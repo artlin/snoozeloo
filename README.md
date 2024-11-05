@@ -1,6 +1,6 @@
 # snoozeloo
 
-di (koin)
+```di (koin)
 
 core
 --domain
@@ -23,3 +23,4 @@ feature (alarm screen / notification)
 -- UI( ui for notification)
 -- data ()
 -- domain ( dismiss and snooze logic via alarm manager )
+```

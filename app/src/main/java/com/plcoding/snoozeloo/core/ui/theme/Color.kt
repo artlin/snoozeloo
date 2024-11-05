@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.ui.theme
+package com.plcoding.snoozeloo.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

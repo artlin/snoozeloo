@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.plcoding.snoozeloo.core.domain.navigation.RootGraph
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -25,16 +26,10 @@ class MainActivity : ComponentActivity() {
             SnoozelooTheme {
                 val viewModel : MainViewModel = koinViewModel()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    innerPadding
                     viewModel.doSomething()
-
                     Log.w("TAG", "MainActivity doSomething")
-
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-
-
-                    )
+                    RootGraph()
                 }
             }
         }

@@ -9,12 +9,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.plcoding.snoozeloo.core.domain.navigation.Graph
-import com.plcoding.snoozeloo.core.domain.navigation.NavigationRoute
+import com.plcoding.snoozeloo.navigation.NavigationController
+import com.plcoding.snoozeloo.navigation.route.NavigationRoute
+import com.plcoding.snoozeloo.navigation.route.navigateRoute
+import org.koin.compose.koinInject
 
 @Composable
-fun AlarmListScreen(navController: NavHostController) {
-    Box(Modifier.background(Color.Green).size(100.dp).clickable {
-        navController.navigate(NavigationRoute.EditAlarm.route)
-    })
+fun AlarmListScreen() {
+    // todo : only for testing purpose, navigation controller should be moved into viewModel
+    val navigation = koinInject<NavigationController>()
+    Box(
+        Modifier
+            .background(Color.Green)
+            .size(100.dp)
+            .clickable {
+                navigation.navigateTo(NavigationRoute.EditAlarm.route)
+            })
 }

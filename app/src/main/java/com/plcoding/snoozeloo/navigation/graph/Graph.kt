@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.core.domain.navigation
+package com.plcoding.snoozeloo.navigation.graph
 
 sealed class Graph(val route: String) {
     data object Root : Graph("root_graph")

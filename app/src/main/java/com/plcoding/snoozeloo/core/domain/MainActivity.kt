@@ -6,17 +6,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.plcoding.snoozeloo.core.domain.navigation.RootGraph
+import androidx.navigation.compose.rememberNavController
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
+import com.plcoding.snoozeloo.navigation.NavigationController
+import com.plcoding.snoozeloo.navigation.NavigationControllerImpl
+import com.plcoding.snoozeloo.navigation.graph.RootGraph
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -24,12 +26,21 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             SnoozelooTheme {
-                val viewModel : MainViewModel = koinViewModel()
+                val viewModel: MainViewModel = koinViewModel()
+                val navController = koinInject<NavigationController>()
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     innerPadding
                     viewModel.doSomething()
                     Log.w("TAG", "MainActivity doSomething")
-                    RootGraph()
+                    // navigation
+                    val navHostController = rememberNavController()
+                    DisposableEffect(navHostController) {
+                        (navController as? NavigationControllerImpl)?.setNavController(navHostController)
+                        onDispose {
+                        }
+                    }
+                    RootGraph(navController = navHostController)
                 }
             }
         }

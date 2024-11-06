@@ -1,6 +1,7 @@
 package com.plcoding.snoozeloo.core.domain
 
 import android.app.Application
+import com.plcoding.snoozeloo.di.coreModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androix.startup.KoinStartup.onKoinStartup
@@ -12,7 +13,7 @@ class SnoozelooApplication: Application() {
         onKoinStartup {
             androidLogger(Level.ERROR)
             androidContext(this@SnoozelooApplication)
-            modules()
+            modules(coreModule)
         }
     }
 

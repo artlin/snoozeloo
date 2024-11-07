@@ -3,7 +3,7 @@ package com.plcoding.snoozeloo.navigation.graph
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.plcoding.snoozeloo.manager.ui.AlarmListScreen
+import com.plcoding.snoozeloo.manager.ui.list.AlarmListScreen
 import com.plcoding.snoozeloo.manager.ui.EditAlarmScreen
 import com.plcoding.snoozeloo.navigation.route.NavigationRoute
 

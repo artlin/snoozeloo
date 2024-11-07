@@ -33,7 +33,7 @@ val MontserratFamily = FontFamily(
     Font(R.font.montserrat_black, FontWeight.Black)
 )
 
-val LocalTextStyleTokens = staticCompositionLocalOf<FontTokens> {
+val LocalTextStyleTokens = staticCompositionLocalOf<TemplateTypeTokens> {
     error("No text style tokens provided")
 }
 

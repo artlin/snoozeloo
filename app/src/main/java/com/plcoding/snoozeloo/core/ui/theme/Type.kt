@@ -2,6 +2,7 @@ package com.plcoding.snoozeloo.core.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -31,6 +32,10 @@ val MontserratFamily = FontFamily(
     Font(R.font.montserrat_extrabold, FontWeight.ExtraBold),
     Font(R.font.montserrat_black, FontWeight.Black)
 )
+
+val LocalTextStyleTokens = staticCompositionLocalOf<FontTokens> {
+    error("No text style tokens provided")
+}
 
 class FontTokens : TemplateTypeTokens(
     // 10:00 on snooze screen
@@ -93,20 +98,18 @@ class FontTokens : TemplateTypeTokens(
         fontWeight = FontWeight.Medium,
         fontSize = TextUnit(12f, TextUnitType.Sp)
     ),
-
 )
-
 
 @Immutable
 open class TemplateTypeTokens(
-    open val title1: TextStyle,
-    open val title2: TextStyle,
-    open val body: TextStyle,
-    open val h3: TextStyle,
-    open val title2Strong: TextStyle,
-    open val h2: TextStyle,
     open val h1: TextStyle,
+    open val h2: TextStyle,
+    open val h3: TextStyle,
     open val title1Strong: TextStyle,
-    open val label: TextStyle,
+    open val title1: TextStyle,
+    open val title2Strong: TextStyle,
+    open val title2: TextStyle,
     open val bodyStrong: TextStyle,
+    open val body: TextStyle,
+    open val label: TextStyle,
 )

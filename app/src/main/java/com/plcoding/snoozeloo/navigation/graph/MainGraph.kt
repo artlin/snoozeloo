@@ -10,7 +10,7 @@ import com.plcoding.snoozeloo.navigation.route.NavigationRoute
 
 fun NavGraphBuilder.mainGraph() {
     navigation(
-        startDestination = NavigationRoute.EditAlarm.route.value,
+        startDestination = NavigationRoute.Alarms.route.value,
         route = Graph.Main.route
     ) {
         composable(NavigationRoute.Alarms.route.value) { AlarmListScreen() }

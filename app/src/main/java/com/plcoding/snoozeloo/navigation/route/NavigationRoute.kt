@@ -1,5 +1,6 @@
 package com.plcoding.snoozeloo.navigation.route
 
+import com.plcoding.snoozeloo.core.domain.entity.AlarmMetadata
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -9,5 +10,5 @@ sealed class NavigationRoute {
     data object Alarms : NavigationRoute()
 
     @Serializable
-    data object EditAlarm : NavigationRoute()
+    data class EditAlarm(val metadata: AlarmMetadata) : NavigationRoute()
 }

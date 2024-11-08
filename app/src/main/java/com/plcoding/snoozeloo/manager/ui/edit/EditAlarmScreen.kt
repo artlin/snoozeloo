@@ -29,6 +29,7 @@ fun EditAlarmScreen() {
         HeaderButtons(buttonsState) { }
         Spacer(Modifier.height(8.dp))
         EditableClockComponent()
+        AlarmNameComponent()
     }
 
 }

@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FAB() {
+fun FAB(modifier: Modifier) {
     FloatingActionButton(
         modifier = Modifier.size(60.dp),
         onClick = { /* your click handler */ },
@@ -20,6 +20,7 @@ fun FAB() {
         shape = CircleShape
     ) {
         Icon(
+            modifier = modifier,
             imageVector = Icons.Default.Add,
             contentDescription = "Add"
         )

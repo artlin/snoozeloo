@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,22 +20,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.plcoding.snoozeloo.R
+import com.plcoding.snoozeloo.core.ui.FAB
 import com.plcoding.snoozeloo.core.ui.text.TextTitle1
 import com.plcoding.snoozeloo.core.ui.text.TextTitle2
-import com.plcoding.snoozeloo.navigation.NavigationController
-import org.koin.compose.koinInject
 
 @Composable
-fun AlarmListScreen() {
-    // todo : only for testing purpose, navigation controller should be moved into viewModel
-    val navigation = koinInject<NavigationController>()
+fun AlarmListScreen(state: AlarmListState, onAlarmList: OnAlarmList) {
     AlarmListHeader()
-    EmptyScreen()
-    AddAlarmButton()
+    if (state.list.isEmpty()) EmptyScreen()
+    AddAlarmButton {
+        onAlarmList(AlarmListEvent.AddAlarmClicked)
+    }
 }
 
 @Composable
-private fun AddAlarmButton() {
+private fun AddAlarmButton(onClick: () -> Unit) {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         AnimatedVisibility(
             visible = true,
@@ -43,7 +43,8 @@ private fun AddAlarmButton() {
             modifier = Modifier
                 .padding(bottom = 16.dp)
         ) {
-            FAB()
+            FAB(Modifier.clickable {
+                onClick() })
         }
     }
 }

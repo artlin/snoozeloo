@@ -4,25 +4,18 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.plcoding.snoozeloo.core.ui.ViewModelAccess
+import com.plcoding.snoozeloo.navigation.NavigationController
+import com.plcoding.snoozeloo.navigation.route.NavigationRoute
 
-class AlarmListViewModel : ViewModel(), ViewModelAccess<AlarmListState, AlarmListEvent> {
+class AlarmListViewModel(private val navigationController: NavigationController) : ViewModel(),
+    ViewModelAccess<AlarmListState, AlarmListEvent> {
 
     override var state: MutableState<AlarmListState> = mutableStateOf(AlarmListState())
-
-    init {
-        // for testing purposes only
-        state.value = state.value.copy(
-            list = emptyList()
-        )
-    }
 
     override fun onEvent(event: AlarmListEvent) {
         when (event) {
             AlarmListEvent.AddAlarmClicked -> {
-                // for testing purposes only
-                state.value = state.value.copy(
-                    list = listOf("d", "s")
-                )
+                navigationController.navigateTo(NavigationRoute.EditAlarm.route)
             }
         }
     }

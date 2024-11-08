@@ -31,7 +31,7 @@ fun AlarmListScreen() {
 
 @Composable
 fun AlarmListHeader() {
-    TextTitle1("Your alarms", Color(0xFF0D0F19))
+    TextTitle1(text = "Your alarms", color = Color(0xFF0D0F19))
 }
 
 @Composable
@@ -48,7 +48,7 @@ fun EmptyScreen() {
 
         )
         TextTitle2(
-            "It's empty! Add the first alarm so you don't miss an important moment!",
+            text = "It's empty! Add the first alarm so you don't miss an important moment!",
             color = Color(0xFF0D0F19)
         )
     }

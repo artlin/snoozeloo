@@ -1,8 +1,15 @@
 package com.plcoding.snoozeloo.manager.ui.list
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,6 +30,22 @@ fun AlarmListScreen() {
     val navigation = koinInject<NavigationController>()
     AlarmListHeader()
     EmptyScreen()
+    AddAlarmButton()
+}
+
+@Composable
+private fun AddAlarmButton() {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+        AnimatedVisibility(
+            visible = true,
+            enter = fadeIn() + scaleIn(),
+            exit = fadeOut() + scaleOut(),
+            modifier = Modifier
+                .padding(bottom = 16.dp)
+        ) {
+            FAB()
+        }
+    }
 }
 
 @Composable

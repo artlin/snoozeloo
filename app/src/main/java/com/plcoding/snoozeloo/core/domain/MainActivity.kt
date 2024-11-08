@@ -29,10 +29,7 @@ class MainActivity : ComponentActivity() {
                 val viewModel: MainViewModel = koinViewModel()
                 val navController = koinInject<NavigationController>()
 
-                Scaffold(modifier = Modifier.fillMaxSize(),
-                    floatingActionButton = { FAB() },
-                    floatingActionButtonPosition = FabPosition.Center
-                ) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     innerPadding
                     viewModel.doSomething()
                     Log.w("TAG", "MainActivity doSomething")

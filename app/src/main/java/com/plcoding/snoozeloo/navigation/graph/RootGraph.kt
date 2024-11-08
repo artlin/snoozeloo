@@ -7,12 +7,17 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
+import com.plcoding.snoozeloo.core.domain.entity.AlarmMetadata
 import com.plcoding.snoozeloo.manager.ui.edit.EditAlarmScreen
 import com.plcoding.snoozeloo.manager.ui.edit.EditAlarmViewModel
 import com.plcoding.snoozeloo.manager.ui.list.AlarmListScreen
 import com.plcoding.snoozeloo.manager.ui.list.AlarmListViewModel
+import com.plcoding.snoozeloo.navigation.custom.CustomNavType
 import com.plcoding.snoozeloo.navigation.route.NavigationRoute
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
+import kotlin.reflect.typeOf
 
 @Composable
 fun RootGraph(
@@ -27,9 +32,16 @@ fun RootGraph(
             val viewModel: AlarmListViewModel = koinViewModel()
             AlarmListScreen(viewModel.state.value, onAlarmList = { viewModel.onEvent(it) })
         }
-        composable<NavigationRoute.EditAlarm> {
-            val viewModel: EditAlarmViewModel = koinViewModel()
-            EditAlarmScreen(viewModel.state.value,onEditAlarm = {viewModel.onEvent(it)})
+        composable<NavigationRoute.EditAlarm>(
+            typeMap = mapOf(
+                typeOf<AlarmMetadata>() to CustomNavType.AlarmMetadataNavType
+            )
+        ) { backStackEntry ->
+            val navParams = backStackEntry.toRoute<NavigationRoute.EditAlarm>()
+            val viewModel: EditAlarmViewModel = koinViewModel {
+                parametersOf(navParams.metadata)
+            }
+            EditAlarmScreen(viewModel.state.value, onEditAlarm = { viewModel.onEvent(it) })
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.plcoding.snoozeloo.manager.ui.edit
 
-import android.widget.Space
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +14,7 @@ import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtons
 import com.plcoding.snoozeloo.core.ui.headerbuttons.SingleButtonState
 
 @Composable
-fun EditAlarmScreen() {
+fun EditAlarmScreen(value: EditAlarmState, onEditAlarm: OnEditAlarm) {
     val buttonsState = ButtonsState(
         leftButton = SingleButtonState(
             buttonType = HeaderButtonType.CLOSE,

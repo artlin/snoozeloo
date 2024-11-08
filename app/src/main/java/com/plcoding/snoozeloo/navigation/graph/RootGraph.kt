@@ -7,9 +7,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.createGraph
 import com.plcoding.snoozeloo.manager.ui.edit.EditAlarmScreen
+import com.plcoding.snoozeloo.manager.ui.edit.EditAlarmViewModel
 import com.plcoding.snoozeloo.manager.ui.list.AlarmListScreen
 import com.plcoding.snoozeloo.manager.ui.list.AlarmListViewModel
 import com.plcoding.snoozeloo.navigation.route.NavigationRoute
@@ -28,6 +27,9 @@ fun RootGraph(
             val viewModel: AlarmListViewModel = koinViewModel()
             AlarmListScreen(viewModel.state.value, onAlarmList = { viewModel.onEvent(it) })
         }
-        composable<NavigationRoute.EditAlarm> { EditAlarmScreen() }
+        composable<NavigationRoute.EditAlarm> {
+            val viewModel: EditAlarmViewModel = koinViewModel()
+            EditAlarmScreen(viewModel.state.value,onEditAlarm = {viewModel.onEvent(it)})
+        }
     }
 }

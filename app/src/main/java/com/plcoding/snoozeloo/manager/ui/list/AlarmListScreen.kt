@@ -1,12 +1,8 @@
 package com.plcoding.snoozeloo.manager.ui.list
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,7 +15,6 @@ import com.plcoding.snoozeloo.R
 import com.plcoding.snoozeloo.core.ui.text.TextTitle1
 import com.plcoding.snoozeloo.core.ui.text.TextTitle2
 import com.plcoding.snoozeloo.navigation.NavigationController
-import com.plcoding.snoozeloo.navigation.route.NavigationRoute
 import org.koin.compose.koinInject
 
 @Composable
@@ -46,7 +41,6 @@ fun EmptyScreen() {
             painter = painterResource(id = R.drawable.icon_alarm),
             contentDescription = null,
             tint = Color(0xFF4664FF)
-
         )
         TextTitle2(
             text = "It's empty! Add the first alarm so you don't miss an important moment!",

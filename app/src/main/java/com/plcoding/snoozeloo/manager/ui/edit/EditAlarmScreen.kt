@@ -1,22 +1,22 @@
 package com.plcoding.snoozeloo.manager.ui.edit
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import com.plcoding.snoozeloo.navigation.NavigationController
-import com.plcoding.snoozeloo.navigation.route.NavigationRoute
-import org.koin.compose.koinInject
+import com.plcoding.snoozeloo.core.domain.value.HeaderButtonLabel
+import com.plcoding.snoozeloo.core.ui.headerbuttons.ButtonsState
+import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
+import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtons
+import com.plcoding.snoozeloo.core.ui.headerbuttons.SingleButtonState
 
 @Composable
 fun EditAlarmScreen() {
-    // todo : only for testing purpose, navigation controller should be moved into viewModel
-    val navigation = koinInject<NavigationController>()
-    Box(Modifier.background(Color.Red).size(100.dp).clickable {
-        navigation.navigateTo(NavigationRoute.Alarms.route)
-    })
+    val buttonsState = ButtonsState(
+        leftButton = SingleButtonState(
+            buttonType = HeaderButtonType.CLOSE,
+            enabled = true
+        ), rightButton = SingleButtonState(
+            buttonType = HeaderButtonType.SAVE,
+            label = HeaderButtonLabel("Save")
+        )
+    )
+    HeaderButtons(buttonsState) { }
 }

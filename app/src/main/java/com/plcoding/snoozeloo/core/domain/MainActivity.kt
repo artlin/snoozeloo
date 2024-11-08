@@ -5,11 +5,12 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.plcoding.snoozeloo.alarm_notification.ui.AlarmNotificationComponent
+import com.plcoding.snoozeloo.core.ui.FAB
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
 import com.plcoding.snoozeloo.navigation.NavigationController
 import com.plcoding.snoozeloo.navigation.NavigationControllerImpl
@@ -28,7 +29,10 @@ class MainActivity : ComponentActivity() {
                 val viewModel: MainViewModel = koinViewModel()
                 val navController = koinInject<NavigationController>()
 
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize(),
+                    floatingActionButton = { FAB() },
+                    floatingActionButtonPosition = FabPosition.Center
+                ) { innerPadding ->
                     innerPadding
                     viewModel.doSomething()
                     Log.w("TAG", "MainActivity doSomething")
@@ -47,3 +51,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+

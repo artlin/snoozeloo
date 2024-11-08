@@ -1,10 +1,9 @@
 package com.plcoding.snoozeloo.navigation
 
 import androidx.navigation.NavHostController
-import com.plcoding.snoozeloo.navigation.route.Route
-import com.plcoding.snoozeloo.navigation.route.navigateRoute
+import com.plcoding.snoozeloo.navigation.route.NavigationRoute
 
-class NavigationControllerImpl() : NavigationController {
+class NavigationControllerImpl : NavigationController {
 
     private var navController: NavHostController? = null
 
@@ -12,8 +11,8 @@ class NavigationControllerImpl() : NavigationController {
         this.navController = navController
     }
 
-    override fun navigateTo(route: Route) {
-        navController?.navigateRoute(route)
+    override fun navigateTo(navRoute: NavigationRoute) {
+        navController?.navigate(navRoute)
     }
 
     override fun navigateBack() {

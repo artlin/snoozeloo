@@ -1,8 +1,8 @@
 package com.plcoding.snoozeloo.navigation
 
-import com.plcoding.snoozeloo.navigation.route.Route
+import com.plcoding.snoozeloo.navigation.route.NavigationRoute
 
 interface NavigationController {
-    fun navigateTo(route: Route)
+    fun navigateTo(navRoute: NavigationRoute)
     fun navigateBack()
 }

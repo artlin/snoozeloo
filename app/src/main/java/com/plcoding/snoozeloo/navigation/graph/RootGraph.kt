@@ -6,20 +6,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.createGraph
+import com.plcoding.snoozeloo.manager.ui.edit.EditAlarmScreen
+import com.plcoding.snoozeloo.manager.ui.list.AlarmListScreen
+import com.plcoding.snoozeloo.manager.ui.list.AlarmListViewModel
+import com.plcoding.snoozeloo.navigation.route.NavigationRoute
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun RootGraph(
     navController: NavHostController,
-    startDestination: String = Graph.Main.route
 ) {
     NavHost(
         modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
         navController = navController,
-        route = Graph.Root.route,
-        startDestination = startDestination
+        startDestination = NavigationRoute.Alarms
     ) {
-        // Main Graph
-        mainGraph()
+        composable<NavigationRoute.Alarms> {
+            val viewModel: AlarmListViewModel = koinViewModel()
+            AlarmListScreen(viewModel.state.value, onAlarmList = { viewModel.onEvent(it) })
+        }
+        composable<NavigationRoute.EditAlarm> { EditAlarmScreen() }
     }
 }

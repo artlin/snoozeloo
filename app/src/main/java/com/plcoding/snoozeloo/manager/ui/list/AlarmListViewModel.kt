@@ -15,7 +15,7 @@ class AlarmListViewModel(private val navigationController: NavigationController)
     override fun onEvent(event: AlarmListEvent) {
         when (event) {
             AlarmListEvent.AddAlarmClicked -> {
-                navigationController.navigateTo(NavigationRoute.EditAlarm.route)
+                navigationController.navigateTo(NavigationRoute.EditAlarm)
             }
         }
     }

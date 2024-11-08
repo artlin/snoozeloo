@@ -14,7 +14,7 @@ fun RootGraph(
     startDestination: String = Graph.Main.route
 ) {
     NavHost(
-        modifier = Modifier.padding(top = 64.dp, start = 16.dp, end = 16.dp),
+        modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
         navController = navController,
         route = Graph.Root.route,
         startDestination = startDestination

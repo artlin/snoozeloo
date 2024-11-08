@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.plcoding.snoozeloo.R
 import com.plcoding.snoozeloo.core.ui.text.TextTitle1
@@ -49,7 +50,8 @@ fun EmptyScreen() {
         )
         TextTitle2(
             text = "It's empty! Add the first alarm so you don't miss an important moment!",
-            color = Color(0xFF0D0F19)
+            color = Color(0xFF0D0F19),
+            textAlign = TextAlign.Center
         )
     }
 }

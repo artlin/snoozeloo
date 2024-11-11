@@ -22,11 +22,18 @@ class EditAlarmViewModel(
 
     init {
         alarmMetadata
+        // decide to fill with empty alarm values or existing values
+        state.value = state.value.toNewAlarm()
     }
 
     override fun onEvent(event: EditAlarmEvent) {
         when (event) {
+            is EditAlarmEvent.DigitEnteredFromKeyboard -> state.value =
+                state.value.setNewDigit(event.digit)
 
+            EditAlarmEvent.HoursComponentClicked -> state.value = state.value.startHoursEditMode()
+            EditAlarmEvent.MinutesComponentClicked -> state.value =
+                state.value.startMinutesEditMode()
         }
     }
 

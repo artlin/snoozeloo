@@ -14,7 +14,7 @@ import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtons
 import com.plcoding.snoozeloo.core.ui.headerbuttons.SingleButtonState
 
 @Composable
-fun EditAlarmScreen(value: EditAlarmState, onEditAlarm: OnEditAlarm) {
+fun EditAlarmScreen(state: EditAlarmState, onEditAlarm: OnEditAlarm) {
     val buttonsState = ButtonsState(
         leftButton = SingleButtonState(
             buttonType = HeaderButtonType.CLOSE,
@@ -27,7 +27,7 @@ fun EditAlarmScreen(value: EditAlarmState, onEditAlarm: OnEditAlarm) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         HeaderButtons(buttonsState) { }
         Spacer(Modifier.height(8.dp))
-        EditableClockComponent()
+        EditableClockComponent(state.timeComponentState,onEditAlarm)
         AlarmNameComponent()
     }
 

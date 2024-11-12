@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -80,10 +81,10 @@ fun OneDigitField(modifier: Modifier, digitData: DigitFieldData?) {
 
     val color by animateColorAsState(
         targetValue = when (digitData?.state) {
-            DigitFieldState.INACTIVE -> Color(0xFF858585)
-            DigitFieldState.IS_SET -> Color(0xFF4664FF)
-            DigitFieldState.IS_WAITING_FOR_INPUT -> Color(0xFF5D5C5C)
-            null -> Color(0xFFCC0000)
+            DigitFieldState.INACTIVE -> MaterialTheme.colorScheme.onSurfaceVariant
+            DigitFieldState.IS_SET -> MaterialTheme.colorScheme.primary
+            DigitFieldState.IS_WAITING_FOR_INPUT -> MaterialTheme.colorScheme.onSurfaceVariant
+            null -> MaterialTheme.colorScheme.error
         },
         animationSpec = tween(durationMillis = 500), label = ""
     )

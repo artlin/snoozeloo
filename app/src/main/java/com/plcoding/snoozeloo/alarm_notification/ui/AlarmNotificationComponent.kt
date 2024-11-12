@@ -7,10 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.plcoding.snoozeloo.R
@@ -22,7 +22,7 @@ fun AlarmNotificationComponent() {
     Column(
         Modifier
             .fillMaxSize()
-            .background(color = Color.White),
+            .background(color = MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp, alignment = Alignment.CenterVertically)
     ) {
@@ -30,12 +30,12 @@ fun AlarmNotificationComponent() {
             modifier = Modifier.size(62.dp),
             painter = painterResource(id = R.drawable.icon_alarm),
             contentDescription = null,
-            tint = Color(0xFF4664FF)
+            tint = MaterialTheme.colorScheme.primary
         )
-        TextH1(text = "10:00", color = Color(0xFF4664FF))
-        TextTitle1Strong(text = "WORK", color = Color(0xFF0D0F19))
+        TextH1(text = "10:00", color = MaterialTheme.colorScheme.primary)
+        TextTitle1Strong(text = "WORK", color = MaterialTheme.colorScheme.onBackground)
         Button(onClick = {}) {
-            TextTitle1Strong(text = "Turn Off", color = Color.White)
+            TextTitle1Strong(text = "Turn Off", color = MaterialTheme.colorScheme.onPrimary)
         }
     }
 }

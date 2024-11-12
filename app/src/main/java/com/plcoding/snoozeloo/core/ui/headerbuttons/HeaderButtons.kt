@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.plcoding.snoozeloo.R
 import com.plcoding.snoozeloo.core.domain.value.HeaderButtonLabel
@@ -34,13 +34,16 @@ private fun HeaderButton(buttonState: SingleButtonState) {
             Icon(
                 painter = painterResource(id = R.drawable.icon_close),
                 contentDescription = null,
-                tint = Color(0xFFE6E6E6)
+                tint = MaterialTheme.colorScheme.primary
             )
         }
 
         HeaderButtonType.SAVE -> {
             Button(enabled = buttonState.enabled, onClick = {}) {
-                TextTitle2Strong(text = buttonState.label.value, color = Color(0xFFFFFFFF))
+                TextTitle2Strong(
+                    text = buttonState.label.value,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             }
         }
 

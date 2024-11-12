@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -44,14 +44,15 @@ private fun AddAlarmButton(onClick: () -> Unit) {
                 .padding(bottom = 16.dp)
         ) {
             FAB(Modifier.clickable {
-                onClick() })
+                onClick()
+            })
         }
     }
 }
 
 @Composable
 fun AlarmListHeader() {
-    TextTitle1(text = "Your alarms", color = Color(0xFF0D0F19))
+    TextTitle1(text = "Your alarms", color = MaterialTheme.colorScheme.onSurface)
 }
 
 @Composable
@@ -64,11 +65,11 @@ fun EmptyScreen() {
         Icon(
             painter = painterResource(id = R.drawable.icon_alarm),
             contentDescription = null,
-            tint = Color(0xFF4664FF)
+            tint = MaterialTheme.colorScheme.primary
         )
         TextTitle2(
             text = "It's empty! Add the first alarm so you don't miss an important moment!",
-            color = Color(0xFF0D0F19),
+            color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center
         )
     }

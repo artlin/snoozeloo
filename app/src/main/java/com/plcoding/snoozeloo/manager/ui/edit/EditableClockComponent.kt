@@ -6,19 +6,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.plcoding.snoozeloo.core.ui.text.TextBody
 
 @Composable
 fun EditableClockComponent(state: TimeComponentState, onEditAlarm: OnEditAlarm) {
     Column(
         Modifier
             .fillMaxWidth()
-            .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(10.dp))
+            .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(10.dp))
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally

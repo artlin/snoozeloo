@@ -135,8 +135,8 @@ data class TimeComponentState(
             FocusedSelection.HOURS_1 -> {
                 val firstPlace = if (newValidDigit <= 2) newValidDigit else hours.firstPlace
                 hours.setFirstPlace(firstPlace).let { newHours ->
-                    when (firstPlace) {
-                        2 -> newHours.setSecondPlace(4)
+                    when {
+                        firstPlace == 2 && hours.secondPlace > 4 -> newHours.setSecondPlace(4)
                         else -> newHours
                     }
                 }

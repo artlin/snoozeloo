@@ -47,7 +47,7 @@ data class TimeComponentState(
         }.toMutableMap()
 
 
-    fun MutableMap<FocusedSelection, DigitFieldData>.forState(
+    private fun MutableMap<FocusedSelection, DigitFieldData>.forState(
         state: FocusedSelection,
         predicate: (DigitFieldData) -> DigitFieldData
     ): MutableMap<FocusedSelection, DigitFieldData> {
@@ -83,36 +83,41 @@ data class TimeComponentState(
 
     fun setNewDigit(digit: String): TimeComponentState {
         Log.d("TimeComponentState", "enteredDigit : $digit")
-        val validDigit = digit.toIntOrNull() ?: return this
-        currentSelectionState
-        hours = modifyHours(currentSelectionState, validDigit)
-        minutes = modifyMinutes(currentSelectionState, validDigit)
+        val newValidDigit = digit.toIntOrNull() ?: return this
+        hours = modifyHours(currentSelectionState, newValidDigit)
+        minutes = modifyMinutes(currentSelectionState, newValidDigit)
 
-        val newValue: String = getNewValue(currentSelectionState)
-
-        val newSelection = when (currentSelectionState) {
+        val newSelectionState = when (currentSelectionState) {
             FocusedSelection.HOURS_1 -> FocusedSelection.HOURS_2
             FocusedSelection.HOURS_2 -> FocusedSelection.MINUTES_1
             FocusedSelection.MINUTES_1 -> FocusedSelection.MINUTES_2
             FocusedSelection.MINUTES_2 -> FocusedSelection.NONE
             FocusedSelection.NONE -> FocusedSelection.NONE
         }
-        val newDigitSelected = currentSelectionState != newSelection
+
+        val currentSelectionValue: String = getNewValueForState(currentSelectionState)
+        val newSelectionValue: String = getNewValueForState(newSelectionState)
+
+
+        val newDigitSelected = currentSelectionState != newSelectionState
 
         var finalStates = allStates
         finalStates = finalStates.forState(currentSelectionState) {
-            it.copy(value = newValue, state = DigitFieldState.IS_SET)
+            it.copy(value = currentSelectionValue, state = DigitFieldState.IS_SET)
         }
 
-        if (newDigitSelected && newSelection != FocusedSelection.NONE) {
-            finalStates = finalStates.forState(newSelection) {
-                it.copy(state = DigitFieldState.IS_WAITING_FOR_INPUT)
+        if (newDigitSelected && newSelectionState != FocusedSelection.NONE) {
+            finalStates = finalStates.forState(newSelectionState) { selection ->
+                selection.copy(
+                    value = newSelectionValue,
+                    state = DigitFieldState.IS_WAITING_FOR_INPUT
+                )
             }
         }
-        return copy(allStates = finalStates, currentSelectionState = newSelection)
+        return copy(allStates = finalStates, currentSelectionState = newSelectionState)
     }
 
-    private fun getNewValue(currentSelection: FocusedSelection): String {
+    private fun getNewValueForState(currentSelection: FocusedSelection): String {
         return when (currentSelection) {
             FocusedSelection.HOURS_1 -> "${hours.firstPlace}"
             FocusedSelection.HOURS_2 -> "${hours.secondPlace}"
@@ -122,17 +127,25 @@ data class TimeComponentState(
         }
     }
 
-    private fun modifyHours(currentSelection: FocusedSelection, validDigit: Int): TwoPlaceNumber {
+    private fun modifyHours(
+        currentSelection: FocusedSelection,
+        newValidDigit: Int
+    ): TwoPlaceNumber {
         return when (currentSelection) {
             FocusedSelection.HOURS_1 -> {
-                val firstPlace = if (validDigit <= 2) validDigit else hours.firstPlace
-                hours.setFirstPlace(firstPlace)
+                val firstPlace = if (newValidDigit <= 2) newValidDigit else hours.firstPlace
+                hours.setFirstPlace(firstPlace).let { newHours ->
+                    when (firstPlace) {
+                        2 -> newHours.setSecondPlace(4)
+                        else -> newHours
+                    }
+                }
             }
 
             FocusedSelection.HOURS_2 -> {
                 val secondPlace = when (hours.firstPlace) {
-                    2 -> if (validDigit <= 4) validDigit else 4
-                    else -> validDigit
+                    2 -> if (newValidDigit <= 4) newValidDigit else 4
+                    else -> newValidDigit
                 }
                 hours.setSecondPlace(secondPlace)
             }
@@ -141,14 +154,17 @@ data class TimeComponentState(
         }
     }
 
-    private fun modifyMinutes(currentSelection: FocusedSelection, validDigit: Int): TwoPlaceNumber {
+    private fun modifyMinutes(
+        currentSelection: FocusedSelection,
+        newValidDigit: Int
+    ): TwoPlaceNumber {
         return when (currentSelection) {
             FocusedSelection.MINUTES_1 -> {
-                val firstPlace = if (validDigit <= 5) validDigit else minutes.firstPlace
+                val firstPlace = if (newValidDigit <= 5) newValidDigit else minutes.firstPlace
                 minutes.setFirstPlace(firstPlace)
             }
 
-            FocusedSelection.MINUTES_2 -> minutes.setSecondPlace(validDigit)
+            FocusedSelection.MINUTES_2 -> minutes.setSecondPlace(newValidDigit)
             else -> minutes
         }
     }

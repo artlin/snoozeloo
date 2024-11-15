@@ -10,14 +10,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
 
 @Composable
 fun EditableClockComponent(state: TimeComponentState, onEditAlarm: OnEditAlarm) {
     Column(
         Modifier
             .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(10.dp))
+            .background(
+                color = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(10.dp)
+            )
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -38,5 +44,16 @@ fun EditableClockComponent(state: TimeComponentState, onEditAlarm: OnEditAlarm) 
 //            text = "Alarm in Xh Ymin",
 //            color = Color(0xFF858585)
 //        )
+    }
+}
+
+@Preview(apiLevel = 33, device = Devices.PIXEL_4)
+@Composable
+fun PreviewEditableClockComponent() {
+    SnoozelooTheme {
+        val state = TimeComponentState().toNewAlarm()
+        EditableClockComponent(state) {
+
+        }
     }
 }

@@ -27,7 +27,7 @@ fun EditAlarmScreen(state: EditAlarmState, onEditAlarm: OnEditAlarm) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         HeaderButtons(buttonsState) { }
         Spacer(Modifier.height(8.dp))
-        EditableClockComponent(state.timeComponentState,onEditAlarm)
+        EditableClockComponent(state.clockDigitStates,onEditAlarm)
         AlarmNameComponent()
     }
 

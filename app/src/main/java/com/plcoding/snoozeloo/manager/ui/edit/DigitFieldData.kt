@@ -6,11 +6,12 @@ data class DigitFieldData(
 ) {
     fun reset(): DigitFieldData = copy(value = "0", state = DigitFieldState.INACTIVE)
 
-    fun enterEditState(): DigitFieldData = copy(state = DigitFieldState.IS_WAITING_FOR_INPUT)
+    fun makeInactive(): DigitFieldData = copy(state = DigitFieldState.INACTIVE)
 
-    fun enterAcceptedState(): DigitFieldData = copy(state = DigitFieldState.IS_SET)
+    fun accept(): DigitFieldData = copy(state = DigitFieldState.IS_SET)
+
+    fun edit(): DigitFieldData = copy(state = DigitFieldState.IS_WAITING_FOR_INPUT)
 
     fun isEditing(): Boolean = state == DigitFieldState.IS_WAITING_FOR_INPUT
-
 
 }

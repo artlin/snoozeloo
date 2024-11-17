@@ -1,6 +1,7 @@
 package com.plcoding.snoozeloo.manager.ui.edit
 
 import android.util.Log
+import android.view.ViewTreeObserver
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -10,10 +11,13 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -21,27 +25,50 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.plcoding.snoozeloo.core.ui.text.TextH2
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TimeComponent(
-    state: TimeComponentState,
+    state: ClockDigitStates,
     onComponentClick: OnComponentClick,
-    onUserEnteredValue: OnUserEnteredValue
+    onUserEnteredValue: OnUserEnteredValue,
+    onKeyboardHidden: OnClick
 ) {
     val focusRequester = remember { FocusRequester() }
-    if (state.isEditModeEnabled()) {
-        Log.d("TimeComponent", "keyboard request focus")
-        focusRequester.requestFocus()
-        val keyboardController = LocalSoftwareKeyboardController.current
-        keyboardController?.show()
-    } else {
-        val keyboardController = LocalSoftwareKeyboardController.current
-        keyboardController?.hide()
-        Log.d("TimeComponent", "keyboard hide")
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    val view = LocalView.current
+    val viewTreeObserver = view.viewTreeObserver
+    DisposableEffect(viewTreeObserver) {
+        val listener = ViewTreeObserver.OnGlobalLayoutListener {
+            val isKeyboardOpen = ViewCompat.getRootWindowInsets(view)
+                ?.isVisible(WindowInsetsCompat.Type.ime()) ?: true
+            if(isKeyboardOpen.not()) onKeyboardHidden()
+        }
+
+        viewTreeObserver.addOnGlobalLayoutListener(listener)
+        onDispose {
+            viewTreeObserver.removeOnGlobalLayoutListener(listener)
+        }
+    }
+
+    LaunchedEffect(state.isEditModeEnabled()) {
+        if (state.isEditModeEnabled()) {
+            Log.d("TimeComponent", "show keyboard and request focus")
+            focusRequester.requestFocus()
+            keyboardController?.show()
+        } else {
+            Log.d("TimeComponent", "hide")
+            focusRequester.freeFocus()
+            keyboardController?.hide()
+        }
     }
     Box {
         FocusableHiddenField(focusRequester) { enteredText ->

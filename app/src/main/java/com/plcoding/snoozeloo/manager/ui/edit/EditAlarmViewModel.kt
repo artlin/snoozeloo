@@ -2,15 +2,10 @@ package com.plcoding.snoozeloo.manager.ui.edit
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.plcoding.snoozeloo.core.domain.entity.AlarmMetadata
 import com.plcoding.snoozeloo.core.ui.ViewModelAccess
 import com.plcoding.snoozeloo.navigation.NavigationController
-import com.plcoding.snoozeloo.navigation.route.NavigationRoute
-import kotlinx.coroutines.launch
 
 class EditAlarmViewModel(
     private val alarmMetadata: AlarmMetadata,
@@ -28,12 +23,20 @@ class EditAlarmViewModel(
 
     override fun onEvent(event: EditAlarmEvent) {
         when (event) {
-            is EditAlarmEvent.DigitEnteredFromKeyboard -> state.value =
-                state.value.setNewDigit(event.digit)
+            is EditAlarmEvent.DigitEnteredFromKeyboard -> {
+                state.value = state.value.setNewDigit(event.digit)
+                if (state.value.isCompleted()) {
+                    state.value = state.value.toCorrectState().toInactiveState()
+                }
+            }
 
-            EditAlarmEvent.HoursComponentClicked -> state.value = state.value.startHoursEditMode()
+            EditAlarmEvent.HoursComponentClicked -> state.value = state.value.startHoursEdit()
             EditAlarmEvent.MinutesComponentClicked -> state.value =
-                state.value.startMinutesEditMode()
+                state.value.startMinutesEdit()
+
+            EditAlarmEvent.KeyboardIsHidden -> {
+                state.value = state.value.toCorrectState().toInactiveState()
+            }
         }
     }
 

@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
 
 @Composable
-fun EditableClockComponent(state: TimeComponentState, onEditAlarm: OnEditAlarm) {
+fun EditableClockComponent(state: ClockDigitStates, onEditAlarm: OnEditAlarm) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -38,6 +38,8 @@ fun EditableClockComponent(state: TimeComponentState, onEditAlarm: OnEditAlarm) 
             )
         }, onUserEnteredValue = { digit ->
             onEditAlarm(EditAlarmEvent.DigitEnteredFromKeyboard(digit))
+        }, onKeyboardHidden = {
+            onEditAlarm(EditAlarmEvent.KeyboardIsHidden)
         })
 
 //        TextBody(
@@ -51,7 +53,7 @@ fun EditableClockComponent(state: TimeComponentState, onEditAlarm: OnEditAlarm) 
 @Composable
 fun PreviewEditableClockComponent() {
     SnoozelooTheme {
-        val state = TimeComponentState().toNewAlarm()
+        val state = ClockDigitStates().asNewAlarm()
         EditableClockComponent(state) {
 
         }

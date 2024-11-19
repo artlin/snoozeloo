@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.plcoding.snoozeloo.core.domain.entity.AlarmMetadata
 import com.plcoding.snoozeloo.core.ui.ViewModelAccess
+import com.plcoding.snoozeloo.manager.domain.EditAlarmState
 import com.plcoding.snoozeloo.navigation.NavigationController
 
 class EditAlarmViewModel(

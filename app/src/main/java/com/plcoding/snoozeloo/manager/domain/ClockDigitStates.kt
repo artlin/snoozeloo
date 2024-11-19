@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.manager.ui.edit
+package com.plcoding.snoozeloo.manager.domain
 
 data class ClockDigitStates(
     val currentSelectionState: FocusedSelection = FocusedSelection.INACTIVE,

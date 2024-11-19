@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.manager.ui.edit
+package com.plcoding.snoozeloo.manager.domain
 
 import com.plcoding.snoozeloo.core.domain.value.HeaderButtonLabel
 import com.plcoding.snoozeloo.core.ui.headerbuttons.ButtonsState

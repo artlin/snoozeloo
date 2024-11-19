@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
+import com.plcoding.snoozeloo.manager.domain.ClockDigitStates
 
 @Composable
 fun EditableClockComponent(state: ClockDigitStates, onEditAlarm: OnEditAlarm) {

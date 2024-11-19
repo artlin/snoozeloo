@@ -15,19 +15,14 @@ import com.plcoding.snoozeloo.core.ui.headerbuttons.SingleButtonState
 
 @Composable
 fun EditAlarmScreen(state: EditAlarmState, onEditAlarm: OnEditAlarm) {
-    val buttonsState = ButtonsState(
-        leftButton = SingleButtonState(
-            buttonType = HeaderButtonType.CLOSE,
-            enabled = true
-        ), rightButton = SingleButtonState(
-            buttonType = HeaderButtonType.SAVE,
-            label = HeaderButtonLabel("Save")
-        )
-    )
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        HeaderButtons(buttonsState) { event ->
-            if (event.buttonType == HeaderButtonType.CLOSE) {
-                onEditAlarm(EditAlarmEvent.CancelClicked)
+        HeaderButtons(state.headerButtonStates) { event ->
+            when (event.buttonType) {
+                HeaderButtonType.CLOSE -> onEditAlarm(EditAlarmEvent.CancelClicked)
+                HeaderButtonType.SAVE -> onEditAlarm(EditAlarmEvent.SaveClicked)
+                else -> Unit
+//                HeaderButtonType.NO_BUTTON -> TODO()
+//                HeaderButtonType.BACK_ARROW -> TODO()
             }
         }
         Spacer(Modifier.height(8.dp))

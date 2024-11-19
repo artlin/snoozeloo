@@ -39,8 +39,17 @@ class EditAlarmViewModel(
                     state.value = state.value.toCorrectState().toAcceptedState()
                 }
             }
+
             EditAlarmEvent.CancelClicked -> navigationController.navigateBack()
+            EditAlarmEvent.SaveClicked -> {
+                ""
+            }
         }
+        validateUi()
+    }
+
+    private fun validateUi() {
+        state.value = state.value.validateButtons()
     }
 
 }

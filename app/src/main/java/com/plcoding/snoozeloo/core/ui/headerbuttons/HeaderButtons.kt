@@ -41,7 +41,9 @@ private fun HeaderButton(buttonState: SingleButtonState, onEvent: HeaderButtonsE
         }
 
         HeaderButtonType.SAVE -> {
-            Button(enabled = buttonState.enabled, onClick = {}) {
+            Button(
+                enabled = buttonState.enabled,
+                onClick = { onEvent(SingleButtonState(buttonType = HeaderButtonType.SAVE)) }) {
                 TextTitle2Strong(
                     text = buttonState.label.value,
                     color = MaterialTheme.colorScheme.onPrimary

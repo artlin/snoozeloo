@@ -39,6 +39,7 @@ class EditAlarmViewModel(
                     state.value = state.value.toCorrectState().toAcceptedState()
                 }
             }
+            EditAlarmEvent.CancelClicked -> navigationController.navigateBack()
         }
     }
 

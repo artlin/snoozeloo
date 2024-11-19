@@ -25,9 +25,13 @@ fun EditAlarmScreen(state: EditAlarmState, onEditAlarm: OnEditAlarm) {
         )
     )
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        HeaderButtons(buttonsState) { }
+        HeaderButtons(buttonsState) { event ->
+            if (event.buttonType == HeaderButtonType.CLOSE) {
+                onEditAlarm(EditAlarmEvent.CancelClicked)
+            }
+        }
         Spacer(Modifier.height(8.dp))
-        EditableClockComponent(state.clockDigitStates,onEditAlarm)
+        EditableClockComponent(state.clockDigitStates, onEditAlarm)
         AlarmNameComponent()
     }
 

@@ -6,6 +6,7 @@ sealed interface EditAlarmEvent {
     data object HoursComponentClicked : EditAlarmEvent
     data object MinutesComponentClicked : EditAlarmEvent
     data class DigitEnteredFromKeyboard(val digit: String) : EditAlarmEvent
+    data object CancelClicked : EditAlarmEvent
 
 }
 

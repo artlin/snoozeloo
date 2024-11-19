@@ -24,7 +24,7 @@ fun EditAlarmScreen(state: EditAlarmState, onEditAlarm: OnEditAlarm) {
             }
         }
         Spacer(Modifier.height(8.dp))
-        EditableClockComponent(state.clockDigitStates, onEditAlarm)
+        ClockWithDescriptionComponent(state.clockDigitStates, state.clockDescription, onEditAlarm)
         AlarmNameComponent()
     }
 

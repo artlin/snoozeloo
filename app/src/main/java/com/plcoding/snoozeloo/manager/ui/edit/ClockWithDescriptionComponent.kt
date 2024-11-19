@@ -13,11 +13,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.plcoding.snoozeloo.core.ui.text.TextBody
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
+import com.plcoding.snoozeloo.manager.domain.ClockAlarmDescriptionState
 import com.plcoding.snoozeloo.manager.domain.ClockDigitStates
 
 @Composable
-fun EditableClockComponent(state: ClockDigitStates, onEditAlarm: OnEditAlarm) {
+fun ClockWithDescriptionComponent(
+    state: ClockDigitStates,
+    descriptionState: ClockAlarmDescriptionState,
+    onEditAlarm: OnEditAlarm
+) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -42,11 +48,12 @@ fun EditableClockComponent(state: ClockDigitStates, onEditAlarm: OnEditAlarm) {
         }, onKeyboardHidden = {
             onEditAlarm(EditAlarmEvent.KeyboardIsHidden)
         })
-
-//        TextBody(
-//            text = "Alarm in Xh Ymin",
-//            color = Color(0xFF858585)
-//        )
+        if (descriptionState.isDescriptionEnabled) {
+            TextBody(
+                text = descriptionState.description,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }
 
@@ -55,7 +62,7 @@ fun EditableClockComponent(state: ClockDigitStates, onEditAlarm: OnEditAlarm) {
 fun PreviewEditableClockComponent() {
     SnoozelooTheme {
         val state = ClockDigitStates().asNewAlarm()
-        EditableClockComponent(state) {
+        ClockWithDescriptionComponent(state, ClockAlarmDescriptionState()) {
 
         }
     }

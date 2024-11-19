@@ -6,6 +6,7 @@ import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
 import com.plcoding.snoozeloo.core.ui.headerbuttons.SingleButtonState
 
 data class EditAlarmState(
+    val clockDescription: ClockAlarmDescriptionState = ClockAlarmDescriptionState(),
     val headerButtonStates: ButtonsState = ButtonsState(
         leftButton = SingleButtonState(
             buttonType = HeaderButtonType.CLOSE,
@@ -39,9 +40,6 @@ data class EditAlarmState(
     fun toCorrectState(): EditAlarmState =
         copy(clockDigitStates = clockDigitStates.toCorrectedState())
 
-    fun toInactiveState(): EditAlarmState =
-        copy(clockDigitStates = clockDigitStates.toInactiveState())
-
     fun toAcceptedState(): EditAlarmState =
         copy(clockDigitStates = clockDigitStates.toAcceptedState())
 
@@ -55,5 +53,9 @@ data class EditAlarmState(
                 )
             )
         )
+    }
+
+    fun validateDescription(currentTime: TimeValue, alarmTime: TimeValue): EditAlarmState {
+        return copy(clockDescription= clockDescription.validateDescription(currentTime,alarmTime))
     }
 }

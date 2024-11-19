@@ -16,6 +16,16 @@ data class ClockDigitStates(
     )
 ) {
 
+    fun getHours(): Int =
+        ((digitsHolder[FocusedSelection.HOURS_1]?.times(10)
+            ?: 0) + (digitsHolder[FocusedSelection.HOURS_2]
+            ?: 0))
+
+    fun getMinutes(): Int =
+        ((digitsHolder[FocusedSelection.MINUTES_1]?.times(10)
+            ?: 0) + (digitsHolder[FocusedSelection.MINUTES_2]
+            ?: 0))
+
     fun asNewAlarm(): ClockDigitStates = copy(
         currentSelectionState = FocusedSelection.INACTIVE,
         allStates = allStates.forAllStates { it.reset() })
@@ -23,10 +33,6 @@ data class ClockDigitStates(
     fun toAcceptedState(): ClockDigitStates =
         copy(currentSelectionState = FocusedSelection.COMPLETED,
             allStates = allStates.forAllStates { it.accept() })
-
-    fun toInactiveState(): ClockDigitStates =
-        copy(currentSelectionState = FocusedSelection.INACTIVE,
-            allStates = allStates.forAllStates { it.makeInactive() })
 
     fun toCorrectedState(): ClockDigitStates {
         val fixedHours = fixHours(digitsHolder)

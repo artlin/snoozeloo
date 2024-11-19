@@ -20,6 +20,10 @@ data class ClockDigitStates(
         currentSelectionState = FocusedSelection.INACTIVE,
         allStates = allStates.forAllStates { it.reset() })
 
+    fun toAcceptedState(): ClockDigitStates =
+        copy(currentSelectionState = FocusedSelection.COMPLETED,
+            allStates = allStates.forAllStates { it.accept() })
+
     fun toInactiveState(): ClockDigitStates =
         copy(currentSelectionState = FocusedSelection.INACTIVE,
             allStates = allStates.forAllStates { it.makeInactive() })
@@ -31,7 +35,7 @@ data class ClockDigitStates(
             val selection = entry.key
             val digit = fixedHours[entry.key] ?: 0
             val digitFieldData = finalStates[selection] ?: DigitFieldData()
-            digitFieldData.copy(value = digit.toString(),state = DigitFieldState.IS_SET)
+            digitFieldData.copy(value = digit.toString(), state = DigitFieldState.IS_SET)
         }.toMutableMap()
         return copy(allStates = finalStates)
     }
@@ -58,7 +62,8 @@ data class ClockDigitStates(
         )
     }
 
-    fun isEditModeEnabled(): Boolean = currentSelectionState != FocusedSelection.INACTIVE
+    fun isEditModeEnabled(): Boolean =
+        currentSelectionState != FocusedSelection.INACTIVE && currentSelectionState != FocusedSelection.COMPLETED
 
     fun setNewDigit(digit: String): ClockDigitStates {
         // digit int validation

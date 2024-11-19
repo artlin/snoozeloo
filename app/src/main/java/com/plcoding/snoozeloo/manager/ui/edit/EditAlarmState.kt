@@ -27,4 +27,7 @@ data class EditAlarmState(
 
     fun toInactiveState(): EditAlarmState =
         copy(clockDigitStates = clockDigitStates.toInactiveState())
+
+    fun toAcceptedState():EditAlarmState=
+        copy(clockDigitStates = clockDigitStates.toAcceptedState())
 }

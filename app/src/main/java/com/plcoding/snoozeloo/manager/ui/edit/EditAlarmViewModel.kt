@@ -26,7 +26,7 @@ class EditAlarmViewModel(
             is EditAlarmEvent.DigitEnteredFromKeyboard -> {
                 state.value = state.value.setNewDigit(event.digit)
                 if (state.value.isCompleted()) {
-                    state.value = state.value.toCorrectState().toInactiveState()
+                    state.value = state.value.toCorrectState().toAcceptedState()
                 }
             }
 
@@ -35,7 +35,9 @@ class EditAlarmViewModel(
                 state.value.startMinutesEdit()
 
             EditAlarmEvent.KeyboardIsHidden -> {
-                state.value = state.value.toCorrectState().toInactiveState()
+                if (state.value.isCompleted().not()) {
+                    state.value = state.value.toCorrectState().toAcceptedState()
+                }
             }
         }
     }

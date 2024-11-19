@@ -33,7 +33,6 @@ import androidx.core.view.WindowInsetsCompat
 import com.plcoding.snoozeloo.core.ui.text.TextH2
 
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TimeComponent(
     state: ClockDigitStates,
@@ -50,7 +49,7 @@ fun TimeComponent(
         val listener = ViewTreeObserver.OnGlobalLayoutListener {
             val isKeyboardOpen = ViewCompat.getRootWindowInsets(view)
                 ?.isVisible(WindowInsetsCompat.Type.ime()) ?: true
-            if(isKeyboardOpen.not()) onKeyboardHidden()
+            if (isKeyboardOpen.not()) onKeyboardHidden()
         }
 
         viewTreeObserver.addOnGlobalLayoutListener(listener)

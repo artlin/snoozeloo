@@ -38,6 +38,9 @@ class MainActivity : ComponentActivity() {
                 val scope = rememberCoroutineScope()
 
                 LaunchedEffect(key1 = true) {
+
+                    alarmsDao.deleteAll()
+
                     val alarmsList = listOf(
                         Alarm(
                             startTime = Instant.now().epochSecond,
@@ -75,7 +78,11 @@ class MainActivity : ComponentActivity() {
                         alarmsDao.upsert(alarm)
                     }
 
-                    println("alarms: $alarms")
+                    println("alarms przed usunięciem: $alarms")
+
+                    alarmsDao.delete(alarms.first())
+
+                    println("alarms po usunięciu: $alarms")
                 }
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->

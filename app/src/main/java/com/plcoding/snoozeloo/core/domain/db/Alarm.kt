@@ -2,7 +2,6 @@ package com.plcoding.snoozeloo.core.domain.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.Period
 
 @Entity
 data class Alarm(

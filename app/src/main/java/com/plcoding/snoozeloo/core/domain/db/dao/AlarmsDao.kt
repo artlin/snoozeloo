@@ -18,4 +18,7 @@ interface AlarmsDao {
 
     @Query("SELECT * FROM alarm")
     fun getAll(): Flow<List<Alarm>>
+
+    @Query("DELETE FROM alarm")
+    suspend fun deleteAll()
 }

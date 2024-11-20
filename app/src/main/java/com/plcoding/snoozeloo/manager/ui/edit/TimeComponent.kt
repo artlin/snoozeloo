@@ -40,7 +40,7 @@ import com.plcoding.snoozeloo.manager.domain.FocusedSelection
 fun TimeComponent(
     state: ClockDigitStates,
     onComponentClick: OnComponentClick,
-    onUserEnteredValue: OnUserEnteredValue,
+    onUserEnteredValue: OnClickWithValue,
     onKeyboardHidden: OnClick
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -133,5 +133,5 @@ fun OneDigitField(modifier: Modifier, digitData: DigitFieldData?) {
 }
 
 typealias OnComponentClick = (ComponentClickType) -> Unit
-typealias OnUserEnteredValue = (String) -> Unit
+typealias OnClickWithValue = (String) -> Unit
 typealias OnClick = () -> Unit

@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.manager.ui.edit
+package com.plcoding.snoozeloo.manager.domain
 
 data class ClockDigitStates(
     val currentSelectionState: FocusedSelection = FocusedSelection.INACTIVE,
@@ -16,13 +16,23 @@ data class ClockDigitStates(
     )
 ) {
 
+    fun getHours(): Int =
+        ((digitsHolder[FocusedSelection.HOURS_1]?.times(10)
+            ?: 0) + (digitsHolder[FocusedSelection.HOURS_2]
+            ?: 0))
+
+    fun getMinutes(): Int =
+        ((digitsHolder[FocusedSelection.MINUTES_1]?.times(10)
+            ?: 0) + (digitsHolder[FocusedSelection.MINUTES_2]
+            ?: 0))
+
     fun asNewAlarm(): ClockDigitStates = copy(
         currentSelectionState = FocusedSelection.INACTIVE,
         allStates = allStates.forAllStates { it.reset() })
 
-    fun toInactiveState(): ClockDigitStates =
-        copy(currentSelectionState = FocusedSelection.INACTIVE,
-            allStates = allStates.forAllStates { it.makeInactive() })
+    fun toAcceptedState(): ClockDigitStates =
+        copy(currentSelectionState = FocusedSelection.COMPLETED,
+            allStates = allStates.forAllStates { it.accept() })
 
     fun toCorrectedState(): ClockDigitStates {
         val fixedHours = fixHours(digitsHolder)
@@ -31,7 +41,7 @@ data class ClockDigitStates(
             val selection = entry.key
             val digit = fixedHours[entry.key] ?: 0
             val digitFieldData = finalStates[selection] ?: DigitFieldData()
-            digitFieldData.copy(value = digit.toString(),state = DigitFieldState.IS_SET)
+            digitFieldData.copy(value = digit.toString(), state = DigitFieldState.IS_SET)
         }.toMutableMap()
         return copy(allStates = finalStates)
     }
@@ -58,7 +68,8 @@ data class ClockDigitStates(
         )
     }
 
-    fun isEditModeEnabled(): Boolean = currentSelectionState != FocusedSelection.INACTIVE
+    fun isEditModeEnabled(): Boolean =
+        currentSelectionState != FocusedSelection.INACTIVE && currentSelectionState != FocusedSelection.COMPLETED
 
     fun setNewDigit(digit: String): ClockDigitStates {
         // digit int validation

@@ -11,7 +11,6 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
@@ -31,14 +30,17 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.plcoding.snoozeloo.core.ui.text.TextH2
+import com.plcoding.snoozeloo.manager.domain.ClockDigitStates
+import com.plcoding.snoozeloo.manager.domain.DigitFieldData
+import com.plcoding.snoozeloo.manager.domain.DigitFieldState
+import com.plcoding.snoozeloo.manager.domain.FocusedSelection
 
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TimeComponent(
     state: ClockDigitStates,
     onComponentClick: OnComponentClick,
-    onUserEnteredValue: OnUserEnteredValue,
+    onUserEnteredValue: OnClickWithValue,
     onKeyboardHidden: OnClick
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -50,7 +52,7 @@ fun TimeComponent(
         val listener = ViewTreeObserver.OnGlobalLayoutListener {
             val isKeyboardOpen = ViewCompat.getRootWindowInsets(view)
                 ?.isVisible(WindowInsetsCompat.Type.ime()) ?: true
-            if(isKeyboardOpen.not()) onKeyboardHidden()
+            if (isKeyboardOpen.not()) onKeyboardHidden()
         }
 
         viewTreeObserver.addOnGlobalLayoutListener(listener)
@@ -131,5 +133,5 @@ fun OneDigitField(modifier: Modifier, digitData: DigitFieldData?) {
 }
 
 typealias OnComponentClick = (ComponentClickType) -> Unit
-typealias OnUserEnteredValue = (String) -> Unit
+typealias OnClickWithValue = (String) -> Unit
 typealias OnClick = () -> Unit

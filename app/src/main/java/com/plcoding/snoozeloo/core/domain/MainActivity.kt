@@ -12,9 +12,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.plcoding.snoozeloo.core.data.mapper.DataMapper
 import com.plcoding.snoozeloo.core.domain.db.Alarm
 import com.plcoding.snoozeloo.core.domain.db.dao.AlarmsDao
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
+import com.plcoding.snoozeloo.manager.domain.AlarmEntity
 import com.plcoding.snoozeloo.navigation.NavigationController
 import com.plcoding.snoozeloo.navigation.NavigationControllerImpl
 import com.plcoding.snoozeloo.navigation.graph.RootGraph
@@ -37,8 +39,14 @@ class MainActivity : ComponentActivity() {
                 val alarms by alarmsDao.getAll().collectAsState(initial = emptyList())
                 val scope = rememberCoroutineScope()
 
-                LaunchedEffect(key1 = true) {
+                val alarmEntityMapper = koinInject<DataMapper<AlarmEntity, Alarm>>()
 
+
+                LaunchedEffect(key1 = true) {
+                    // Remove this, it's to show you how it works
+                    val listFromDBEntityToDomainEntity: List<AlarmEntity> = alarmEntityMapper.convert(alarms)
+                    // Remove this, it's to show you how it works
+                    val listFromDomainEntityToDBEntity: List<Alarm> = alarmEntityMapper.convert(listFromDBEntityToDomainEntity)
                     alarmsDao.deleteAll()
 
                     val alarmsList = listOf(

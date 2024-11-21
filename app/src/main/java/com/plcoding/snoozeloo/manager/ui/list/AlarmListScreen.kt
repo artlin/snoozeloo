@@ -25,6 +25,7 @@ import com.plcoding.snoozeloo.core.ui.text.TextBody
 import com.plcoding.snoozeloo.core.ui.text.TextH3
 import com.plcoding.snoozeloo.core.ui.text.TextTitle2Strong
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
+import com.plcoding.snoozeloo.manager.domain.AlarmEntity
 import com.plcoding.snoozeloo.manager.domain.TimeValue
 import com.plcoding.snoozeloo.manager.ui.edit.OnClick
 import com.plcoding.snoozeloo.manager.ui.edit.OnClickWithValue
@@ -150,7 +151,10 @@ fun generateAlarms(alarmNames: List<String>): List<AlarmEntity> {
                 uid = UUID.randomUUID().toString(), // Generate a random unique ID
                 alarmName = alarmNames[i], // Alarm name
                 alarmTime = TimeValue(alarmTime), // Set calculated time
-                isEnabled = (i % 2 == 0) // Enable only even-indexed alarms
+                isEnabled = (i % 2 == 0), // Enable only even-indexed alarms
+                ringtoneId = "4", // Replace with actual ringtone ID
+                isVibrateEnabled = true, // Enable vibration for all alarms
+                volume = 0.5f // Set volume to 0.5
             )
         )
     }

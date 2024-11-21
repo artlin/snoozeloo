@@ -2,6 +2,7 @@ package com.plcoding.snoozeloo.core.domain.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.concurrent.TimeUnit
 
 @Entity
 data class Alarm(
@@ -13,5 +14,5 @@ data class Alarm(
     val alarmRingtoneId: String,
     val shouldVibrate: Boolean,
     val volume: Float, // 0.0-1.0
-    val defaultRingingTime: Long = 5 * 60 * 1000L // Duration
-    )
+    val defaultRingingTime: Long = TimeUnit.MINUTES.toMillis(5)
+)

@@ -1,7 +1,7 @@
 package com.plcoding.snoozeloo.core.data.mapper
 
 
-abstract class DataMapper<TypeA, TypeB>() {
+abstract class DataMapper<TypeA, TypeB> {
 
     @JvmName("convertAtoB")
     suspend fun convert(input: TypeA): TypeB? = fromAtoB(input)

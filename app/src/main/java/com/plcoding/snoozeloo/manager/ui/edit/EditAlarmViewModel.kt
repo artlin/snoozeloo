@@ -6,29 +6,27 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.snoozeloo.core.domain.entity.AlarmMetadata
 import com.plcoding.snoozeloo.core.ui.ViewModelAccess
+import com.plcoding.snoozeloo.manager.domain.AlarmEntity
 import com.plcoding.snoozeloo.manager.domain.EditAlarmState
 import com.plcoding.snoozeloo.manager.domain.TimeValue
+import com.plcoding.snoozeloo.manager.domain.UpdateAlarmUseCase
 import com.plcoding.snoozeloo.navigation.NavigationController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.Clock
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneId
 import java.util.Calendar
 
 class EditAlarmViewModel(
-//    private val updateAlarmUseCase: UpdateAlarmUseCase,
-    private val alarmMetadata: AlarmMetadata,
-    private val navigationController: NavigationController
+    private val updateAlarmUseCase: UpdateAlarmUseCase,
+    private val navigationController: NavigationController,
+    private val alarmEntity: AlarmEntity? = null
 ) : ViewModel(),
     ViewModelAccess<EditAlarmState, EditAlarmEvent> {
 
     override var state: MutableState<EditAlarmState> = mutableStateOf(EditAlarmState())
 
+
     init {
-        alarmMetadata
+
         // decide to fill with empty alarm values or existing values
         state.value = state.value.toNewAlarm()
     }
@@ -54,17 +52,18 @@ class EditAlarmViewModel(
 
             EditAlarmEvent.CancelClicked -> navigationController.navigateBack()
             EditAlarmEvent.SaveClicked -> {
-//                saveAlarm()
+                saveAlarm()
             }
         }
         validateUi()
     }
 
-//    private fun saveAlarm() {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            updateAlarmUseCase.updateAlarm(state.value.getAlarmData())
-//        }
-//    }
+    private fun saveAlarm() {
+        viewModelScope.launch(Dispatchers.IO) {
+
+//            updateAlarmUseCase(state.value.getAlarmEntity())
+        }
+    }
 
     private fun validateUi() {
         val currentTime = System.currentTimeMillis()
@@ -73,11 +72,17 @@ class EditAlarmViewModel(
         val alarmMinute = state.value.clockDigitStates.getMinutes()
         state.value = state.value.validateButtons().validateDescription(
             currentTime = TimeValue(currentTime),
-            alarmTime = TimeValue(setTimeToSpecificHourAndMinute(currentTime,alarmHour,alarmMinute))
+            alarmTime = TimeValue(
+                setTimeToSpecificHourAndMinute(
+                    currentTime,
+                    alarmHour,
+                    alarmMinute
+                )
+            )
         )
     }
 
-    fun setTimeToSpecificHourAndMinute(
+    private fun setTimeToSpecificHourAndMinute(
         originalTimeInMillis: Long,
         targetHour: Int,
         targetMinute: Int

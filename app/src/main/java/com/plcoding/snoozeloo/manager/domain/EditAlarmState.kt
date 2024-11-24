@@ -56,6 +56,14 @@ data class EditAlarmState(
     }
 
     fun validateDescription(currentTime: TimeValue, alarmTime: TimeValue): EditAlarmState {
-        return copy(clockDescription= clockDescription.validateDescription(currentTime,alarmTime))
+        return copy(clockDescription = clockDescription.validateDescription(currentTime, alarmTime))
     }
+
+    fun getClockTime(): ClockTime {
+        return ClockTime(
+            hours = TimeValue(clockDigitStates.getHours().toLong()),
+            minutes = TimeValue(clockDigitStates.getMinutes().toLong())
+        )
+    }
+
 }

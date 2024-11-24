@@ -8,22 +8,25 @@ import com.plcoding.snoozeloo.core.domain.db.AlarmsDatabase
 import com.plcoding.snoozeloo.core.domain.db.dao.AlarmsDao
 import com.plcoding.snoozeloo.core.domain.db.getAlarmsDatabase
 import com.plcoding.snoozeloo.manager.domain.AlarmEntity
+import com.plcoding.snoozeloo.manager.domain.UpdateAlarmUseCase
 import com.plcoding.snoozeloo.manager.ui.list.AlarmListViewModel
 import com.plcoding.snoozeloo.manager.ui.edit.EditAlarmViewModel
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val coreModule = module {
     viewModelOf(::MainViewModel)
     viewModelOf(::AlarmListViewModel)
-    viewModelOf(::EditAlarmViewModel)
-
+    viewModel { params->
+        EditAlarmViewModel(get(), get(), params.getOrNull())
+    }
     single<AlarmsDatabase> { getAlarmsDatabase(androidContext()) }
-
+    single<UpdateAlarmUseCase> { UpdateAlarmUseCase(get(), get()) }
     single<AlarmsDao> { get<AlarmsDatabase>().alarmsDao() }
 
     // mappers
-    factory<DataMapper<AlarmEntity, Alarm>> { AlarmEntityMapper() }
+    factory<DataMapper<Alarm, AlarmEntity>> { AlarmEntityMapper() }
 }
 

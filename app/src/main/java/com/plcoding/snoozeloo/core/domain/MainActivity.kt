@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,63 +36,7 @@ class MainActivity : ComponentActivity() {
                 val viewModel: MainViewModel = koinViewModel()
                 val navController = koinInject<NavigationController>()
 
-                val alarmsDao = koinInject<AlarmsDao>()
-                val alarms by alarmsDao.getAll().collectAsState(initial = emptyList())
-                val scope = rememberCoroutineScope()
-
-                val alarmEntityMapper = koinInject<DataMapper<AlarmEntity, Alarm>>()
-
-
-                LaunchedEffect(key1 = true) {
-                    // Remove this, it's to show you how it works
-                    val listFromDBEntityToDomainEntity: List<AlarmEntity> = alarmEntityMapper.convert(alarms)
-                    // Remove this, it's to show you how it works
-                    val listFromDomainEntityToDBEntity: List<Alarm> = alarmEntityMapper.convert(listFromDBEntityToDomainEntity)
-                    alarmsDao.deleteAll()
-
-                    val alarmsList = listOf(
-                        Alarm(
-                            startTime = Instant.now().epochSecond,
-                            period = "THURSDAY, SATURDAY",
-                            name = "Alarm 1",
-                            isActive = true,
-                            alarmRingtoneId = "4",
-                            shouldVibrate = true,
-                            volume = 0.5f,
-                            defaultRingingTime = 5 * 60 * 1000L
-                        ),
-                        Alarm(
-                            startTime = Instant.now().epochSecond,
-                            period = "MONDAY, WEDNESDAY, FRIDAY",
-                            name = "Alarm 2",
-                            isActive = false,
-                            alarmRingtoneId = "4",
-                            shouldVibrate = true,
-                            volume = 0.5f,
-                            defaultRingingTime = 5 * 60 * 1000L
-                        ),
-                        Alarm(
-                            startTime = Instant.now().epochSecond,
-                            period = "FRIDAY, SUNDAY",
-                            name = "Alarm 3",
-                            isActive = true,
-                            alarmRingtoneId = "4",
-                            shouldVibrate = false,
-                            volume = 0.5f,
-                            defaultRingingTime = 5 * 60 * 1000L
-                        )
-                    )
-
-                    alarmsList.forEach { alarm ->
-                        alarmsDao.upsert(alarm)
-                    }
-
-                    println("alarms przed usunięciem: $alarms")
-
-                    alarmsDao.delete(alarms.first())
-
-                    println("alarms po usunięciu: $alarms")
-                }
+//                TestCase()
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     innerPadding
@@ -106,6 +51,67 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    @Composable
+    private fun TestCase(){
+        val alarmsDao = koinInject<AlarmsDao>()
+        val alarms by alarmsDao.getAll().collectAsState(initial = emptyList())
+        val scope = rememberCoroutineScope()
+
+        val alarmEntityMapper = koinInject<DataMapper<AlarmEntity, Alarm>>()
+
+        LaunchedEffect(key1 = false) {
+            // Remove this, it's to show you how it works
+            val listFromDBEntityToDomainEntity: List<AlarmEntity> = alarmEntityMapper.convert(alarms)
+            // Remove this, it's to show you how it works
+            val listFromDomainEntityToDBEntity: List<Alarm> = alarmEntityMapper.convert(listFromDBEntityToDomainEntity)
+            alarmsDao.deleteAll()
+
+            val alarmsList = listOf(
+                Alarm(
+                    startTime = Instant.now().epochSecond,
+                    period = "THURSDAY, SATURDAY",
+                    name = "Alarm 1",
+                    isActive = true,
+                    alarmRingtoneId = "4",
+                    shouldVibrate = true,
+                    volume = 0.5f,
+                    defaultRingingTime = 5 * 60 * 1000L
+                ),
+                Alarm(
+                    startTime = Instant.now().epochSecond,
+                    period = "MONDAY, WEDNESDAY, FRIDAY",
+                    name = "Alarm 2",
+                    isActive = false,
+                    alarmRingtoneId = "4",
+                    shouldVibrate = true,
+                    volume = 0.5f,
+                    defaultRingingTime = 5 * 60 * 1000L
+                ),
+                Alarm(
+                    startTime = Instant.now().epochSecond,
+                    period = "FRIDAY, SUNDAY",
+                    name = "Alarm 3",
+                    isActive = true,
+                    alarmRingtoneId = "4",
+                    shouldVibrate = false,
+                    volume = 0.5f,
+                    defaultRingingTime = 5 * 60 * 1000L
+                )
+            )
+
+            alarmsList.forEach { alarm ->
+                alarmsDao.upsert(alarm)
+            }
+
+            println("alarms przed usunięciem: $alarms")
+
+            alarmsDao.delete(alarms.first())
+
+            println("alarms po usunięciu: $alarms")
+        }
+
     }
 }
 

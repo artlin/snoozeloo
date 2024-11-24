@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.plcoding.snoozeloo.core.domain.entity.AlarmMetadata
+import com.plcoding.snoozeloo.manager.domain.AlarmEntity
 import com.plcoding.snoozeloo.manager.ui.edit.EditAlarmScreen
 import com.plcoding.snoozeloo.manager.ui.edit.EditAlarmViewModel
 import com.plcoding.snoozeloo.manager.ui.list.AlarmListScreen
@@ -34,13 +34,11 @@ fun RootGraph(
         }
         composable<NavigationRoute.EditAlarm>(
             typeMap = mapOf(
-                typeOf<AlarmMetadata>() to CustomNavType.AlarmMetadataNavType
+                typeOf<AlarmEntity?>() to CustomNavType.AlarmMetadataNavType
             )
         ) { backStackEntry ->
             val navParams = backStackEntry.toRoute<NavigationRoute.EditAlarm>()
-            val viewModel: EditAlarmViewModel = koinViewModel {
-                parametersOf(navParams.metadata)
-            }
+            val viewModel: EditAlarmViewModel = koinViewModel()
             EditAlarmScreen(viewModel.state.value, onEditAlarm = { viewModel.onEvent(it) })
         }
     }

@@ -19,4 +19,3 @@ class NavigationControllerImpl : NavigationController {
         navController?.popBackStack()
     }
 }
-

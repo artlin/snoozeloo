@@ -98,7 +98,7 @@ private fun Pair<Int, Int>.toAlarmTime(): String {
     return StringBuilder().apply {
         append("$first")
         append(":")
-        if(second<10)append("0")
+        if (second < 10 && second != 0) append("0")
         append("$second")
     }.toString()
 }
@@ -107,7 +107,7 @@ private fun Pair<Long, Long>.toAlarmInTime(): String {
     return StringBuilder().apply {
         append("Alarm in")
         if (first > 0) append(" ${first}h")
-        if(second<10)append(" 0")
+        if (second < 10) append(" 0")
         else append(" ")
         append("$second")
         append("min")
@@ -118,29 +118,27 @@ private fun Pair<Long, Long>.toAlarmInTime(): String {
 @Composable
 private fun PreviewAlarmList() {
     SnoozelooTheme {
-        val listOfAlarms = generateAlarms(
-            listOf(
-                "WORK",
-                "RUN",
-                "WALK",
-                "WAKEUP",
-                "REST",
-                "WORK",
-                "RUN",
-                "WALK",
-                "WAKEUP",
-                "REST"
-            )
-        )
         AlarmList(
             currentTime = TimeValue(System.currentTimeMillis()),
-            list = listOfAlarms,
+            list = generateAlarms(),
             onAlarmList = {}
         )
     }
 }
 
-fun generateAlarms(alarmNames: List<String>): List<AlarmEntity> {
+fun generateAlarms(): List<AlarmEntity> {
+    val alarmNames = listOf(
+        "WORK",
+        "RUN",
+        "WALK",
+        "WAKEUP",
+        "REST",
+        "WORK",
+        "RUN",
+        "WALK",
+        "WAKEUP",
+        "REST"
+    )
     val currentTime = System.currentTimeMillis() // Get the current timestamp
     val alarms = mutableListOf<AlarmEntity>()
 

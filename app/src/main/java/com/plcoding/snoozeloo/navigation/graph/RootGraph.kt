@@ -36,7 +36,6 @@ fun RootGraph(
                 typeOf<AlarmEntity?>() to CustomNavType.AlarmMetadataNavType
             )
         ) { backStackEntry ->
-            val navParams = backStackEntry.toRoute<NavigationRoute.EditAlarm>()
             val viewModel: EditAlarmViewModel = koinViewModel()
             EditAlarmScreen(viewModel.state.value, onEditAlarm = { viewModel.onEvent(it) })
         }

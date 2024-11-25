@@ -24,6 +24,25 @@ fun getAlarmInTime(currentTime: TimeValue, alarmTime: TimeValue): Pair<Long, Lon
     }
 }
 
+fun getAlarmInTime(currentTime: TimeValue, hours: Int, minutes: Int): Pair<Long, Long> {
+    val calendar = Calendar.getInstance().apply {
+        timeInMillis = currentTime.value
+    }
+    val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+    val currentMinute = calendar.get(Calendar.MINUTE)
+
+    val currentMinutes = currentHour * 60 + currentMinute
+    var targetMinutes = hours * 60 + minutes
+
+    // If target time is earlier today, add 24 hours
+    if (targetMinutes <= currentMinutes) {
+        targetMinutes += 24 * 60
+    }
+
+    val diffMinutes = targetMinutes - currentMinutes
+    return Pair((diffMinutes / 60).toLong(), (diffMinutes % 60).toLong())
+}
+
 fun getTimeDifferenceInHoursAndMinutes(timestamp1: Long, timestamp2: Long): Pair<Long, Long> {
     // Calculate the difference in milliseconds
     val differenceInMillis = abs(timestamp2 - timestamp1)
@@ -33,4 +52,14 @@ fun getTimeDifferenceInHoursAndMinutes(timestamp1: Long, timestamp2: Long): Pair
     val minutes = (differenceInMillis % (1000 * 60 * 60)) / (1000 * 60)
 
     return hours to minutes
+}
+
+fun getTimeComponents(timestamp: Long): Pair<Int, Int> {
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = timestamp
+
+    val hours = calendar.get(Calendar.HOUR_OF_DAY)
+    val minutes = calendar.get(Calendar.MINUTE)
+
+    return Pair(hours, minutes)
 }

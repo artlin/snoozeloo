@@ -7,7 +7,7 @@ import com.plcoding.snoozeloo.core.domain.value.TimeValue
 class AlarmEntityMapper : DataMapper<Alarm, AlarmEntity>() {
 
     override suspend fun fromAtoB(input: Alarm): AlarmEntity? = AlarmEntity(
-        uid = input.id.toString(),
+        uid = input.id,
         alarmName = input.name,
         isEnabled = input.isActive,
         alarmTime = TimeValue(input.startTime * 1000),
@@ -19,7 +19,7 @@ class AlarmEntityMapper : DataMapper<Alarm, AlarmEntity>() {
     )
 
     override suspend fun fromBtoA(input: AlarmEntity): Alarm = Alarm(
-        id = input.uid.toInt(),
+        id = input.uid,
         startTime = input.alarmTime.value,
         period = "Once",
         name = input.alarmName,

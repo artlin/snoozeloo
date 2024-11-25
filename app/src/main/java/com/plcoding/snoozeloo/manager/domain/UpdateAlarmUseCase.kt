@@ -7,11 +7,13 @@ import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 
 class UpdateAlarmUseCase(
     private val alarmsDao: AlarmsDao,
-    private val mapper: DataMapper<AlarmEntity, Alarm>
+    private val mapper: DataMapper<Alarm, AlarmEntity>
 ) {
     suspend operator fun invoke(alarmEntity: AlarmEntity) {
         mapper.convert(alarmEntity)?.let { alarm ->
             alarmsDao.upsert(alarm)
         }
+
+
     }
 }

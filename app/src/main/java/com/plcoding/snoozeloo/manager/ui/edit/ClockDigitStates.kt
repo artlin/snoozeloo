@@ -145,4 +145,36 @@ data class ClockDigitStates(
         currentSelection: FocusedSelection
     ): String = (digitsHolder[currentSelection] ?: 0).toString()
 
+    fun setupClock(hour: Int, minutes: Int): ClockDigitStates {
+        val hoursString = formatNumberToTwoDigits(hour).split("")
+        val minutesString = formatNumberToTwoDigits(minutes).split("")
+        var digitsHolder = digitsHolder
+        hoursString[0].toIntOrNull()?.let {
+            digitsHolder = modifyDigitsHolder(it, digitsHolder, FocusedSelection.HOURS_1)
+        }
+        hoursString[1].toIntOrNull()?.let {
+            digitsHolder = modifyDigitsHolder(it, digitsHolder, FocusedSelection.HOURS_2)
+        }
+        minutesString[0].toIntOrNull()?.let {
+            digitsHolder = modifyDigitsHolder(it, digitsHolder, FocusedSelection.MINUTES_1)
+        }
+        minutesString[1].toIntOrNull()?.let {
+            digitsHolder = modifyDigitsHolder(it, digitsHolder, FocusedSelection.MINUTES_2)
+        }
+        var finalStates = allStates
+        finalStates = finalStates.forState(currentSelectionState) {
+            val currentSelectionValue: String =
+                getNewValueForState(digitsHolder, currentSelectionState)
+            it.copy(value = currentSelectionValue, state = DigitFieldState.IS_SET)
+        }
+
+        return copy(
+            allStates = finalStates
+        )
+    }
+
+    fun formatNumberToTwoDigits(number: Int): String {
+        return number.toString().padStart(2, '0')
+    }
+
 }

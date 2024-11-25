@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.snoozeloo.core.ui.ViewModelAccess
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
+import com.plcoding.snoozeloo.core.domain.entity.newAlarmEntity
+import com.plcoding.snoozeloo.core.domain.getAlarmTime
 import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import com.plcoding.snoozeloo.manager.domain.UpdateAlarmUseCase
 import com.plcoding.snoozeloo.navigation.NavigationController
@@ -16,17 +18,22 @@ import java.util.Calendar
 class EditAlarmViewModel(
     private val updateAlarmUseCase: UpdateAlarmUseCase,
     private val navigationController: NavigationController,
-    private val alarmEntity: AlarmEntity? = null
+    private val alarmEntityArgument: AlarmEntity? = null
 ) : ViewModel(),
     ViewModelAccess<EditAlarmState, EditAlarmEvent> {
 
     override var state: MutableState<EditAlarmState> = mutableStateOf(EditAlarmState())
 
+    private var alarmEntity: AlarmEntity
 
     init {
-
-        // decide to fill with empty alarm values or existing values
-        state.value = state.value.toNewAlarm()
+        if (alarmEntityArgument == null) {
+            alarmEntity = newAlarmEntity()
+            state.value = state.value.toNewAlarm()
+        } else {
+            alarmEntity = alarmEntityArgument.copy()
+            state.value = state.value.fromEntity(alarmEntityArgument)
+        }
     }
 
     override fun onEvent(event: EditAlarmEvent) {
@@ -50,16 +57,23 @@ class EditAlarmViewModel(
 
             EditAlarmEvent.CancelClicked -> navigationController.navigateBack()
             EditAlarmEvent.SaveClicked -> {
+                updateAlarmEntity()
                 saveAlarm()
             }
         }
         validateUi()
     }
 
+    private fun updateAlarmEntity() {
+        alarmEntity = alarmEntity.copy(
+            hours = state.value.clockDigitStates.getHours(),
+            minutes = state.value.clockDigitStates.getMinutes(),
+        )
+    }
+
     private fun saveAlarm() {
         viewModelScope.launch(Dispatchers.IO) {
-
-//            updateAlarmUseCase(state.value.getAlarmEntity())
+            updateAlarmUseCase(alarmEntity)
         }
     }
 

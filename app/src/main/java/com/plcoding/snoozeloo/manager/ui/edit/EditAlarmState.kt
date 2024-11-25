@@ -1,10 +1,13 @@
 package com.plcoding.snoozeloo.manager.ui.edit
 
+import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
+import com.plcoding.snoozeloo.core.domain.getTimeComponents
 import com.plcoding.snoozeloo.core.domain.value.HeaderButtonLabel
 import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import com.plcoding.snoozeloo.core.ui.headerbuttons.ButtonsState
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
 import com.plcoding.snoozeloo.core.ui.headerbuttons.SingleButtonState
+import java.util.Calendar
 
 data class EditAlarmState(
     val clockDescription: ClockAlarmDescriptionState = ClockAlarmDescriptionState(),
@@ -60,11 +63,9 @@ data class EditAlarmState(
         return copy(clockDescription = clockDescription.validateDescription(currentTime, alarmTime))
     }
 
-    fun getClockTime(): ClockTime {
-        return ClockTime(
-            hours = TimeValue(clockDigitStates.getHours().toLong()),
-            minutes = TimeValue(clockDigitStates.getMinutes().toLong())
-        )
+    fun fromEntity(alarmEntity: AlarmEntity): EditAlarmState {
+        val (hour, minutes) = getTimeComponents(alarmEntity.alarmTime.value)
+        return copy(clockDigitStates = clockDigitStates.setupClock(hour, minutes))
     }
 
 }

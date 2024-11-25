@@ -78,11 +78,11 @@ fun AlarmItem(
                 color = MaterialTheme.colorScheme.onSurface
             )
             TextH3(
-                text = getAlarmTime(alarmEntity.alarmTime).toAlarmTime(),
+                text = Pair(alarmEntity.hours, alarmEntity.minutes).toAlarmTime(),
                 color = MaterialTheme.colorScheme.onSurface
             )
             TextBody(
-                text = getAlarmInTime(currentTime, alarmEntity.alarmTime).toAlarmInTime(),
+                text = getAlarmInTime(currentTime, alarmEntity.hours,alarmEntity.minutes).toAlarmInTime(),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -146,7 +146,7 @@ fun generateAlarms(): List<AlarmEntity> {
         val alarmTime = currentTime + (i * 30 * 60 * 1000) // Increment by 30 minutes for each alarm
         alarms.add(
             AlarmEntity(
-                uid = UUID.randomUUID().toString(), // Generate a random unique ID
+                uid = 3,
                 alarmName = alarmNames[i], // Alarm name
                 alarmTime = TimeValue(alarmTime), // Set calculated time
                 isEnabled = (i % 2 == 0), // Enable only even-indexed alarms

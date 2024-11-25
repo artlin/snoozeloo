@@ -9,10 +9,14 @@ import com.plcoding.snoozeloo.core.domain.db.dao.AlarmsDao
 import com.plcoding.snoozeloo.core.domain.db.getAlarmsDatabase
 import com.plcoding.snoozeloo.manager.domain.AlarmEntity
 import com.plcoding.snoozeloo.manager.domain.UpdateAlarmUseCase
+import com.plcoding.snoozeloo.manager.domain.AlarmScheduler
+import com.plcoding.snoozeloo.manager.domain.AlarmSchedulerImpl
 import com.plcoding.snoozeloo.manager.ui.list.AlarmListViewModel
 import com.plcoding.snoozeloo.manager.ui.edit.EditAlarmViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -28,5 +32,6 @@ val coreModule = module {
 
     // mappers
     factory<DataMapper<Alarm, AlarmEntity>> { AlarmEntityMapper() }
+    singleOf(::AlarmSchedulerImpl) { bind<AlarmScheduler>() }
 }
 

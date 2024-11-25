@@ -18,12 +18,15 @@ import com.plcoding.snoozeloo.core.domain.db.Alarm
 import com.plcoding.snoozeloo.core.domain.db.dao.AlarmsDao
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
 import com.plcoding.snoozeloo.manager.domain.AlarmEntity
+import com.plcoding.snoozeloo.manager.domain.AlarmItem
+import com.plcoding.snoozeloo.manager.domain.AlarmSchedulerImpl
 import com.plcoding.snoozeloo.navigation.NavigationController
 import com.plcoding.snoozeloo.navigation.NavigationControllerImpl
 import com.plcoding.snoozeloo.navigation.graph.RootGraph
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import java.time.Instant
+import java.time.LocalDateTime
 
 class MainActivity : ComponentActivity() {
 
@@ -61,57 +64,14 @@ class MainActivity : ComponentActivity() {
 
         val alarmEntityMapper = koinInject<DataMapper<AlarmEntity, Alarm>>()
 
-        LaunchedEffect(key1 = false) {
-            // Remove this, it's to show you how it works
-            val listFromDBEntityToDomainEntity: List<AlarmEntity> = alarmEntityMapper.convert(alarms)
-            // Remove this, it's to show you how it works
-            val listFromDomainEntityToDBEntity: List<Alarm> = alarmEntityMapper.convert(listFromDBEntityToDomainEntity)
-            alarmsDao.deleteAll()
+        val alarmSchedulerImpl = koinInject<AlarmSchedulerImpl>()
 
-            val alarmsList = listOf(
-                Alarm(
-                    startTime = Instant.now().epochSecond,
-                    period = "THURSDAY, SATURDAY",
-                    name = "Alarm 1",
-                    isActive = true,
-                    alarmRingtoneId = "4",
-                    shouldVibrate = true,
-                    volume = 0.5f,
-                    defaultRingingTime = 5 * 60 * 1000L
-                ),
-                Alarm(
-                    startTime = Instant.now().epochSecond,
-                    period = "MONDAY, WEDNESDAY, FRIDAY",
-                    name = "Alarm 2",
-                    isActive = false,
-                    alarmRingtoneId = "4",
-                    shouldVibrate = true,
-                    volume = 0.5f,
-                    defaultRingingTime = 5 * 60 * 1000L
-                ),
-                Alarm(
-                    startTime = Instant.now().epochSecond,
-                    period = "FRIDAY, SUNDAY",
-                    name = "Alarm 3",
-                    isActive = true,
-                    alarmRingtoneId = "4",
-                    shouldVibrate = false,
-                    volume = 0.5f,
-                    defaultRingingTime = 5 * 60 * 1000L
-                )
-            )
+        val alarmItem = AlarmItem(
+            time = LocalDateTime.now().plusMinutes(1),
+            message = "DESPICABLE ME 1 min have passed"
+        )
 
-            alarmsList.forEach { alarm ->
-                alarmsDao.upsert(alarm)
-            }
-
-            println("alarms przed usunięciem: $alarms")
-
-            alarmsDao.delete(alarms.first())
-
-            println("alarms po usunięciu: $alarms")
-        }
-
+        alarmSchedulerImpl.scheduleAlarm(alarmItem)
     }
 }
 

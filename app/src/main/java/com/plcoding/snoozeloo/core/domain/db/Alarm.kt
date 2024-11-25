@@ -10,6 +10,8 @@ data class Alarm(
     val startTime: Long,
     val period: String, // Period
     val name: String,
+    val minutes: Int,
+    val hours: Int,
     val isActive: Boolean,
     val alarmRingtoneId: String,
     val shouldVibrate: Boolean,

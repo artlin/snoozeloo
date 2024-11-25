@@ -10,10 +10,12 @@ class AlarmEntityMapper : DataMapper<Alarm, AlarmEntity>() {
         uid = input.id.toString(),
         alarmName = input.name,
         isEnabled = input.isActive,
-        alarmTime = TimeValue(input.startTime*1000),
+        alarmTime = TimeValue(input.startTime * 1000),
         ringtoneId = input.alarmRingtoneId,
         isVibrateEnabled = input.shouldVibrate,
-        volume = input.volume
+        volume = input.volume,
+        minutes = input.minutes,
+        hours = input.hours
     )
 
     override suspend fun fromBtoA(input: AlarmEntity): Alarm = Alarm(
@@ -24,6 +26,8 @@ class AlarmEntityMapper : DataMapper<Alarm, AlarmEntity>() {
         isActive = input.isEnabled,
         alarmRingtoneId = input.ringtoneId,
         shouldVibrate = input.isVibrateEnabled,
-        volume = input.volume
+        volume = input.volume,
+        minutes = input.minutes,
+        hours = input.hours
     )
 }

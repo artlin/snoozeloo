@@ -152,7 +152,9 @@ fun generateAlarms(): List<AlarmEntity> {
                 isEnabled = (i % 2 == 0), // Enable only even-indexed alarms
                 ringtoneId = "4", // Replace with actual ringtone ID
                 isVibrateEnabled = true, // Enable vibration for all alarms
-                volume = 0.5f // Set volume to 0.5
+                volume = 0.5f, // Set volume to 0.5
+                minutes = 30,
+                hours = 1
             )
         )
     }

@@ -6,6 +6,8 @@ import kotlinx.serialization.Serializable
 data class AlarmEntity(
     val uid: String,
     val alarmTime: TimeValue,
+    val minutes: Int,
+    val hours: Int,
     val alarmName: String,
     val isEnabled: Boolean,
     val ringtoneId: String,

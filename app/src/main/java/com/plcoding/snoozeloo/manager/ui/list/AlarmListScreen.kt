@@ -25,8 +25,8 @@ import com.plcoding.snoozeloo.core.ui.text.TextBody
 import com.plcoding.snoozeloo.core.ui.text.TextH3
 import com.plcoding.snoozeloo.core.ui.text.TextTitle2Strong
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
-import com.plcoding.snoozeloo.manager.domain.AlarmEntity
-import com.plcoding.snoozeloo.manager.domain.TimeValue
+import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
+import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import com.plcoding.snoozeloo.manager.ui.edit.OnClick
 import com.plcoding.snoozeloo.manager.ui.edit.OnClickWithValue
 import java.util.UUID

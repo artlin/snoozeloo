@@ -1,8 +1,8 @@
 package com.plcoding.snoozeloo.core.data.mapper
 
 import com.plcoding.snoozeloo.core.domain.db.Alarm
-import com.plcoding.snoozeloo.manager.domain.AlarmEntity
-import com.plcoding.snoozeloo.manager.domain.TimeValue
+import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
+import com.plcoding.snoozeloo.core.domain.value.TimeValue
 
 class AlarmEntityMapper : DataMapper<Alarm, AlarmEntity>() {
 

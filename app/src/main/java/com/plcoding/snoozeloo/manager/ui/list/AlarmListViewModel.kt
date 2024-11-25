@@ -8,10 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.plcoding.snoozeloo.core.data.mapper.DataMapper
 import com.plcoding.snoozeloo.core.domain.db.Alarm
 import com.plcoding.snoozeloo.core.domain.db.dao.AlarmsDao
-import com.plcoding.snoozeloo.core.domain.entity.AlarmMetadata
 import com.plcoding.snoozeloo.core.ui.ViewModelAccess
-import com.plcoding.snoozeloo.manager.domain.AlarmEntity
-import com.plcoding.snoozeloo.manager.domain.TimeValue
+import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
+import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import com.plcoding.snoozeloo.navigation.NavigationController
 import com.plcoding.snoozeloo.navigation.route.NavigationRoute
 import kotlinx.coroutines.flow.collectLatest

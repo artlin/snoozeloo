@@ -1,6 +1,6 @@
 package com.plcoding.snoozeloo.core.domain
 
-import com.plcoding.snoozeloo.manager.domain.TimeValue
+import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs

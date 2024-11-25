@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.manager.domain
+package com.plcoding.snoozeloo.scheduler
 
 import android.app.AlarmManager
 import android.app.PendingIntent

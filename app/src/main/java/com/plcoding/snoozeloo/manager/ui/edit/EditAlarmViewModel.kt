@@ -4,11 +4,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.plcoding.snoozeloo.core.domain.entity.AlarmMetadata
 import com.plcoding.snoozeloo.core.ui.ViewModelAccess
-import com.plcoding.snoozeloo.manager.domain.AlarmEntity
-import com.plcoding.snoozeloo.manager.domain.EditAlarmState
-import com.plcoding.snoozeloo.manager.domain.TimeValue
+import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
+import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import com.plcoding.snoozeloo.manager.domain.UpdateAlarmUseCase
 import com.plcoding.snoozeloo.navigation.NavigationController
 import kotlinx.coroutines.Dispatchers

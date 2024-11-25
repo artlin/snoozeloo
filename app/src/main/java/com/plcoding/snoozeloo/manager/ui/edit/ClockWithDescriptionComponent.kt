@@ -15,8 +15,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.plcoding.snoozeloo.core.ui.text.TextBody
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
-import com.plcoding.snoozeloo.manager.domain.ClockAlarmDescriptionState
-import com.plcoding.snoozeloo.manager.domain.ClockDigitStates
 
 @Composable
 fun ClockWithDescriptionComponent(

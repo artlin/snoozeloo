@@ -1,7 +1,6 @@
 package com.plcoding.snoozeloo.navigation.route
 
-import com.plcoding.snoozeloo.core.domain.entity.AlarmMetadata
-import com.plcoding.snoozeloo.manager.domain.AlarmEntity
+import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import kotlinx.serialization.Serializable
 
 @Serializable

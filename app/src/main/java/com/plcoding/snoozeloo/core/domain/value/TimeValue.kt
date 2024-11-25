@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.manager.domain
+package com.plcoding.snoozeloo.core.domain.value
 
 import kotlinx.serialization.Serializable
 

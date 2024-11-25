@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.manager.domain
+package com.plcoding.snoozeloo.manager.ui.edit
 
 data class DigitFieldData(
     val value: String = "",

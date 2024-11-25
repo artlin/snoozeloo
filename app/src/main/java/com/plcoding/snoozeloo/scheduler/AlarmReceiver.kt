@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.manager.domain
+package com.plcoding.snoozeloo.scheduler
 
 import android.content.BroadcastReceiver
 import android.content.Context

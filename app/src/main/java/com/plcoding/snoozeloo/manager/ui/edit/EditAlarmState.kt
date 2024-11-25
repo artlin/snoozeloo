@@ -1,6 +1,7 @@
-package com.plcoding.snoozeloo.manager.domain
+package com.plcoding.snoozeloo.manager.ui.edit
 
 import com.plcoding.snoozeloo.core.domain.value.HeaderButtonLabel
+import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import com.plcoding.snoozeloo.core.ui.headerbuttons.ButtonsState
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
 import com.plcoding.snoozeloo.core.ui.headerbuttons.SingleButtonState

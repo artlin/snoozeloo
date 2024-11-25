@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.manager.domain
+package com.plcoding.snoozeloo.manager.ui.edit
 
 enum class FocusedSelection {
     INACTIVE, HOURS_1, HOURS_2, MINUTES_1, MINUTES_2, COMPLETED

@@ -30,10 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.plcoding.snoozeloo.core.ui.text.TextH2
-import com.plcoding.snoozeloo.manager.domain.ClockDigitStates
-import com.plcoding.snoozeloo.manager.domain.DigitFieldData
-import com.plcoding.snoozeloo.manager.domain.DigitFieldState
-import com.plcoding.snoozeloo.manager.domain.FocusedSelection
 
 
 @Composable

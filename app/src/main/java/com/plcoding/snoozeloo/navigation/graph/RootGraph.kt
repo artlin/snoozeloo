@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.plcoding.snoozeloo.manager.domain.AlarmEntity
+import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.manager.ui.edit.EditAlarmScreen
 import com.plcoding.snoozeloo.manager.ui.edit.EditAlarmViewModel
 import com.plcoding.snoozeloo.manager.ui.list.AlarmListScreen
@@ -16,7 +16,6 @@ import com.plcoding.snoozeloo.manager.ui.list.AlarmListViewModel
 import com.plcoding.snoozeloo.navigation.custom.CustomNavType
 import com.plcoding.snoozeloo.navigation.route.NavigationRoute
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 import kotlin.reflect.typeOf
 
 @Composable

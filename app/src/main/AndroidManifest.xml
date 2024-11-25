@@ -33,7 +33,7 @@
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
 
-        <receiver android:name=".manager.domain.AlarmReceiver" />
+        <receiver android:name=".scheduler.AlarmReceiver" />
 
     </application>
 

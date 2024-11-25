@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtons
-import com.plcoding.snoozeloo.manager.domain.EditAlarmState
 
 @Composable
 fun EditAlarmScreen(state: EditAlarmState, onEditAlarm: OnEditAlarm) {

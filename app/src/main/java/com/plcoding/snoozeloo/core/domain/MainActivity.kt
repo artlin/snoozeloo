@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -17,15 +16,14 @@ import com.plcoding.snoozeloo.core.data.mapper.DataMapper
 import com.plcoding.snoozeloo.core.domain.db.Alarm
 import com.plcoding.snoozeloo.core.domain.db.dao.AlarmsDao
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
-import com.plcoding.snoozeloo.manager.domain.AlarmEntity
-import com.plcoding.snoozeloo.manager.domain.AlarmItem
-import com.plcoding.snoozeloo.manager.domain.AlarmSchedulerImpl
+import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
+import com.plcoding.snoozeloo.scheduler.AlarmItem
+import com.plcoding.snoozeloo.scheduler.AlarmSchedulerImpl
 import com.plcoding.snoozeloo.navigation.NavigationController
 import com.plcoding.snoozeloo.navigation.NavigationControllerImpl
 import com.plcoding.snoozeloo.navigation.graph.RootGraph
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import java.time.Instant
 import java.time.LocalDateTime
 
 class MainActivity : ComponentActivity() {

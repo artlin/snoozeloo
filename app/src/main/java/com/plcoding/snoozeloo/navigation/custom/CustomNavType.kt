@@ -3,7 +3,7 @@ package com.plcoding.snoozeloo.navigation.custom
 import android.net.Uri
 import android.os.Bundle
 import androidx.navigation.NavType
-import com.plcoding.snoozeloo.manager.domain.AlarmEntity
+import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

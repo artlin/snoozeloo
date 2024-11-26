@@ -58,6 +58,7 @@ class EditAlarmViewModel(
             EditAlarmEvent.SaveClicked -> {
                 updateAlarmEntity()
                 saveAlarm()
+                navigationController.navigateBack()
             }
         }
         validateUi()

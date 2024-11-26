@@ -1,6 +1,9 @@
 package com.plcoding.snoozeloo.core.domain
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import com.plcoding.snoozeloo.di.alarmManagerModule
 import com.plcoding.snoozeloo.di.coreModule
 import com.plcoding.snoozeloo.di.navigationModule
@@ -29,5 +32,15 @@ class SnoozelooApplication : Application() {
                 )
             )
         }
+
+        val channel = NotificationChannel(
+            "ALARM_SERVICE_CHANNEL_ID",
+            "Alarm Notifications",
+            NotificationManager.IMPORTANCE_HIGH
+        )
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+
     }
 }

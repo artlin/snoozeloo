@@ -1,5 +1,8 @@
 package com.plcoding.snoozeloo.core.domain
 
+import android.Manifest
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -11,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.rememberNavController
 import com.plcoding.snoozeloo.core.data.mapper.DataMapper
 import com.plcoding.snoozeloo.core.domain.db.Alarm
@@ -22,6 +26,7 @@ import com.plcoding.snoozeloo.scheduler.AlarmSchedulerImpl
 import com.plcoding.snoozeloo.navigation.NavigationController
 import com.plcoding.snoozeloo.navigation.NavigationControllerImpl
 import com.plcoding.snoozeloo.navigation.graph.RootGraph
+import com.plcoding.snoozeloo.service.AlarmService
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import java.time.LocalDateTime
@@ -32,12 +37,31 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         Log.w("TAG", "MainActivity onCreate")
 
+        val permissions = mutableListOf<String>()
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                permissions.add(Manifest.permission.POST_NOTIFICATIONS)
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                permissions.add(Manifest.permission.SCHEDULE_EXACT_ALARM)
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.P -> {
+                permissions.add(Manifest.permission.FOREGROUND_SERVICE)
+            }
+        }
+
+        ActivityCompat.requestPermissions(
+            this,
+            permissions.toTypedArray(),
+            0
+        )
+
         setContent {
             SnoozelooTheme {
                 val viewModel: MainViewModel = koinViewModel()
                 val navController = koinInject<NavigationController>()
 
-//                TestCase()
+                TestCase()
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     innerPadding
@@ -70,6 +94,11 @@ class MainActivity : ComponentActivity() {
         )
 
         alarmSchedulerImpl.scheduleAlarm(alarmItem)
+
+        Intent(applicationContext, AlarmService::class.java).also {
+            it.action = AlarmService.Actions.START_FOREGROUND_SERVICE.toString()
+            startService(it)
+        }
     }
 }
 

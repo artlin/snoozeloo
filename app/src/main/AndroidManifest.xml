@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="FOREGROUND_SERVICE_SYSTEM_EXEMPTED" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
     <application
         android:name=".core.domain.SnoozelooApplication"
@@ -34,6 +38,11 @@
             tools:node="remove" />
 
         <receiver android:name=".scheduler.AlarmReceiver" />
+
+        <service
+            android:name=".service.AlarmService"
+            android:foregroundServiceType="shortService">
+        </service>
 
     </application>
 

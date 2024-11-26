@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit
 @Entity
 data class Alarm(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val startTime: Long,
     val period: String, // Period
     val name: String,
     val minutes: Int,

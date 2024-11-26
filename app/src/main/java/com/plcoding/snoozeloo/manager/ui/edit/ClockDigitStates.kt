@@ -1,5 +1,7 @@
 package com.plcoding.snoozeloo.manager.ui.edit
 
+import com.plcoding.snoozeloo.core.domain.formatNumberToTwoDigits
+
 data class ClockDigitStates(
     val currentSelectionState: FocusedSelection = FocusedSelection.INACTIVE,
     val allStates: MutableMap<FocusedSelection, DigitFieldData> = mutableMapOf(
@@ -146,35 +148,28 @@ data class ClockDigitStates(
     ): String = (digitsHolder[currentSelection] ?: 0).toString()
 
     fun setupClock(hour: Int, minutes: Int): ClockDigitStates {
-        val hoursString = formatNumberToTwoDigits(hour).split("")
-        val minutesString = formatNumberToTwoDigits(minutes).split("")
+        val hoursString = formatNumberToTwoDigits(hour).map { it.toString() }
+        val minutesString = formatNumberToTwoDigits(minutes).map { it.toString() }
         var digitsHolder = digitsHolder
+        val newStates = allStates.toMutableMap()
         hoursString[0].toIntOrNull()?.let {
             digitsHolder = modifyDigitsHolder(it, digitsHolder, FocusedSelection.HOURS_1)
+            newStates[FocusedSelection.HOURS_1] = DigitFieldData.setValueOrEmpty(it)
         }
         hoursString[1].toIntOrNull()?.let {
             digitsHolder = modifyDigitsHolder(it, digitsHolder, FocusedSelection.HOURS_2)
+            newStates[FocusedSelection.HOURS_2] = DigitFieldData.setValueOrEmpty(it)
         }
         minutesString[0].toIntOrNull()?.let {
             digitsHolder = modifyDigitsHolder(it, digitsHolder, FocusedSelection.MINUTES_1)
+            newStates[FocusedSelection.MINUTES_1] = DigitFieldData.setValueOrEmpty(it)
         }
         minutesString[1].toIntOrNull()?.let {
             digitsHolder = modifyDigitsHolder(it, digitsHolder, FocusedSelection.MINUTES_2)
+            newStates[FocusedSelection.MINUTES_2] = DigitFieldData.setValueOrEmpty(it)
         }
-        var finalStates = allStates
-        finalStates = finalStates.forState(currentSelectionState) {
-            val currentSelectionValue: String =
-                getNewValueForState(digitsHolder, currentSelectionState)
-            it.copy(value = currentSelectionValue, state = DigitFieldState.IS_SET)
-        }
-
         return copy(
-            allStates = finalStates
+            allStates = newStates
         )
     }
-
-    fun formatNumberToTwoDigits(number: Int): String {
-        return number.toString().padStart(2, '0')
-    }
-
 }

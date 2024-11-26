@@ -36,7 +36,7 @@ import com.plcoding.snoozeloo.core.ui.text.TextH2
 fun TimeComponent(
     state: ClockDigitStates,
     onComponentClick: OnComponentClick,
-    onUserEnteredValue: OnClickWithValue,
+    onUserEnteredValue: OnClickWithStringValue,
     onKeyboardHidden: OnClick
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -129,5 +129,6 @@ fun OneDigitField(modifier: Modifier, digitData: DigitFieldData?) {
 }
 
 typealias OnComponentClick = (ComponentClickType) -> Unit
-typealias OnClickWithValue = (String) -> Unit
+typealias OnClickWithIntValue = (Int) -> Unit
+typealias OnClickWithStringValue = (String) -> Unit
 typealias OnClick = () -> Unit

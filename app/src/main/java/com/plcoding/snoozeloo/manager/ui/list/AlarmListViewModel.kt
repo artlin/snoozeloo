@@ -8,9 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.plcoding.snoozeloo.core.data.mapper.DataMapper
 import com.plcoding.snoozeloo.core.domain.db.Alarm
 import com.plcoding.snoozeloo.core.domain.db.dao.AlarmsDao
-import com.plcoding.snoozeloo.core.ui.ViewModelAccess
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.value.TimeValue
+import com.plcoding.snoozeloo.core.ui.ViewModelAccess
 import com.plcoding.snoozeloo.navigation.NavigationController
 import com.plcoding.snoozeloo.navigation.route.NavigationRoute
 import kotlinx.coroutines.flow.collectLatest
@@ -32,7 +32,7 @@ class AlarmListViewModel(
 
     init {
         viewModelScope.launch {
-            alarmsDao.getAll().collectLatest {alarmDtos->
+            alarmsDao.getAll().collectLatest { alarmDtos ->
                 val alarms = entityConverter.convert(alarmDtos)
                 state.value = state.value.copy(
                     list = alarms,
@@ -44,8 +44,12 @@ class AlarmListViewModel(
 
     override fun onEvent(event: AlarmListEvent) {
         when (event) {
-            AlarmListEvent.AddAlarmClicked -> {
+            is AlarmListEvent.AddAlarmClicked -> {
                 navigationController.navigateTo(NavigationRoute.EditAlarm(alarmEntity = null))
+            }
+
+            is AlarmListEvent.AlarmCardClicked -> {
+                navigationController.navigateTo(NavigationRoute.EditAlarm(alarmEntity = event.alarmEntity))
             }
         }
     }

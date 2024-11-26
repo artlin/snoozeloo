@@ -63,3 +63,7 @@ fun getTimeComponents(timestamp: Long): Pair<Int, Int> {
 
     return Pair(hours, minutes)
 }
+
+fun formatNumberToTwoDigits(number: Int): String {
+    return number.toString().padStart(2, '0')
+}

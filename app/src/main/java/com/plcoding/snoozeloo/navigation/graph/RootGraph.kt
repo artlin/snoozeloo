@@ -16,6 +16,7 @@ import com.plcoding.snoozeloo.manager.ui.list.AlarmListViewModel
 import com.plcoding.snoozeloo.navigation.custom.CustomNavType
 import com.plcoding.snoozeloo.navigation.route.NavigationRoute
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import kotlin.reflect.typeOf
 
 @Composable
@@ -36,7 +37,10 @@ fun RootGraph(
                 typeOf<AlarmEntity?>() to CustomNavType.AlarmMetadataNavType
             )
         ) { backStackEntry ->
-            val viewModel: EditAlarmViewModel = koinViewModel()
+            val navParams = backStackEntry.toRoute<NavigationRoute.EditAlarm>()
+            val viewModel: EditAlarmViewModel = koinViewModel {
+                parametersOf(navParams.alarmEntity)
+            }
             EditAlarmScreen(viewModel.state.value, onEditAlarm = { viewModel.onEvent(it) })
         }
     }

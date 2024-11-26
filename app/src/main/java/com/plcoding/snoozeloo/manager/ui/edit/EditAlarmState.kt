@@ -64,7 +64,7 @@ data class EditAlarmState(
     }
 
     fun fromEntity(alarmEntity: AlarmEntity): EditAlarmState {
-        val (hour, minutes) = getTimeComponents(alarmEntity.alarmTime.value)
+        val (hour, minutes) = alarmEntity.clockTime
         return copy(clockDigitStates = clockDigitStates.setupClock(hour, minutes))
     }
 

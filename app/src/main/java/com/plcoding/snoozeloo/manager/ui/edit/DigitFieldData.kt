@@ -14,4 +14,8 @@ data class DigitFieldData(
 
     fun isEditing(): Boolean = state == DigitFieldState.IS_WAITING_FOR_INPUT
 
+  companion object{
+      fun setValueOrEmpty(value: Int): DigitFieldData =
+          DigitFieldData(value.toString(), DigitFieldState.IS_SET)
+  }
 }

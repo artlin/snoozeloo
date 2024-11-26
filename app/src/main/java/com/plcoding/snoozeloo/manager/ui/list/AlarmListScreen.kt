@@ -1,6 +1,7 @@
 package com.plcoding.snoozeloo.manager.ui.list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.Absolute.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,17 +20,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
+import com.plcoding.snoozeloo.core.domain.entity.ClockTime
 import com.plcoding.snoozeloo.core.domain.getAlarmInTime
-import com.plcoding.snoozeloo.core.domain.getAlarmTime
+import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import com.plcoding.snoozeloo.core.ui.text.TextBody
 import com.plcoding.snoozeloo.core.ui.text.TextH3
 import com.plcoding.snoozeloo.core.ui.text.TextTitle2Strong
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
-import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
-import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import com.plcoding.snoozeloo.manager.ui.edit.OnClick
-import com.plcoding.snoozeloo.manager.ui.edit.OnClickWithValue
-import java.util.UUID
+import com.plcoding.snoozeloo.manager.ui.edit.OnClickWithIntValue
 
 @Composable
 fun AlarmListScreen(state: AlarmListState, onAlarmList: OnAlarmList) {
@@ -49,7 +49,7 @@ fun AlarmList(currentTime: TimeValue, list: List<AlarmEntity>, onAlarmList: OnAl
             AlarmItem(alarmEntity = item,
                 currentTime = currentTime,
                 onToggleClick = { onAlarmList(AlarmListEvent.ToggleAlarmClicked(item.uid)) },
-                onCardClick = { onAlarmList(AlarmListEvent.AlarmCardClicked(item.uid)) })
+                onCardClick = { onAlarmList(AlarmListEvent.AlarmCardClicked(item)) })
         }
     }
 }
@@ -60,7 +60,7 @@ fun AlarmItem(
     alarmEntity: AlarmEntity,
     currentTime: TimeValue,
     onToggleClick: OnClick,
-    onCardClick: OnClickWithValue
+    onCardClick: OnClickWithIntValue
 ) {
     Box(
         modifier = Modifier
@@ -70,7 +70,10 @@ fun AlarmItem(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(10.dp)
             )
-            .padding(16.dp), contentAlignment = Alignment.TopEnd
+            .padding(16.dp)
+            .clickable {
+                onCardClick(alarmEntity.uid)
+            }, contentAlignment = Alignment.TopEnd
     ) {
         Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = spacedBy(10.dp)) {
             TextTitle2Strong(
@@ -82,7 +85,11 @@ fun AlarmItem(
                 color = MaterialTheme.colorScheme.onSurface
             )
             TextBody(
-                text = getAlarmInTime(currentTime, alarmEntity.hours,alarmEntity.minutes).toAlarmInTime(),
+                text = getAlarmInTime(
+                    currentTime,
+                    alarmEntity.hours,
+                    alarmEntity.minutes
+                ).toAlarmInTime(),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -148,13 +155,11 @@ fun generateAlarms(): List<AlarmEntity> {
             AlarmEntity(
                 uid = 3,
                 alarmName = alarmNames[i], // Alarm name
-                alarmTime = TimeValue(alarmTime), // Set calculated time
                 isEnabled = (i % 2 == 0), // Enable only even-indexed alarms
                 ringtoneId = "4", // Replace with actual ringtone ID
                 isVibrateEnabled = true, // Enable vibration for all alarms
                 volume = 0.5f, // Set volume to 0.5
-                minutes = 30,
-                hours = 1
+                clockTime = ClockTime(30,1),
             )
         )
     }

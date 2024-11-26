@@ -12,7 +12,7 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
-fun FocusableHiddenField(focusRequester: FocusRequester, onUserEnteredValue: OnClickWithValue) {
+fun FocusableHiddenField(focusRequester: FocusRequester, onUserEnteredValue: OnClickWithStringValue) {
     TextField(
         value = "",
         singleLine = true,

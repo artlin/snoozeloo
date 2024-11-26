@@ -13,6 +13,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class AlarmService: Service() {
 
@@ -29,7 +30,7 @@ class AlarmService: Service() {
         }
 
         serviceScope.launch {
-            delay(60 * 1000L)
+            delay(TimeUnit.MINUTES.toMillis(1))
             stopSelf()
         }
 
@@ -45,7 +46,7 @@ class AlarmService: Service() {
             .build()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE)
+            startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED)
         } else {
             startForeground(1, notification)
         }

@@ -1,5 +1,6 @@
 package com.plcoding.snoozeloo.manager.ui.edit
 
+import android.net.Uri
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -64,7 +65,15 @@ class EditAlarmViewModel(
             }
 
             EditAlarmEvent.SelectRingtoneClicked -> {
-                navigationController.navigateTo(NavigationRoute.SelectRingtone(RingtoneId(0)))
+                navigationController.navigateTo(
+                    NavigationRoute.SelectRingtone(
+                        RingtoneId(
+                            Uri.parse(
+                                ""
+                            )
+                        )
+                    )
+                )
             }
         }
         validateUi()

@@ -12,26 +12,29 @@ object CustomNavType {
 
     val RingtoneIdNavType = object : NavType<RingtoneId>(isNullableAllowed = false) {
         override fun get(bundle: Bundle, key: String): RingtoneId {
-            return RingtoneId(bundle.getInt(key))
+            return RingtoneId(Uri.parse(bundle.getString(key)))
         }
 
-        // this one is important as it is extracting proper value for nav pathŌ
         override fun serializeAsValue(value: RingtoneId): String {
             return value.value.toString()
         }
 
         override fun parseValue(value: String): RingtoneId {
-            return RingtoneId(value.toInt())
+            return RingtoneId(Uri.parse(value))
         }
 
         override fun put(bundle: Bundle, key: String, value: RingtoneId) {
-            bundle.putInt(key, value.value)
+            bundle.putString(key, value.value.toString())
         }
     }
 
-    val AlarmMetadataNavType = object : NavType<AlarmEntity?>(isNullableAllowed = true) { // Changed to non-nullable AlarmEntity type
+
+    val AlarmMetadataNavType = object :
+        NavType<AlarmEntity?>(isNullableAllowed = true) { // Changed to non-nullable AlarmEntity type
         override fun get(bundle: Bundle, key: String): AlarmEntity? {
-            return Json.decodeFromString(bundle.getString(key) ?: throw IllegalArgumentException("Null not allowed"))
+            return Json.decodeFromString(
+                bundle.getString(key) ?: throw IllegalArgumentException("Null not allowed")
+            )
         }
 
         override fun parseValue(value: String): AlarmEntity? {

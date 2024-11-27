@@ -3,13 +3,17 @@ package com.plcoding.snoozeloo.manager.ui.edit
 import android.net.Uri
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.plcoding.snoozeloo.core.ui.ViewModelAccess
+import com.plcoding.snoozeloo.alarm_selection.domain.GetSystemRingtonesUseCase
+import com.plcoding.snoozeloo.alarm_selection.ui.SELECTED_RINGTONE_KEY
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity.Companion.newAlarmEntity
+import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
 import com.plcoding.snoozeloo.core.domain.value.RingtoneId
 import com.plcoding.snoozeloo.core.domain.value.TimeValue
+import com.plcoding.snoozeloo.core.ui.ViewModelAccess
 import com.plcoding.snoozeloo.manager.domain.UpdateAlarmUseCase
 import com.plcoding.snoozeloo.navigation.NavigationController
 import com.plcoding.snoozeloo.navigation.route.NavigationRoute
@@ -18,13 +22,19 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class EditAlarmViewModel(
+    private val ringtonesUseCase: GetSystemRingtonesUseCase,
     private val updateAlarmUseCase: UpdateAlarmUseCase,
     private val navigationController: NavigationController,
-    private val alarmEntityArgument: AlarmEntity? = null
+    private val savedStateHandle: SavedStateHandle,
+    alarmEntityArgument: AlarmEntity? = null
 ) : ViewModel(),
     ViewModelAccess<EditAlarmState, EditAlarmEvent> {
 
-    override var state: MutableState<EditAlarmState> = mutableStateOf(EditAlarmState())
+    override var state: MutableState<EditAlarmState> = mutableStateOf(
+        EditAlarmState(
+            ringtoneEntity = RingtoneEntity.asDefault()
+        )
+    )
 
     private var alarmEntity: AlarmEntity
 
@@ -35,6 +45,22 @@ class EditAlarmViewModel(
         } else {
             alarmEntity = alarmEntityArgument.copy()
             state.value = state.value.fromEntity(alarmEntityArgument)
+        }
+        viewModelScope.launch {
+            savedStateHandle.getStateFlow<String?>(SELECTED_RINGTONE_KEY, null)
+                .collect { ringtoneString ->
+                    println("Debug: Collecting ringtone string: $ringtoneString")
+                    ringtoneString?.let { uriPath ->
+                        // Update your state
+                        val selectedRingtone = ringtonesUseCase().firstOrNull { it.uri.toString() == uriPath }
+                            ?: RingtoneEntity.asDefault()
+                        state.value = state.value.copy(
+                            ringtoneEntity = selectedRingtone
+                        )
+                        // Clear the value
+                        savedStateHandle[SELECTED_RINGTONE_KEY] = null
+                    }
+                }
         }
     }
 

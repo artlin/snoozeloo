@@ -1,6 +1,7 @@
 package com.plcoding.snoozeloo.manager.ui.edit
 
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
+import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
 import com.plcoding.snoozeloo.core.domain.getTimeComponents
 import com.plcoding.snoozeloo.core.domain.value.HeaderButtonLabel
 import com.plcoding.snoozeloo.core.domain.value.TimeValue
@@ -10,6 +11,7 @@ import com.plcoding.snoozeloo.core.ui.headerbuttons.SingleButtonState
 import java.util.Calendar
 
 data class EditAlarmState(
+    val ringtoneEntity: RingtoneEntity,
     val clockDescription: ClockAlarmDescriptionState = ClockAlarmDescriptionState(),
     val headerButtonStates: ButtonsState = ButtonsState(
         leftButton = SingleButtonState(

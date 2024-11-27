@@ -1,8 +1,8 @@
 package com.plcoding.snoozeloo.alarm_selection.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
+import com.plcoding.snoozeloo.core.domain.value.RingtoneId
 import com.plcoding.snoozeloo.core.ui.headerbuttons.ButtonsState
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtons
@@ -21,7 +22,7 @@ import com.plcoding.snoozeloo.core.ui.headerbuttons.SingleButtonState
 import com.plcoding.snoozeloo.core.ui.text.TextBodyStrong
 
 @Composable
-fun RingtoneListScreen(ringtones: List<RingtoneEntity>) {
+fun RingtoneListScreen(ringtones: List<RingtoneEntity>, onRingtoneEvent: OnRingtoneEvent) {
     HeaderButtons(
         ButtonsState(
             leftButton = SingleButtonState(buttonType = HeaderButtonType.BACK_ARROW),
@@ -33,13 +34,15 @@ fun RingtoneListScreen(ringtones: List<RingtoneEntity>) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         items(ringtones.size, key = ({ index -> ringtones[index].uri })) { index ->
             val ringtone = ringtones[index]
-            RingtoneItemComponent(ringtone)
+            RingtoneItemComponent(ringtone, onUriClick = {
+                onRingtoneEvent(RingtoneEvent.RingtoneSelected(RingtoneId(it)))
+            })
         }
     }
 }
 
 @Composable
-fun RingtoneItemComponent(ringtoneEntity: RingtoneEntity) {
+fun RingtoneItemComponent(ringtoneEntity: RingtoneEntity, onUriClick: OnUriClick) {
     Row(
         Modifier
             .background(
@@ -47,7 +50,8 @@ fun RingtoneItemComponent(ringtoneEntity: RingtoneEntity) {
                 shape = RoundedCornerShape(10.dp)
             )
             .fillMaxWidth()
-            .padding(vertical = 10.dp, horizontal = 16.dp),
+            .padding(vertical = 10.dp, horizontal = 16.dp)
+            .clickable { onUriClick(ringtoneEntity.uri) },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {

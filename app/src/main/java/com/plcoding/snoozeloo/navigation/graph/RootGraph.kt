@@ -42,7 +42,7 @@ fun RootGraph(
         ) { backStackEntry ->
             val navParams = backStackEntry.toRoute<NavigationRoute.EditAlarm>()
             val viewModel: EditAlarmViewModel = koinViewModel {
-                parametersOf(navParams.alarmEntity)
+                parametersOf(navParams.alarmEntity, backStackEntry.savedStateHandle)
             }
             EditAlarmScreen(viewModel.state.value, onEditAlarm = { viewModel.onEvent(it) })
         }
@@ -55,7 +55,7 @@ fun RootGraph(
             val viewModel: RingtoneViewModel = koinViewModel {
                 parametersOf(navParams.currentRingtone)
             }
-            RingtoneListScreen(ringtones = viewModel.state.value.ringtones)
+            RingtoneListScreen(ringtones = viewModel.state.value.ringtones, onRingtoneEvent = {viewModel.onEvent(it)})
         }
     }
 }

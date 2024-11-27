@@ -4,7 +4,7 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import com.plcoding.snoozeloo.di.alarmListModule
+import com.plcoding.snoozeloo.di.ringtoneListModule
 import com.plcoding.snoozeloo.di.alarmManagerModule
 import com.plcoding.snoozeloo.di.coreModule
 import com.plcoding.snoozeloo.di.navigationModule
@@ -30,7 +30,7 @@ class SnoozelooApplication : Application() {
                     alarmManagerModule,
                     repositoryModule,
                     schedulerModule,
-                    alarmListModule
+                    ringtoneListModule
                 )
             )
         }

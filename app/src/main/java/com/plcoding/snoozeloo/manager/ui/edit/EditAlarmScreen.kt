@@ -27,7 +27,7 @@ fun EditAlarmScreen(state: EditAlarmState, onEditAlarm: OnEditAlarm) {
         ClickableRowWithLabelComponent("Alarm name", "Work", onClick = {})
         ClickableRowWithLabelComponent(
             "Alarm ringtone",
-            "Default",
+            state.ringtoneEntity.title,
             onClick = { onEditAlarm(EditAlarmEvent.SelectRingtoneClicked) })
     }
 

@@ -7,16 +7,22 @@ class NavigationControllerImpl : NavigationController {
 
     private var navController: NavHostController? = null
 
+    override fun getCurrentNavController(): NavHostController? = navController
+
+
     fun setNavController(navController: NavHostController) {
         this.navController = navController
     }
 
     override fun navigateTo(navRoute: NavigationRoute) {
-        println("Debug - Attempting to navigate to: $navRoute")
         navController?.navigate(navRoute)
     }
 
     override fun navigateBack() {
-        navController?.popBackStack()
+        navController?.navigateUp()
+    }
+
+    override fun <T> setStateHandleValue(value: T, key: String) {
+        navController?.previousBackStackEntry?.savedStateHandle?.set(key, value)
     }
 }

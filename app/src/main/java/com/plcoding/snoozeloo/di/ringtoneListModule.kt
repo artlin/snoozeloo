@@ -5,9 +5,9 @@ import com.plcoding.snoozeloo.alarm_selection.ui.RingtoneViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-val alarmListModule = module {
+val ringtoneListModule = module {
     viewModel { params ->
-        RingtoneViewModel(get(), currentRingtone = params.get())
+        RingtoneViewModel(get(), get(), currentRingtone = params.get())
     }
     factory { GetSystemRingtonesUseCase(get()) }
 }

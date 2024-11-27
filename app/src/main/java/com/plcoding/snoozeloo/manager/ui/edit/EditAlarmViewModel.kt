@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.plcoding.snoozeloo.core.ui.ViewModelAccess
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity.Companion.newAlarmEntity
+import com.plcoding.snoozeloo.core.domain.value.RingtoneId
 import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import com.plcoding.snoozeloo.manager.domain.UpdateAlarmUseCase
 import com.plcoding.snoozeloo.navigation.NavigationController
+import com.plcoding.snoozeloo.navigation.route.NavigationRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -59,6 +61,10 @@ class EditAlarmViewModel(
                 updateAlarmEntity()
                 saveAlarm()
                 navigationController.navigateBack()
+            }
+
+            EditAlarmEvent.SelectRingtoneClicked -> {
+                navigationController.navigateTo(NavigationRoute.SelectRingtone(RingtoneId(0)))
             }
         }
         validateUi()

@@ -8,7 +8,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.plcoding.snoozeloo.alarm_selection.ui.RingtoneListScreen
+import com.plcoding.snoozeloo.alarm_selection.ui.RingtoneViewModel
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
+import com.plcoding.snoozeloo.core.domain.value.RingtoneId
 import com.plcoding.snoozeloo.manager.ui.edit.EditAlarmScreen
 import com.plcoding.snoozeloo.manager.ui.edit.EditAlarmViewModel
 import com.plcoding.snoozeloo.manager.ui.list.AlarmListScreen
@@ -42,6 +45,17 @@ fun RootGraph(
                 parametersOf(navParams.alarmEntity)
             }
             EditAlarmScreen(viewModel.state.value, onEditAlarm = { viewModel.onEvent(it) })
+        }
+        composable<NavigationRoute.SelectRingtone>(
+            typeMap = mapOf(
+                typeOf<RingtoneId>() to CustomNavType.RingtoneIdNavType
+            )
+        ) { backStackEntry ->
+            val navParams = backStackEntry.toRoute<NavigationRoute.SelectRingtone>()
+            val viewModel: RingtoneViewModel = koinViewModel {
+                parametersOf(navParams.currentRingtone)
+            }
+            RingtoneListScreen(ringtones = viewModel.state.value.ringtones)
         }
     }
 }

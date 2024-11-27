@@ -1,6 +1,7 @@
 package com.plcoding.snoozeloo.manager.ui.edit
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +16,7 @@ import com.plcoding.snoozeloo.core.ui.text.TextBody
 import com.plcoding.snoozeloo.core.ui.text.TextTitle2Strong
 
 @Composable
-fun AlarmNameComponent() {
+fun ClickableRowWithLabelComponent(label: String, value: String, onClick: OnClick) {
     Row(
         Modifier
             .fillMaxWidth()
@@ -23,11 +24,12 @@ fun AlarmNameComponent() {
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(10.dp)
             )
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        TextTitle2Strong(text = "Alarm Name", color = MaterialTheme.colorScheme.onSurface)
+        TextTitle2Strong(text = label, color = MaterialTheme.colorScheme.onSurface)
         Spacer(Modifier.weight(1f))
-        TextBody(text = "Work", color = MaterialTheme.colorScheme.onSurfaceVariant)
+        TextBody(text = value, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }

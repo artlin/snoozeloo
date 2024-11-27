@@ -8,7 +8,7 @@ sealed interface EditAlarmEvent {
     data class DigitEnteredFromKeyboard(val digit: String) : EditAlarmEvent
     data object CancelClicked : EditAlarmEvent
     data object SaveClicked : EditAlarmEvent
-
+    data object SelectRingtoneClicked : EditAlarmEvent
 }
 
 typealias OnEditAlarm = (EditAlarmEvent) -> Unit

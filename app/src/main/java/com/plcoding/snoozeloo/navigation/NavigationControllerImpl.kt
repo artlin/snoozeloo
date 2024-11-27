@@ -12,6 +12,7 @@ class NavigationControllerImpl : NavigationController {
     }
 
     override fun navigateTo(navRoute: NavigationRoute) {
+        println("Debug - Attempting to navigate to: $navRoute")
         navController?.navigate(navRoute)
     }
 

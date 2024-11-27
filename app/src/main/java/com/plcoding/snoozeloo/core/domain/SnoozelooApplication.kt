@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import com.plcoding.snoozeloo.di.alarmListModule
 import com.plcoding.snoozeloo.di.alarmManagerModule
 import com.plcoding.snoozeloo.di.coreModule
 import com.plcoding.snoozeloo.di.navigationModule
@@ -24,11 +25,12 @@ class SnoozelooApplication : Application() {
             androidContext(this@SnoozelooApplication)
             modules(
                 listOf(
-                    navigationModule,
                     coreModule,
+                    navigationModule,
                     alarmManagerModule,
                     repositoryModule,
-                    schedulerModule
+                    schedulerModule,
+                    alarmListModule
                 )
             )
         }
@@ -39,7 +41,8 @@ class SnoozelooApplication : Application() {
             NotificationManager.IMPORTANCE_HIGH
         )
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
 
     }

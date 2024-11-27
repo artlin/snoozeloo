@@ -24,7 +24,11 @@ fun EditAlarmScreen(state: EditAlarmState, onEditAlarm: OnEditAlarm) {
         }
         Spacer(Modifier.height(8.dp))
         ClockWithDescriptionComponent(state.clockDigitStates, state.clockDescription, onEditAlarm)
-        AlarmNameComponent()
+        ClickableRowWithLabelComponent("Alarm name", "Work", onClick = {})
+        ClickableRowWithLabelComponent(
+            "Alarm ringtone",
+            "Default",
+            onClick = { onEditAlarm(EditAlarmEvent.SelectRingtoneClicked) })
     }
 
 }

@@ -1,7 +1,6 @@
 package com.plcoding.snoozeloo.core.domain
 
 import android.Manifest
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -26,7 +25,6 @@ import com.plcoding.snoozeloo.scheduler.AlarmSchedulerImpl
 import com.plcoding.snoozeloo.navigation.NavigationController
 import com.plcoding.snoozeloo.navigation.NavigationControllerImpl
 import com.plcoding.snoozeloo.navigation.graph.RootGraph
-import com.plcoding.snoozeloo.service.AlarmService
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import java.time.LocalDateTime
@@ -94,11 +92,5 @@ class MainActivity : ComponentActivity() {
         )
 
         alarmSchedulerImpl.scheduleAlarm(alarmItem)
-
-        Intent(applicationContext, AlarmService::class.java).also {
-            it.action = AlarmService.Actions.START_FOREGROUND_SERVICE.toString()
-            startService(it)
-        }
     }
 }
-

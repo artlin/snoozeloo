@@ -1,5 +1,6 @@
 package com.plcoding.snoozeloo.service
 
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.content.pm.ServiceInfo
@@ -7,6 +8,7 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.plcoding.snoozeloo.R
+import com.plcoding.snoozeloo.core.domain.LockScreenAlarmActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -25,7 +27,7 @@ class AlarmService: Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when(intent?.action){
-            Actions.START_FOREGROUND_SERVICE.toString() -> startFService()
+            Actions.START_FOREGROUND_SERVICE.toString() -> startFullScreen()
             Actions.STOP_FOREGROUND_SERVICE.toString() -> stopSelf()
         }
 
@@ -37,12 +39,27 @@ class AlarmService: Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun startFService() {
+    private fun startFullScreen() {
+        val alarmScreenIntent = Intent(this, LockScreenAlarmActivity::class.java)
+
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            alarmScreenIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         val notification = NotificationCompat.Builder(this, "ALARM_SERVICE_CHANNEL_ID")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle("Alarm")
             .setContentText("Alarm is running")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
+            .setChannelId("ALARM_SERVICE_CHANNEL_ID")
+            .setFullScreenIntent(
+                pendingIntent,
+                true
+            )
             .build()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {

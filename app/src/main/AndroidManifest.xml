@@ -32,6 +32,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".core.domain.LockScreenAlarmActivity"
+            android:showOnLockScreen="true" />
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

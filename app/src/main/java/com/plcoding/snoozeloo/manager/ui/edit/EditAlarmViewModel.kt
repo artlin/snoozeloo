@@ -44,7 +44,9 @@ class EditAlarmViewModel(
             state.value = state.value.toNewAlarm()
         } else {
             alarmEntity = alarmEntityArgument.copy()
-            state.value = state.value.fromEntity(alarmEntityArgument)
+            viewModelScope.launch {
+                state.value = state.value.fromEntity(alarmEntityArgument, ringtonesUseCase())
+            }
         }
         viewModelScope.launch {
             savedStateHandle.getStateFlow<String?>(SELECTED_RINGTONE_KEY, null)
@@ -52,14 +54,16 @@ class EditAlarmViewModel(
                     println("Debug: Collecting ringtone string: $ringtoneString")
                     ringtoneString?.let { uriPath ->
                         // Update your state
-                        val selectedRingtone = ringtonesUseCase().firstOrNull { it.uri.toString() == uriPath }
-                            ?: RingtoneEntity.asDefault()
+                        val selectedRingtone =
+                            ringtonesUseCase().firstOrNull { it.uri.toString() == uriPath }
+                                ?: RingtoneEntity.asDefault()
                         state.value = state.value.copy(
                             ringtoneEntity = selectedRingtone
                         )
                         // Clear the value
                         savedStateHandle[SELECTED_RINGTONE_KEY] = null
                     }
+                    validateUi()
                 }
         }
     }
@@ -114,6 +118,7 @@ class EditAlarmViewModel(
 
     private fun saveAlarm() {
         viewModelScope.launch(Dispatchers.IO) {
+            alarmEntity = alarmEntity.copy(ringtoneId = state.value.ringtoneEntity.uri.toString())
             updateAlarmUseCase(alarmEntity)
         }
     }

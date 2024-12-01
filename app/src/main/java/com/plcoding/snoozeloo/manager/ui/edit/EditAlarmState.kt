@@ -1,14 +1,13 @@
 package com.plcoding.snoozeloo.manager.ui.edit
 
+import android.net.Uri
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
-import com.plcoding.snoozeloo.core.domain.getTimeComponents
 import com.plcoding.snoozeloo.core.domain.value.HeaderButtonLabel
 import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import com.plcoding.snoozeloo.core.ui.headerbuttons.ButtonsState
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
 import com.plcoding.snoozeloo.core.ui.headerbuttons.SingleButtonState
-import java.util.Calendar
 
 data class EditAlarmState(
     val ringtoneEntity: RingtoneEntity,
@@ -41,7 +40,7 @@ data class EditAlarmState(
     }
 
     fun isCompleted(): Boolean =
-        clockDigitStates.currentSelectionState == FocusedSelection.COMPLETED
+        clockDigitStates.allStates.all { it.value.state == DigitFieldState.IS_SET }
 
     fun toCorrectState(): EditAlarmState =
         copy(clockDigitStates = clockDigitStates.toCorrectedState())
@@ -65,9 +64,17 @@ data class EditAlarmState(
         return copy(clockDescription = clockDescription.validateDescription(currentTime, alarmTime))
     }
 
-    fun fromEntity(alarmEntity: AlarmEntity): EditAlarmState {
+    fun fromEntity(
+        alarmEntity: AlarmEntity,
+        ringtones: MutableList<RingtoneEntity>
+    ): EditAlarmState {
         val (hour, minutes) = alarmEntity.clockTime
-        return copy(clockDigitStates = clockDigitStates.setupClock(hour, minutes))
+        val alarmUri = Uri.parse(alarmEntity.ringtoneId)
+        val ringtone: RingtoneEntity = ringtones.firstOrNull { it.uri == alarmUri } ?: RingtoneEntity.asDefault()
+        return copy(
+            clockDigitStates = clockDigitStates.setupClock(hour, minutes),
+            ringtoneEntity = ringtone
+        )
     }
 
 }

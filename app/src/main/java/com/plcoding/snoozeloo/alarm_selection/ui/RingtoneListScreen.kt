@@ -22,7 +22,11 @@ import com.plcoding.snoozeloo.core.ui.headerbuttons.SingleButtonState
 import com.plcoding.snoozeloo.core.ui.text.TextBodyStrong
 
 @Composable
-fun RingtoneListScreen(ringtones: List<RingtoneEntity>, onRingtoneEvent: OnRingtoneEvent) {
+fun RingtoneListScreen(
+    ringtones: List<RingtoneEntity>,
+    selectedRingtone: RingtoneEntity,
+    onRingtoneEvent: OnRingtoneEvent
+) {
     HeaderButtons(
         ButtonsState(
             leftButton = SingleButtonState(buttonType = HeaderButtonType.BACK_ARROW),
@@ -34,15 +38,22 @@ fun RingtoneListScreen(ringtones: List<RingtoneEntity>, onRingtoneEvent: OnRingt
     LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         items(ringtones.size, key = ({ index -> ringtones[index].uri })) { index ->
             val ringtone = ringtones[index]
-            RingtoneItemComponent(ringtone, onUriClick = {
-                onRingtoneEvent(RingtoneEvent.RingtoneSelected(RingtoneId(it)))
-            })
+            RingtoneItemComponent(
+                ringtone,
+                isSelected = ringtone.uri.toString() == selectedRingtone.uri.toString(),
+                onUriClick = {
+                    onRingtoneEvent(RingtoneEvent.RingtoneSelected(RingtoneId(it)))
+                })
         }
     }
 }
 
 @Composable
-fun RingtoneItemComponent(ringtoneEntity: RingtoneEntity, onUriClick: OnUriClick) {
+fun RingtoneItemComponent(
+    ringtoneEntity: RingtoneEntity,
+    isSelected: Boolean,
+    onUriClick: OnUriClick
+) {
     Row(
         Modifier
             .background(

@@ -55,7 +55,10 @@ fun RootGraph(
             val viewModel: RingtoneViewModel = koinViewModel {
                 parametersOf(navParams.currentRingtone)
             }
-            RingtoneListScreen(ringtones = viewModel.state.value.ringtones, onRingtoneEvent = {viewModel.onEvent(it)})
+            RingtoneListScreen(
+                ringtones = viewModel.state.value.ringtones,
+                selectedRingtone = viewModel.state.value.selectedRingtone,
+                onRingtoneEvent = { viewModel.onEvent(it) })
         }
     }
 }

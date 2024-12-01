@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.snoozeloo.alarm_selection.domain.GetSystemRingtonesUseCase
+import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
 import com.plcoding.snoozeloo.core.domain.value.RingtoneId
 import com.plcoding.snoozeloo.core.ui.ViewModelAccess
 import com.plcoding.snoozeloo.navigation.NavigationController
@@ -17,7 +18,8 @@ class RingtoneViewModel(
 ) : ViewModel(),
     ViewModelAccess<RingtoneState, RingtoneEvent> {
 
-    override var state: MutableState<RingtoneState> = mutableStateOf(RingtoneState())
+    override var state: MutableState<RingtoneState> =
+        mutableStateOf(RingtoneState(emptyList(), selectedRingtone = RingtoneEntity.asDefault()))
 
 
     init {

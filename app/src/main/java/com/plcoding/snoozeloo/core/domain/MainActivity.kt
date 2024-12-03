@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
                 val viewModel: MainViewModel = koinViewModel()
                 val navController = koinInject<NavigationController>()
 
-                TestCase()
+//                TestCase()
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     viewModel.doSomething()

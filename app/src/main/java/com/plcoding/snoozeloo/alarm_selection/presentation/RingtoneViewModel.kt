@@ -4,7 +4,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.plcoding.snoozeloo.alarm_selection.domain.GetSystemRingtonesUseCase
 import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
 import com.plcoding.snoozeloo.core.domain.value.RingtoneId
 import com.plcoding.snoozeloo.core.ui.ViewModelAccess
@@ -13,24 +12,33 @@ import kotlinx.coroutines.launch
 
 class RingtoneViewModel(
     private val navController: NavigationController,
-    private val getSystemRingtonesUseCase: GetSystemRingtonesUseCase,
+    private val ringtonesManager: RingtonesManager,
     private val currentRingtone: RingtoneId
 ) : ViewModel(),
     ViewModelAccess<RingtoneState, RingtoneEvent> {
 
     override var uiState: MutableState<RingtoneState> =
-        mutableStateOf(RingtoneState(emptyList(), selectedRingtone = RingtoneEntity.asDefault()))
+        mutableStateOf(RingtoneState(emptyList(), selectedRingtone = RingtoneEntity.asMute()))
 
     private var newState: RingtoneState =
-        RingtoneState(emptyList(), selectedRingtone = RingtoneEntity.asDefault())
+        RingtoneState(emptyList(), selectedRingtone = RingtoneEntity.asMute())
         set(value) {
             uiState.value = value
         }
 
     init {
         viewModelScope.launch {
-            newState = uiState.value.copy(ringtones = getSystemRingtonesUseCase())
+            setRingtonesWithSpecialOptions(systemRingtones = ringtonesManager.getAllRingtones())
         }
+    }
+
+    private fun setRingtonesWithSpecialOptions(systemRingtones: List<RingtoneEntity>) {
+        val ringtonesWithOptions = buildList {
+            add(RingtoneEntity.asMute())
+            add(RingtoneEntity.asDefault(systemRingtones.first()))
+            addAll(systemRingtones.drop(1))
+        }
+        newState = uiState.value.copy(ringtones = ringtonesWithOptions)
     }
 
     override fun onEvent(event: RingtoneEvent) {

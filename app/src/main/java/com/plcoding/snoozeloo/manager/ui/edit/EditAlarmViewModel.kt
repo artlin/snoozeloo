@@ -32,11 +32,11 @@ class EditAlarmViewModel(
 
     override var uiState: MutableState<UIStateEditAlarm> = mutableStateOf(
         UIStateEditAlarm(
-            ringtoneEntity = RingtoneEntity.asDefault()
+            ringtoneEntity = RingtoneEntity.asMute()
         )
     )
 
-    var newState: UIStateEditAlarm = UIStateEditAlarm(RingtoneEntity.asDefault())
+    var newState: UIStateEditAlarm = UIStateEditAlarm(RingtoneEntity.asMute())
         set(value) {
             uiState.value = value
         }
@@ -60,7 +60,7 @@ class EditAlarmViewModel(
                         // Update your state
                         val selectedRingtone =
                             ringtonesUseCase().firstOrNull { it.uri.toString() == uriPath }
-                                ?: RingtoneEntity.asDefault()
+                                ?: RingtoneEntity.asMute()
                         newState = uiState.value.copy(
                             ringtoneEntity = selectedRingtone
                         )
@@ -88,7 +88,8 @@ class EditAlarmViewModel(
 
             EditAlarmEvent.ChangeAlarmNameClicked -> {
                 val alarmName = uiState.value.alarmNameSubState.name
-                val alarmNameSubState = uiState.value.alarmNameSubState.openDialogWithName(alarmName)
+                val alarmNameSubState =
+                    uiState.value.alarmNameSubState.openDialogWithName(alarmName)
                 newState = uiState.value.copy(alarmNameSubState = alarmNameSubState)
             }
 

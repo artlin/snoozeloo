@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.plcoding.snoozeloo.alarm_selection.presentation.RingtoneListScreen
+import com.plcoding.snoozeloo.alarm_selection.presentation.ui.RingtoneListScreen
 import com.plcoding.snoozeloo.alarm_selection.presentation.RingtoneViewModel
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.value.RingtoneId

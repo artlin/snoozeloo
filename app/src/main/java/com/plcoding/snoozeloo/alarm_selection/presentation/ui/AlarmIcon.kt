@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.alarm_selection.presentation
+package com.plcoding.snoozeloo.alarm_selection.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

@@ -73,7 +73,7 @@ data class UIStateEditAlarm(
         val (hour, minutes) = alarmEntity.clockTime
         val alarmUri = Uri.parse(alarmEntity.ringtoneId)
         val ringtone: RingtoneEntity =
-            ringtones.firstOrNull { it.uri == alarmUri } ?: RingtoneEntity.asDefault()
+            ringtones.firstOrNull { it.uri == alarmUri } ?: RingtoneEntity.asMute()
         return copy(
             clockDigitStates = clockDigitStates.setupClock(hour, minutes),
             alarmNameSubState = AlarmNameSubState.fromName(alarmName = alarmEntity.alarmName),

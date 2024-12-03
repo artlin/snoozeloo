@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.alarm_selection.presentation
+package com.plcoding.snoozeloo.alarm_selection.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,7 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.plcoding.snoozeloo.alarm_selection.presentation.OnRingtoneEvent
+import com.plcoding.snoozeloo.alarm_selection.presentation.OnUriClick
+import com.plcoding.snoozeloo.alarm_selection.presentation.RingtoneEvent
 import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
+import com.plcoding.snoozeloo.core.domain.entity.SpecialRingtoneType
 import com.plcoding.snoozeloo.core.domain.value.RingtoneId
 import com.plcoding.snoozeloo.core.ui.headerbuttons.ButtonsState
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
@@ -66,10 +70,26 @@ fun RingtoneItemComponent(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        AlarmIcon()
+        LeftSideIcon(ringtoneEntity.specialType)
         TextBodyStrong(
-            text = ringtoneEntity.title.value,
+            text = getLabel(ringtoneEntity),
             color = MaterialTheme.colorScheme.onSurface
         )
+    }
+}
+
+private fun getLabel(ringtoneEntity: RingtoneEntity): String {
+   return when (ringtoneEntity.specialType) {
+        SpecialRingtoneType.MUTE -> "Silent"
+        SpecialRingtoneType.DEFAULT -> "Default (${ringtoneEntity.title.value})"
+        SpecialRingtoneType.NONE -> ringtoneEntity.title.value
+    }
+}
+
+@Composable
+private fun LeftSideIcon(specialType: SpecialRingtoneType) {
+    when (specialType) {
+        SpecialRingtoneType.MUTE -> AlarmIconCrossed()
+        SpecialRingtoneType.NONE, SpecialRingtoneType.DEFAULT -> AlarmIcon()
     }
 }

@@ -13,9 +13,9 @@ val alarmManagerModule = module {
     single<UpdateAlarmUseCase> { UpdateAlarmUseCase(get(), get()) }
     viewModel { params ->
         EditAlarmViewModel(
-            ringtonesUseCase = get(),
             updateAlarmUseCase = get(),
             navigationController = get(),
+            ringtonesManager = get(),
             savedStateHandle = params[1],
             alarmEntityArgument = params[0]
         )

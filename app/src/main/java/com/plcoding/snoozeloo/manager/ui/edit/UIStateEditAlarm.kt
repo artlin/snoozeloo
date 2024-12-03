@@ -10,7 +10,7 @@ import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
 import com.plcoding.snoozeloo.core.ui.headerbuttons.SingleButtonState
 
 data class UIStateEditAlarm(
-    val ringtoneEntity: RingtoneEntity,
+    val selectedRingtoneEntity: RingtoneEntity,
     val alarmNameSubState: AlarmNameSubState = AlarmNameSubState.asDefault(),
     val clockDescription: ClockAlarmDescriptionState = ClockAlarmDescriptionState(),
     val headerButtonStates: ButtonsState = ButtonsState(
@@ -68,16 +68,13 @@ data class UIStateEditAlarm(
 
     fun fromEntity(
         alarmEntity: AlarmEntity,
-        ringtones: MutableList<RingtoneEntity>
+        selectedRingtone : RingtoneEntity
     ): UIStateEditAlarm {
         val (hour, minutes) = alarmEntity.clockTime
-        val alarmUri = Uri.parse(alarmEntity.ringtoneId)
-        val ringtone: RingtoneEntity =
-            ringtones.firstOrNull { it.uri == alarmUri } ?: RingtoneEntity.asMute()
         return copy(
             clockDigitStates = clockDigitStates.setupClock(hour, minutes),
             alarmNameSubState = AlarmNameSubState.fromName(alarmName = alarmEntity.alarmName),
-            ringtoneEntity = ringtone
+            selectedRingtoneEntity = selectedRingtone
         )
     }
 

@@ -72,17 +72,25 @@ fun RingtoneItemComponent(
     ) {
         LeftSideIcon(ringtoneEntity.specialType)
         TextBodyStrong(
-            text = getLabel(ringtoneEntity),
+            text = ringtoneEntity.getLabel(),
             color = MaterialTheme.colorScheme.onSurface
         )
     }
 }
 
-private fun getLabel(ringtoneEntity: RingtoneEntity): String {
-   return when (ringtoneEntity.specialType) {
+fun RingtoneEntity.getLabel(): String {
+    return when (specialType) {
         SpecialRingtoneType.MUTE -> "Silent"
-        SpecialRingtoneType.DEFAULT -> "Default (${ringtoneEntity.title.value})"
-        SpecialRingtoneType.NONE -> ringtoneEntity.title.value
+        SpecialRingtoneType.DEFAULT -> "Default (${title.value})"
+        SpecialRingtoneType.NONE -> title.value
+    }
+}
+
+fun RingtoneEntity.getLabelShort(): String {
+    return when (specialType) {
+        SpecialRingtoneType.MUTE -> "Silent"
+        SpecialRingtoneType.DEFAULT -> "Default"
+        SpecialRingtoneType.NONE -> title.value
     }
 }
 

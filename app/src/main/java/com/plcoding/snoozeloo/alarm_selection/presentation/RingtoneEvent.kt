@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.alarm_selection.ui
+package com.plcoding.snoozeloo.alarm_selection.presentation
 
 import android.net.Uri
 import com.plcoding.snoozeloo.core.domain.value.RingtoneId

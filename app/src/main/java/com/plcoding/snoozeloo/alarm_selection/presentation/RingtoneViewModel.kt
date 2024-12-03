@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.alarm_selection.ui
+package com.plcoding.snoozeloo.alarm_selection.presentation
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

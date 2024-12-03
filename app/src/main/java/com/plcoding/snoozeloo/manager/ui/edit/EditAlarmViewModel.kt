@@ -7,7 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.snoozeloo.alarm_selection.domain.GetSystemRingtonesUseCase
-import com.plcoding.snoozeloo.alarm_selection.ui.SELECTED_RINGTONE_KEY
+import com.plcoding.snoozeloo.alarm_selection.presentation.SELECTED_RINGTONE_KEY
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity.Companion.newAlarmEntity
 import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity

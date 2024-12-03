@@ -67,6 +67,6 @@ fun RingtoneItemComponent(
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         AlarmIcon()
-        TextBodyStrong(text = ringtoneEntity.title, color = MaterialTheme.colorScheme.onSurface)
+        TextBodyStrong(text = ringtoneEntity.title.value, color = MaterialTheme.colorScheme.onSurface)
     }
 }

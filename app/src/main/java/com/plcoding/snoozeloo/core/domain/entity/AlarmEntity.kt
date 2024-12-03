@@ -1,5 +1,6 @@
 package com.plcoding.snoozeloo.core.domain.entity
 
+import com.plcoding.snoozeloo.core.domain.value.AlarmName
 import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import kotlinx.serialization.Serializable
 import kotlin.math.min
@@ -8,7 +9,7 @@ import kotlin.math.min
 data class AlarmEntity(
     val uid: Int,
     val clockTime: ClockTime = ClockTime.asEmpty(),
-    val alarmName: String,
+    val alarmName: AlarmName,
     val isEnabled: Boolean,
     val ringtoneId: String,
     val isVibrateEnabled: Boolean,
@@ -28,12 +29,13 @@ data class AlarmEntity(
         return copy(clockTime = clockTime.copy(hours = hours, minutes = minutes))
     }
 
+
     companion object {
 
         fun newAlarmEntity(): AlarmEntity = AlarmEntity(
             uid = 0,
             clockTime = ClockTime.asEmpty(),
-            alarmName = "",
+            alarmName = AlarmName("")   ,
             isEnabled = true,
             ringtoneId = "",
             isVibrateEnabled = false,

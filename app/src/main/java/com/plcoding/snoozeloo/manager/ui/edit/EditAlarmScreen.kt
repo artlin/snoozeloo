@@ -11,7 +11,7 @@ import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtons
 
 @Composable
-fun EditAlarmScreen(state: EditAlarmState, onEditAlarm: OnEditAlarm) {
+fun EditAlarmScreen(state: UIStateEditAlarm, onEditAlarm: OnEditAlarm) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         HeaderButtons(state.headerButtonStates) { event ->
             when (event.buttonType) {
@@ -24,11 +24,16 @@ fun EditAlarmScreen(state: EditAlarmState, onEditAlarm: OnEditAlarm) {
         }
         Spacer(Modifier.height(8.dp))
         ClockWithDescriptionComponent(state.clockDigitStates, state.clockDescription, onEditAlarm)
-        ClickableRowWithLabelComponent("Alarm name", "Work", onClick = {})
+        ClickableRowWithLabelComponent(
+            "Alarm name",
+            state.alarmNameSubState.name.value,
+            onClick = { onEditAlarm(EditAlarmEvent.ChangeAlarmNameClicked) })
         ClickableRowWithLabelComponent(
             "Alarm ringtone",
-            state.ringtoneEntity.title,
+            state.ringtoneEntity.title.value,
             onClick = { onEditAlarm(EditAlarmEvent.SelectRingtoneClicked) })
     }
-
+    if (state.alarmNameSubState.isDialogShown) {
+        EditAlarmNameDialog(state.alarmNameSubState.editedName.value, onEditAlarm)
+    }
 }

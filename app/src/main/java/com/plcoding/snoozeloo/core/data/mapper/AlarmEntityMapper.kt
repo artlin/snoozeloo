@@ -3,13 +3,13 @@ package com.plcoding.snoozeloo.core.data.mapper
 import com.plcoding.snoozeloo.core.domain.db.Alarm
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.entity.ClockTime
-import com.plcoding.snoozeloo.core.domain.value.TimeValue
+import com.plcoding.snoozeloo.core.domain.value.AlarmName
 
 class AlarmEntityMapper : DataMapper<Alarm, AlarmEntity>() {
 
     override suspend fun fromAtoB(input: Alarm): AlarmEntity? = AlarmEntity(
         uid = input.id,
-        alarmName = input.name,
+        alarmName = AlarmName(input.name),
         isEnabled = input.isActive,
         ringtoneId = input.alarmRingtoneId,
         isVibrateEnabled = input.shouldVibrate,
@@ -20,7 +20,7 @@ class AlarmEntityMapper : DataMapper<Alarm, AlarmEntity>() {
     override suspend fun fromBtoA(input: AlarmEntity): Alarm = Alarm(
         id = input.uid,
         period = "Once",
-        name = input.alarmName,
+        name = input.alarmName.value,
         isActive = input.isEnabled,
         alarmRingtoneId = input.ringtoneId,
         shouldVibrate = input.isVibrateEnabled,

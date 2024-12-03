@@ -28,10 +28,10 @@ class EditAlarmViewModel(
     private val savedStateHandle: SavedStateHandle,
     alarmEntityArgument: AlarmEntity? = null
 ) : ViewModel(),
-    ViewModelAccess<EditAlarmState, EditAlarmEvent> {
+    ViewModelAccess<UIStateEditAlarm, EditAlarmEvent> {
 
-    override var state: MutableState<EditAlarmState> = mutableStateOf(
-        EditAlarmState(
+    override var state: MutableState<UIStateEditAlarm> = mutableStateOf(
+        UIStateEditAlarm(
             ringtoneEntity = RingtoneEntity.asDefault()
         )
     )
@@ -51,7 +51,6 @@ class EditAlarmViewModel(
         viewModelScope.launch {
             savedStateHandle.getStateFlow<String?>(SELECTED_RINGTONE_KEY, null)
                 .collect { ringtoneString ->
-                    println("Debug: Collecting ringtone string: $ringtoneString")
                     ringtoneString?.let { uriPath ->
                         // Update your state
                         val selectedRingtone =
@@ -75,6 +74,30 @@ class EditAlarmViewModel(
                 if (state.value.isCompleted()) {
                     state.value = state.value.toCorrectState().toAcceptedState()
                 }
+            }
+
+            EditAlarmEvent.OnAlarmNameDismiss -> {
+                val alarmNameSubState = state.value.alarmNameSubState.dismissDialogResetValues()
+                state.value = state.value.copy(alarmNameSubState = alarmNameSubState)
+            }
+
+            EditAlarmEvent.ChangeAlarmNameClicked -> {
+                val alarmName = state.value.alarmNameSubState.name
+                val alarmNameSubState = state.value.alarmNameSubState.openDialogWithName(alarmName)
+                state.value = state.value.copy(alarmNameSubState = alarmNameSubState)
+            }
+
+            is EditAlarmEvent.OnAlarmNameChanged -> {
+                val newName = state.value.alarmNameSubState.updateName(event.name)
+                state.value = state.value.copy(alarmNameSubState = newName)
+            }
+
+            EditAlarmEvent.SaveAlarmNameClicked -> {
+                val alarmNameSubState = state.value.alarmNameSubState
+                    .saveNameIfNotEmpty()
+                    .dismissDialogResetValues()
+                state.value = state.value.copy(alarmNameSubState = alarmNameSubState)
+
             }
 
             EditAlarmEvent.HoursComponentClicked -> state.value = state.value.startHoursEdit()
@@ -118,7 +141,10 @@ class EditAlarmViewModel(
 
     private fun saveAlarm() {
         viewModelScope.launch(Dispatchers.IO) {
-            alarmEntity = alarmEntity.copy(ringtoneId = state.value.ringtoneEntity.uri.toString())
+            alarmEntity = alarmEntity.copy(
+                ringtoneId = state.value.ringtoneEntity.uri.toString(),
+                alarmName = state.value.alarmNameSubState.name
+            )
             updateAlarmUseCase(alarmEntity)
         }
     }

@@ -9,8 +9,9 @@ import com.plcoding.snoozeloo.core.ui.headerbuttons.ButtonsState
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
 import com.plcoding.snoozeloo.core.ui.headerbuttons.SingleButtonState
 
-data class EditAlarmState(
+data class UIStateEditAlarm(
     val ringtoneEntity: RingtoneEntity,
+    val alarmNameSubState: AlarmNameSubState = AlarmNameSubState.asDefault(),
     val clockDescription: ClockAlarmDescriptionState = ClockAlarmDescriptionState(),
     val headerButtonStates: ButtonsState = ButtonsState(
         leftButton = SingleButtonState(
@@ -23,32 +24,33 @@ data class EditAlarmState(
     ),
     val clockDigitStates: ClockDigitStates = ClockDigitStates()
 ) {
-    fun toNewAlarm(): EditAlarmState {
+
+    fun toNewAlarm(): UIStateEditAlarm {
         return copy(clockDigitStates = clockDigitStates.asNewAlarm())
     }
 
-    fun startHoursEdit(): EditAlarmState {
+    fun startHoursEdit(): UIStateEditAlarm {
         return copy(clockDigitStates = clockDigitStates.startHoursEdit())
     }
 
-    fun startMinutesEdit(): EditAlarmState {
+    fun startMinutesEdit(): UIStateEditAlarm {
         return copy(clockDigitStates = clockDigitStates.startMinutesEdit())
     }
 
-    fun setNewDigit(digit: String): EditAlarmState {
+    fun setNewDigit(digit: String): UIStateEditAlarm {
         return copy(clockDigitStates = clockDigitStates.setNewDigit(digit))
     }
 
     fun isCompleted(): Boolean =
         clockDigitStates.allStates.all { it.value.state == DigitFieldState.IS_SET }
 
-    fun toCorrectState(): EditAlarmState =
+    fun toCorrectState(): UIStateEditAlarm =
         copy(clockDigitStates = clockDigitStates.toCorrectedState())
 
-    fun toAcceptedState(): EditAlarmState =
+    fun toAcceptedState(): UIStateEditAlarm =
         copy(clockDigitStates = clockDigitStates.toAcceptedState())
 
-    fun validateButtons(): EditAlarmState {
+    fun validateButtons(): UIStateEditAlarm {
         val isSaveAlarmAllowed = isCompleted()
         val saveButton = headerButtonStates.rightButton
         return copy(
@@ -60,19 +62,21 @@ data class EditAlarmState(
         )
     }
 
-    fun validateDescription(currentTime: TimeValue, alarmTime: TimeValue): EditAlarmState {
+    fun validateDescription(currentTime: TimeValue, alarmTime: TimeValue): UIStateEditAlarm {
         return copy(clockDescription = clockDescription.validateDescription(currentTime, alarmTime))
     }
 
     fun fromEntity(
         alarmEntity: AlarmEntity,
         ringtones: MutableList<RingtoneEntity>
-    ): EditAlarmState {
+    ): UIStateEditAlarm {
         val (hour, minutes) = alarmEntity.clockTime
         val alarmUri = Uri.parse(alarmEntity.ringtoneId)
-        val ringtone: RingtoneEntity = ringtones.firstOrNull { it.uri == alarmUri } ?: RingtoneEntity.asDefault()
+        val ringtone: RingtoneEntity =
+            ringtones.firstOrNull { it.uri == alarmUri } ?: RingtoneEntity.asDefault()
         return copy(
             clockDigitStates = clockDigitStates.setupClock(hour, minutes),
+            alarmNameSubState = AlarmNameSubState.fromName(alarmName = alarmEntity.alarmName),
             ringtoneEntity = ringtone
         )
     }

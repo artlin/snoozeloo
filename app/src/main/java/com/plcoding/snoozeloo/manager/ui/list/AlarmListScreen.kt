@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.entity.ClockTime
 import com.plcoding.snoozeloo.core.domain.getAlarmInTime
+import com.plcoding.snoozeloo.core.domain.value.AlarmName
 import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import com.plcoding.snoozeloo.core.ui.text.TextBody
 import com.plcoding.snoozeloo.core.ui.text.TextH3
@@ -77,7 +78,7 @@ fun AlarmItem(
     ) {
         Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = spacedBy(10.dp)) {
             TextTitle2Strong(
-                text = alarmEntity.alarmName,
+                text = alarmEntity.alarmName.value,
                 color = MaterialTheme.colorScheme.onSurface
             )
             TextH3(
@@ -154,12 +155,12 @@ fun generateAlarms(): List<AlarmEntity> {
         alarms.add(
             AlarmEntity(
                 uid = 3,
-                alarmName = alarmNames[i], // Alarm name
+                alarmName = AlarmName(alarmNames[i]), // Alarm name
                 isEnabled = (i % 2 == 0), // Enable only even-indexed alarms
                 ringtoneId = "4", // Replace with actual ringtone ID
                 isVibrateEnabled = true, // Enable vibration for all alarms
                 volume = 0.5f, // Set volume to 0.5
-                clockTime = ClockTime(30,1),
+                clockTime = ClockTime(30, 1),
             )
         )
     }

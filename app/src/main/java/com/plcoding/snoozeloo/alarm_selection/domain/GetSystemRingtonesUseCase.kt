@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.RingtoneManager
 import android.net.Uri
 import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
+import com.plcoding.snoozeloo.core.domain.value.AlarmName
 
 class GetSystemRingtonesUseCase(private val context: Context) {
     suspend operator fun invoke(): MutableList<RingtoneEntity> {
@@ -22,7 +23,7 @@ class GetSystemRingtonesUseCase(private val context: Context) {
                 cursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/" +
                         cursor.getString(RingtoneManager.ID_COLUMN_INDEX)
             )
-            ringtones.add(RingtoneEntity(uri, title))
+            ringtones.add(RingtoneEntity(uri, AlarmName(title)))
         }
 //content://media/internal/audio/media/257
         return ringtones

@@ -34,7 +34,7 @@ import com.plcoding.snoozeloo.manager.ui.edit.OnClickWithIntValue
 
 @Composable
 fun AlarmListScreen(state: AlarmListState, onAlarmList: OnAlarmList) {
-    AlarmListHeader()
+
     if (state.list.isEmpty()) EmptyScreen()
     else AlarmList(currentTime = state.currentTime, list = state.list, onAlarmList)
     AddAlarmButton {
@@ -45,6 +45,10 @@ fun AlarmListScreen(state: AlarmListState, onAlarmList: OnAlarmList) {
 @Composable
 fun AlarmList(currentTime: TimeValue, list: List<AlarmEntity>, onAlarmList: OnAlarmList) {
     LazyColumn(modifier = Modifier.padding(12.dp), verticalArrangement = spacedBy(16.dp)) {
+       item{
+           AlarmListHeader()
+       }
+
         items(items = list,
             key = { item -> item.uid }) { item ->
             AlarmItem(alarmEntity = item,

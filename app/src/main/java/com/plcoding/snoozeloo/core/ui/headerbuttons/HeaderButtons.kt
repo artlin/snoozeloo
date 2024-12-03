@@ -53,6 +53,7 @@ private fun HeaderButton(buttonState: SingleButtonState, onEvent: HeaderButtonsE
 
         HeaderButtonType.BACK_ARROW -> {
             Image(
+                modifier = Modifier.clickable { onEvent(SingleButtonState(buttonType = HeaderButtonType.BACK_ARROW)) },
                 painter = painterResource(id = R.drawable.icon_back),
                 contentDescription = null,
             )

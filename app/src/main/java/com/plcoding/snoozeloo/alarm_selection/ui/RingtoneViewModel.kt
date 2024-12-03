@@ -43,6 +43,10 @@ class RingtoneViewModel(
                 println("Debug: Setting ringtone value: ${event.ringtoneId.value}")
                 navController.navigateBack()
             }
+
+            RingtoneEvent.BackButtonClicked -> {
+                navController.navigateBack()
+            }
         }
 
     }

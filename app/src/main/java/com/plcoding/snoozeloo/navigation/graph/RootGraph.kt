@@ -1,5 +1,6 @@
 package com.plcoding.snoozeloo.navigation.graph
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,9 +26,11 @@ import kotlin.reflect.typeOf
 @Composable
 fun RootGraph(
     navController: NavHostController,
+    innerPadding: PaddingValues,
 ) {
+
     NavHost(
-        modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
+        modifier = Modifier.padding(innerPadding).padding(10.dp),
         navController = navController,
         startDestination = NavigationRoute.Alarms
     ) {

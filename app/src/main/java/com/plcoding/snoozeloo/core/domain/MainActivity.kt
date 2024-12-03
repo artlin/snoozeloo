@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -34,7 +35,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.w("TAG", "MainActivity onCreate")
-
+        enableEdgeToEdge()
         val permissions = mutableListOf<String>()
         when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
@@ -62,7 +63,6 @@ class MainActivity : ComponentActivity() {
                 TestCase()
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    innerPadding
                     viewModel.doSomething()
                     Log.w("TAG", "MainActivity doSomething")
                     // navigation
@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
                     (navController as? NavigationControllerImpl)?.setNavController(
                         navHostController
                     )
-                    RootGraph(navController = navHostController)
+                    RootGraph(navController = navHostController,innerPadding)
                 }
             }
         }

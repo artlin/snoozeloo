@@ -27,15 +27,15 @@ fun RingtoneListScreen(
     selectedRingtone: RingtoneEntity,
     onRingtoneEvent: OnRingtoneEvent
 ) {
-    HeaderButtons(
-        ButtonsState(
-            leftButton = SingleButtonState(buttonType = HeaderButtonType.BACK_ARROW),
-            rightButton = SingleButtonState()
-        ),
-        onEvent = {})
-
-
     LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        item {
+            HeaderButtons(
+                ButtonsState(
+                    leftButton = SingleButtonState(buttonType = HeaderButtonType.BACK_ARROW),
+                    rightButton = SingleButtonState()
+                ),
+                onEvent = { onRingtoneEvent(RingtoneEvent.BackButtonClicked) })
+        }
         items(ringtones.size, key = ({ index -> ringtones[index].uri })) { index ->
             val ringtone = ringtones[index]
             RingtoneItemComponent(
@@ -67,6 +67,9 @@ fun RingtoneItemComponent(
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         AlarmIcon()
-        TextBodyStrong(text = ringtoneEntity.title.value, color = MaterialTheme.colorScheme.onSurface)
+        TextBodyStrong(
+            text = ringtoneEntity.title.value,
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }

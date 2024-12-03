@@ -27,14 +27,14 @@ class AlarmListViewModel(
     private val alarmsDao: AlarmsDao by inject()
     private val entityConverter: DataMapper<Alarm, AlarmEntity> by inject()
 
-    override var state: MutableState<AlarmListState> =
+    override var uiState: MutableState<AlarmListState> =
         mutableStateOf(AlarmListState(currentTime = TimeValue(System.currentTimeMillis())))
 
     init {
         viewModelScope.launch {
             alarmsDao.getAll().collectLatest { alarmDtos ->
                 val alarms = entityConverter.convert(alarmDtos)
-                state.value = state.value.copy(
+                uiState.value = uiState.value.copy(
                     list = alarms,
                     currentTime = TimeValue(System.currentTimeMillis())
                 )

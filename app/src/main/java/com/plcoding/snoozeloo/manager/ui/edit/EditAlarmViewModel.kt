@@ -30,7 +30,7 @@ class EditAlarmViewModel(
 ) : ViewModel(),
     ViewModelAccess<UIStateEditAlarm, EditAlarmEvent> {
 
-    override var state: MutableState<UIStateEditAlarm> = mutableStateOf(
+    override var uiState: MutableState<UIStateEditAlarm> = mutableStateOf(
         UIStateEditAlarm(
             ringtoneEntity = RingtoneEntity.asDefault()
         )
@@ -38,7 +38,7 @@ class EditAlarmViewModel(
 
     var newState: UIStateEditAlarm = UIStateEditAlarm(RingtoneEntity.asDefault())
         set(value) {
-            state.value = value
+            uiState.value = value
         }
 
     private var alarmEntity: AlarmEntity
@@ -46,11 +46,11 @@ class EditAlarmViewModel(
     init {
         if (alarmEntityArgument == null) {
             alarmEntity = newAlarmEntity()
-            newState = state.value.toNewAlarm()
+            newState = uiState.value.toNewAlarm()
         } else {
             alarmEntity = alarmEntityArgument.copy()
             viewModelScope.launch {
-                newState = state.value.fromEntity(alarmEntityArgument, ringtonesUseCase())
+                newState = uiState.value.fromEntity(alarmEntityArgument, ringtonesUseCase())
             }
         }
         viewModelScope.launch {
@@ -61,7 +61,7 @@ class EditAlarmViewModel(
                         val selectedRingtone =
                             ringtonesUseCase().firstOrNull { it.uri.toString() == uriPath }
                                 ?: RingtoneEntity.asDefault()
-                        newState = state.value.copy(
+                        newState = uiState.value.copy(
                             ringtoneEntity = selectedRingtone
                         )
                         // Clear the value
@@ -75,43 +75,43 @@ class EditAlarmViewModel(
     override fun onEvent(event: EditAlarmEvent) {
         when (event) {
             is EditAlarmEvent.DigitEnteredFromKeyboard -> {
-                newState = state.value.setNewDigit(event.digit)
-                if (state.value.isCompleted()) {
-                    newState = state.value.toCorrectState().toAcceptedState()
+                newState = uiState.value.setNewDigit(event.digit)
+                if (uiState.value.isCompleted()) {
+                    newState = uiState.value.toCorrectState().toAcceptedState()
                 }
             }
 
             EditAlarmEvent.OnAlarmNameDismiss -> {
-                val alarmNameSubState = state.value.alarmNameSubState.dismissDialogResetValues()
-                newState = state.value.copy(alarmNameSubState = alarmNameSubState)
+                val alarmNameSubState = uiState.value.alarmNameSubState.dismissDialogResetValues()
+                newState = uiState.value.copy(alarmNameSubState = alarmNameSubState)
             }
 
             EditAlarmEvent.ChangeAlarmNameClicked -> {
-                val alarmName = state.value.alarmNameSubState.name
-                val alarmNameSubState = state.value.alarmNameSubState.openDialogWithName(alarmName)
-                newState = state.value.copy(alarmNameSubState = alarmNameSubState)
+                val alarmName = uiState.value.alarmNameSubState.name
+                val alarmNameSubState = uiState.value.alarmNameSubState.openDialogWithName(alarmName)
+                newState = uiState.value.copy(alarmNameSubState = alarmNameSubState)
             }
 
             is EditAlarmEvent.OnAlarmNameChanged -> {
-                val newName = state.value.alarmNameSubState.updateName(event.name)
-                newState = state.value.copy(alarmNameSubState = newName)
+                val newName = uiState.value.alarmNameSubState.updateName(event.name)
+                newState = uiState.value.copy(alarmNameSubState = newName)
             }
 
             EditAlarmEvent.SaveAlarmNameClicked -> {
-                val alarmNameSubState = state.value.alarmNameSubState
+                val alarmNameSubState = uiState.value.alarmNameSubState
                     .saveNameIfNotEmpty()
                     .dismissDialogResetValues()
-                newState = state.value.copy(alarmNameSubState = alarmNameSubState)
+                newState = uiState.value.copy(alarmNameSubState = alarmNameSubState)
 
             }
 
-            EditAlarmEvent.HoursComponentClicked -> newState = state.value.startHoursEdit()
+            EditAlarmEvent.HoursComponentClicked -> newState = uiState.value.startHoursEdit()
             EditAlarmEvent.MinutesComponentClicked -> newState =
-                state.value.startMinutesEdit()
+                uiState.value.startMinutesEdit()
 
             EditAlarmEvent.KeyboardIsHidden -> {
-                if (state.value.isCompleted().not()) {
-                    newState = state.value.toCorrectState().toAcceptedState()
+                if (uiState.value.isCompleted().not()) {
+                    newState = uiState.value.toCorrectState().toAcceptedState()
                 }
             }
 
@@ -139,16 +139,16 @@ class EditAlarmViewModel(
 
     private fun updateAlarmEntity() {
         alarmEntity = alarmEntity.updateClock(
-            hours = state.value.clockDigitStates.getHours(),
-            minutes = state.value.clockDigitStates.getMinutes(),
+            hours = uiState.value.clockDigitStates.getHours(),
+            minutes = uiState.value.clockDigitStates.getMinutes(),
         )
     }
 
     private fun saveAlarm() {
         viewModelScope.launch(Dispatchers.IO) {
             alarmEntity = alarmEntity.copy(
-                ringtoneId = state.value.ringtoneEntity.uri.toString(),
-                alarmName = state.value.alarmNameSubState.name
+                ringtoneId = uiState.value.ringtoneEntity.uri.toString(),
+                alarmName = uiState.value.alarmNameSubState.name
             )
             updateAlarmUseCase(alarmEntity)
         }
@@ -157,9 +157,9 @@ class EditAlarmViewModel(
     private fun validateUi() {
         val currentTime = System.currentTimeMillis()
 
-        val alarmHour = state.value.clockDigitStates.getHours()
-        val alarmMinute = state.value.clockDigitStates.getMinutes()
-        newState = state.value.validateButtons().validateDescription(
+        val alarmHour = uiState.value.clockDigitStates.getHours()
+        val alarmMinute = uiState.value.clockDigitStates.getMinutes()
+        newState = uiState.value.validateButtons().validateDescription(
             currentTime = TimeValue(currentTime),
             alarmTime = TimeValue(
                 setTimeToSpecificHourAndMinute(

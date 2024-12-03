@@ -36,7 +36,7 @@ fun RootGraph(
     ) {
         composable<NavigationRoute.Alarms> {
             val viewModel: AlarmListViewModel = koinViewModel()
-            AlarmListScreen(viewModel.state.value, onAlarmList = { viewModel.onEvent(it) })
+            AlarmListScreen(viewModel.uiState.value, onAlarmList = { viewModel.onEvent(it) })
         }
         composable<NavigationRoute.EditAlarm>(
             typeMap = mapOf(
@@ -47,7 +47,7 @@ fun RootGraph(
             val viewModel: EditAlarmViewModel = koinViewModel {
                 parametersOf(navParams.alarmEntity, backStackEntry.savedStateHandle)
             }
-            EditAlarmScreen(viewModel.state.value, onEditAlarm = { viewModel.onEvent(it) })
+            EditAlarmScreen(viewModel.uiState.value, onEditAlarm = { viewModel.onEvent(it) })
         }
         composable<NavigationRoute.SelectRingtone>(
             typeMap = mapOf(
@@ -59,8 +59,8 @@ fun RootGraph(
                 parametersOf(navParams.currentRingtone)
             }
             RingtoneListScreen(
-                ringtones = viewModel.state.value.ringtones,
-                selectedRingtone = viewModel.state.value.selectedRingtone,
+                ringtones = viewModel.uiState.value.ringtones,
+                selectedRingtone = viewModel.uiState.value.selectedRingtone,
                 onRingtoneEvent = { viewModel.onEvent(it) })
         }
     }

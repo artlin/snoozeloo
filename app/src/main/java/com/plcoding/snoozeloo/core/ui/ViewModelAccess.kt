@@ -4,7 +4,7 @@ import androidx.compose.runtime.State
 
 interface ViewModelAccess<StateClass, UIEvent> {
     // exposes view state/states
-    val state: State<StateClass>
+    val uiState: State<StateClass>
 
     // handle events from composables
     fun onEvent(event: UIEvent)

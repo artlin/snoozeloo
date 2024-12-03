@@ -18,13 +18,18 @@ class RingtoneViewModel(
 ) : ViewModel(),
     ViewModelAccess<RingtoneState, RingtoneEvent> {
 
-    override var state: MutableState<RingtoneState> =
+    override var uiState: MutableState<RingtoneState> =
         mutableStateOf(RingtoneState(emptyList(), selectedRingtone = RingtoneEntity.asDefault()))
 
+    private var newState: RingtoneState =
+        RingtoneState(emptyList(), selectedRingtone = RingtoneEntity.asDefault())
+        set(value) {
+            uiState.value = value
+        }
 
     init {
         viewModelScope.launch {
-            state.value = state.value.copy(ringtones = getSystemRingtonesUseCase())
+            newState = uiState.value.copy(ringtones = getSystemRingtonesUseCase())
         }
     }
 

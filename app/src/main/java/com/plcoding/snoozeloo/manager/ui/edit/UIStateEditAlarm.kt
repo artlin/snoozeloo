@@ -1,6 +1,5 @@
 package com.plcoding.snoozeloo.manager.ui.edit
 
-import android.net.Uri
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
 import com.plcoding.snoozeloo.core.domain.value.HeaderButtonLabel
@@ -25,8 +24,11 @@ data class UIStateEditAlarm(
     val clockDigitStates: ClockDigitStates = ClockDigitStates()
 ) {
 
-    fun toNewAlarm(): UIStateEditAlarm {
-        return copy(clockDigitStates = clockDigitStates.asNewAlarm())
+    fun toNewAlarm(defaultRingtone: RingtoneEntity): UIStateEditAlarm {
+        return copy(
+            clockDigitStates = clockDigitStates.asNewAlarm(),
+            selectedRingtoneEntity = defaultRingtone
+        )
     }
 
     fun startHoursEdit(): UIStateEditAlarm {
@@ -68,7 +70,7 @@ data class UIStateEditAlarm(
 
     fun fromEntity(
         alarmEntity: AlarmEntity,
-        selectedRingtone : RingtoneEntity
+        selectedRingtone: RingtoneEntity
     ): UIStateEditAlarm {
         val (hour, minutes) = alarmEntity.clockTime
         return copy(

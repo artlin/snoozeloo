@@ -46,7 +46,9 @@ class EditAlarmViewModel(
     init {
         if (alarmEntityArgument == null) {
             alarmEntity = newAlarmEntity()
-            newState = uiState.value.toNewAlarm()
+            viewModelScope.launch {
+                newState = uiState.value.toNewAlarm(ringtonesManager.getDefaultRingtone())
+            }
         } else {
             alarmEntity = alarmEntityArgument.copy()
             newUiStateFromNavArgument(alarmEntityArgument)
@@ -70,7 +72,10 @@ class EditAlarmViewModel(
 
     private fun newUiStateFromNavArgument(navArgument: AlarmEntity) {
         viewModelScope.launch {
-            newState = uiState.value.fromEntity(navArgument, ringtonesManager.getRingtoneByUri(navArgument.ringtoneId))
+            newState = uiState.value.fromEntity(
+                navArgument,
+                ringtonesManager.getRingtoneByUri(navArgument.ringtoneId)
+            )
         }
     }
 

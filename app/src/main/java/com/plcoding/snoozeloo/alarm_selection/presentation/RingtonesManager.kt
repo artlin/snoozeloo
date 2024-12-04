@@ -20,4 +20,9 @@ class RingtonesManager(private val getSystemRingtonesUseCase: GetSystemRingtones
         }
     }
 
+    suspend fun getDefaultRingtone(): RingtoneEntity {
+        val ringtones = getSystemRingtonesUseCase()
+        return RingtoneEntity.asDefault(ringtones.first())
+    }
+
 }

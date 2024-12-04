@@ -108,9 +108,10 @@ fun AlarmItem(
 
 private fun Pair<Int, Int>.toAlarmTime(): String {
     return StringBuilder().apply {
+        if (first < 10) append("0")
         append("$first")
         append(":")
-        if (second < 10 && second != 0) append("0")
+        if (second < 10) append("0")
         append("$second")
     }.toString()
 }

@@ -1,5 +1,6 @@
 package com.plcoding.snoozeloo.navigation.custom
 
+import SerializableNavType
 import android.net.Uri
 import android.os.Bundle
 import androidx.navigation.NavType
@@ -7,27 +8,14 @@ import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.value.RingtoneId
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlin.reflect.typeOf
 
 object CustomNavType {
 
-    val RingtoneIdNavType = object : NavType<RingtoneId>(isNullableAllowed = false) {
-        override fun get(bundle: Bundle, key: String): RingtoneId {
-            return RingtoneId(Uri.parse(bundle.getString(key)))
-        }
-
-        override fun serializeAsValue(value: RingtoneId): String {
-            return value.value.toString()
-        }
-
-        override fun parseValue(value: String): RingtoneId {
-            return RingtoneId(Uri.parse(value))
-        }
-
-        override fun put(bundle: Bundle, key: String, value: RingtoneId) {
-            bundle.putString(key, value.value.toString())
-        }
-    }
-
+    val RingtoneIdNavType = SerializableNavType<RingtoneId>(
+        type = typeOf<RingtoneId>(),
+        isNullableAllowed = false
+    )
 
     val AlarmMetadataNavType = object :
         NavType<AlarmEntity?>(isNullableAllowed = true) { // Changed to non-nullable AlarmEntity type

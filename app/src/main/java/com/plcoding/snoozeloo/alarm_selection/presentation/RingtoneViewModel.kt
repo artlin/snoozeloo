@@ -1,5 +1,6 @@
 package com.plcoding.snoozeloo.alarm_selection.presentation
 
+import android.net.Uri
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -28,17 +29,30 @@ class RingtoneViewModel(
 
     init {
         viewModelScope.launch {
-            setRingtonesWithSpecialOptions(systemRingtones = ringtonesManager.getAllRingtones())
+            setRingtonesWithSpecialOptions(
+                currentRingtone = currentRingtone,
+                systemRingtones = ringtonesManager.getAllRingtones()
+            )
         }
     }
 
-    private fun setRingtonesWithSpecialOptions(systemRingtones: List<RingtoneEntity>) {
+    private fun setRingtonesWithSpecialOptions(
+        systemRingtones: List<RingtoneEntity>,
+        currentRingtone: RingtoneId
+    ) {
         val ringtonesWithOptions = buildList {
             add(RingtoneEntity.asMute())
             add(RingtoneEntity.asDefault(systemRingtones.first()))
             addAll(systemRingtones.drop(1))
         }
-        newState = uiState.value.copy(ringtones = ringtonesWithOptions)
+        viewModelScope.launch {
+            val selectedRingtone =
+                ringtonesManager.getRingtoneByUri(currentRingtone.value.toString())
+            newState = uiState.value.copy(
+                ringtones = ringtonesWithOptions,
+                selectedRingtone = selectedRingtone
+            )
+        }
     }
 
     override fun onEvent(event: RingtoneEvent) {

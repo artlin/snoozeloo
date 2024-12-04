@@ -133,11 +133,7 @@ class EditAlarmViewModel(
             EditAlarmEvent.SelectRingtoneClicked -> {
                 navigationController.navigateTo(
                     NavigationRoute.SelectRingtone(
-                        RingtoneId(
-                            Uri.parse(
-                                ""
-                            )
-                        )
+                        RingtoneId(uiState.value.selectedRingtoneEntity.uri)
                     )
                 )
             }

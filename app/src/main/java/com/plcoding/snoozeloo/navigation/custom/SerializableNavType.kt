@@ -5,43 +5,55 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import kotlin.reflect.KType
 
-class SerializableNavType<T: Any>(
+class SerializableNavType<T>(
     private val type: KType,
     isNullableAllowed: Boolean = false
-) : NavType<T>(isNullableAllowed) {
+) : NavType<T>(isNullableAllowed) where T : Any? {
 
-    @Suppress("UNCHECKED_CAST")
     override fun get(bundle: Bundle, key: String): T {
-        return Json.decodeFromString(
-            deserializer = serializer(type),
-            string = bundle.getString(key) ?: throw IllegalArgumentException("Null not allowed")
-        ) as T
+        return bundle.getString(key)?.let { value ->
+            Json.decodeFromString(
+                deserializer = serializer(type),
+                string = value
+            ) as T
+        } as T
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun parseValue(value: String): T {
-        return Json.decodeFromString(
-            deserializer = serializer(type),
-            string = Uri.decode(value)
-        ) as T
+        return if (value == "null") {
+            null as T
+        } else {
+            Json.decodeFromString(
+                deserializer = serializer(type),
+                string = Uri.decode(value)
+            ) as T
+        }
     }
 
     override fun put(bundle: Bundle, key: String, value: T) {
-        bundle.putString(
-            key,
-            Json.encodeToString(
-                serializer = serializer(type),
-                value = value
+        if (value == null) {
+            bundle.putString(key, null)
+        } else {
+            bundle.putString(
+                key,
+                Json.encodeToString(
+                    serializer = serializer(type),
+                    value = value
+                )
             )
-        )
+        }
     }
 
     override fun serializeAsValue(value: T): String {
-        return Uri.encode(
-            Json.encodeToString(
-                serializer = serializer(type),
-                value = value
+        return if (value == null) {
+            "null"
+        } else {
+            Uri.encode(
+                Json.encodeToString(
+                    serializer = serializer(type),
+                    value = value
+                )
             )
-        )
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.plcoding.snoozeloo.manager.ui.edit
 
-import android.net.Uri
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -20,6 +19,7 @@ import com.plcoding.snoozeloo.navigation.route.NavigationRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Calendar
+
 
 class EditAlarmViewModel(
     private val updateAlarmUseCase: UpdateAlarmUseCase,
@@ -53,20 +53,19 @@ class EditAlarmViewModel(
             alarmEntity = alarmEntityArgument.copy()
             newUiStateFromNavArgument(alarmEntityArgument)
         }
-        viewModelScope.launch {
-            savedStateHandle.getStateFlow<String?>(SELECTED_RINGTONE_KEY, null)
-                .collect { ringtoneString ->
-                    ringtoneString?.let { uriPath ->
-                        // Update your state
-                        val selectedRingtone = ringtonesManager.getRingtoneByUri(uriPath)
-                        newState = uiState.value.copy(
-                            selectedRingtoneEntity = selectedRingtone
-                        )
-                        // Clear the value
-                        savedStateHandle[SELECTED_RINGTONE_KEY] = null
-                    }
-                    validateUi()
+        with(navigationController) {
+            viewModelScope.watchStateHandle<String>(
+                key = SELECTED_RINGTONE_KEY,
+                defaultValue = null
+            ) { ringtoneUri ->
+                ringtoneUri?.let {
+                    val selectedRingtone = ringtonesManager.getRingtoneByUri(ringtoneUri)
+                    newState = uiState.value.copy(
+                        selectedRingtoneEntity = selectedRingtone
+                    )
                 }
+                validateUi()
+            }
         }
     }
 

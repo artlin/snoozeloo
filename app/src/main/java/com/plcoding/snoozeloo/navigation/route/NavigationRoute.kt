@@ -5,14 +5,14 @@ import com.plcoding.snoozeloo.core.domain.value.RingtoneId
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class NavigationRoute {
+sealed interface NavigationRoute {
     // Main Flow Routes
     @Serializable
-    data object Alarms : NavigationRoute()
+    data object Alarms : NavigationRoute
 
     @Serializable
-    data class EditAlarm(val alarmEntity: AlarmEntity?) : NavigationRoute()
+    data class EditAlarm(val alarmEntity: AlarmEntity?) : NavigationRoute
 
     @Serializable
-    data class SelectRingtone(val currentRingtone: RingtoneId) : NavigationRoute()
+    data class SelectRingtone(val currentRingtone: RingtoneId) : NavigationRoute
 }

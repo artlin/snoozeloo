@@ -140,6 +140,10 @@ class EditAlarmViewModel(
             is EditAlarmEvent.OnRepetitionDayClicked -> {
                 newState = uiState.value.toggleRepetitionDay(atIndex = event.index)
             }
+
+            is EditAlarmEvent.OnAlarmVolumeChanged -> {
+                newState = uiState.value.changeAlarmVolume(newVolume =event.volume)
+            }
         }
         validateUi()
     }

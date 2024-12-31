@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.alarm_volume.presentation
+package com.plcoding.snoozeloo.alarm_volume.presentation.ui
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -28,12 +28,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.plcoding.snoozeloo.alarm_volume.presentation.AlarmVolumeSubState
 import com.plcoding.snoozeloo.core.ui.text.TextTitle2Strong
 
 @Composable
 fun AlarmVolumeComponent(
     label: String,
-    onClickedIndex: (Int) -> Unit
+    alarmVolumeSubState: AlarmVolumeSubState,
+    onVolumeChanged: (Float) -> Unit
 ) {
     Column(
         Modifier
@@ -46,13 +48,13 @@ fun AlarmVolumeComponent(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         TextTitle2Strong(text = label, color = MaterialTheme.colorScheme.onSurface)
-        CustomSlider(0.5f)
+        CustomSlider(alarmVolumeSubState.currentVolume, onVolumeChanged)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomSlider(progress: Float) {
+fun CustomSlider(progress: Float, onChanged: (Float) -> Unit) {
 
     val sizes = 36.dp
     var sliderValue by remember { mutableFloatStateOf(progress) }
@@ -76,7 +78,7 @@ fun CustomSlider(progress: Float) {
         value = sliderValue,
         onValueChange = { newValue ->
             sliderValue = newValue // Update the slider value
-//            onEvent(UIEditTextPanelEvent.FonSizeChanged(newValue))
+            onChanged(newValue)
         },
         valueRange = 0f..1f,
         steps = 32,
@@ -103,7 +105,6 @@ fun CustomSliderThumb(isThumbPressed: Boolean) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomSliderTrack(sliderProgress: Float) {
     Log.e("SliderState", sliderProgress.toString())

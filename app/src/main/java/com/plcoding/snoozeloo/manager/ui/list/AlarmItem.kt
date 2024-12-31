@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -22,6 +20,7 @@ import com.plcoding.snoozeloo.core.common.extension.toAlarmTime
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.getTimeLeftToAlarm
 import com.plcoding.snoozeloo.core.domain.value.TimeValue
+import com.plcoding.snoozeloo.core.ui.CustomSwitch
 import com.plcoding.snoozeloo.core.ui.text.TextBody
 import com.plcoding.snoozeloo.core.ui.text.TextH3
 import com.plcoding.snoozeloo.core.ui.text.TextTitle2Strong
@@ -80,11 +79,7 @@ fun AlarmItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        Switch(
-            entity.isEnabled, {}, colors = SwitchDefaults.colors().copy(
-
-            )
-        )
+        CustomSwitch(entity.isEnabled) { }
     }
 }
 

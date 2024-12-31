@@ -2,9 +2,11 @@ package com.plcoding.snoozeloo.manager.ui.list
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.plcoding.snoozeloo.core.common.timer.TimerComponent
 import com.plcoding.snoozeloo.core.data.mapper.DataMapper
 import com.plcoding.snoozeloo.core.domain.db.Alarm
 import com.plcoding.snoozeloo.core.domain.db.dao.AlarmsDao
@@ -24,6 +26,8 @@ class AlarmListViewModel(
 ) : ViewModel(), KoinComponent,
     ViewModelAccess<AlarmListState, AlarmListEvent> {
 
+    private var timerComponent = TimerComponent(viewModelScope, ::updateCurrentTime)
+
     private val alarmsDao: AlarmsDao by inject()
     private val entityConverter: DataMapper<Alarm, AlarmEntity> by inject()
 
@@ -42,6 +46,18 @@ class AlarmListViewModel(
         }
     }
 
+    fun handleLifecycleState(state: Lifecycle.State) {
+        when (state) {
+            Lifecycle.State.RESUMED -> timerComponent.start()
+            Lifecycle.State.STARTED -> timerComponent.start()
+            else -> timerComponent.stop()
+        }
+    }
+
+    private fun updateCurrentTime() {
+        uiState.value = uiState.value.setNewTime(TimeValue(System.currentTimeMillis()))
+    }
+
     override fun onEvent(event: AlarmListEvent) {
         when (event) {
             is AlarmListEvent.AddAlarmClicked -> {
@@ -52,5 +68,10 @@ class AlarmListViewModel(
                 navigationController.navigateTo(NavigationRoute.EditAlarm(alarmEntity = event.alarmEntity))
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        timerComponent.cancel()
     }
 }

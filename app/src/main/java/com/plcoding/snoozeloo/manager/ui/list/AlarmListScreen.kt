@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
@@ -36,22 +37,25 @@ import com.plcoding.snoozeloo.manager.ui.edit.OnClickWithIntValue
 fun AlarmListScreen(state: AlarmListState, onAlarmList: OnAlarmList) {
 
     if (state.list.isEmpty()) EmptyScreen()
-    else AlarmList(currentTime = state.currentTime, list = state.list, onAlarmList)
+    else {
+        AlarmList(currentTime = { state.currentTime }, list = state.list, onAlarmList)
+    }
     AddAlarmButton {
         onAlarmList(AlarmListEvent.AddAlarmClicked)
     }
 }
 
 @Composable
-fun AlarmList(currentTime: TimeValue, list: List<AlarmEntity>, onAlarmList: OnAlarmList) {
+fun AlarmList(currentTime: () -> TimeValue, list: List<AlarmEntity>, onAlarmList: OnAlarmList) {
+    println("Alarm list recompose")
     LazyColumn(modifier = Modifier.padding(12.dp), verticalArrangement = spacedBy(16.dp)) {
-       item{
-           AlarmListHeader()
-       }
+        item {
+            AlarmListHeader()
+        }
 
         items(items = list,
             key = { item -> item.uid }) { item ->
-            AlarmItem(alarmEntity = item,
+            AlarmItem(alarmEntity = {item},
                 currentTime = currentTime,
                 onToggleClick = { onAlarmList(AlarmListEvent.ToggleAlarmClicked(item.uid)) },
                 onCardClick = { onAlarmList(AlarmListEvent.AlarmCardClicked(item)) })
@@ -62,11 +66,26 @@ fun AlarmList(currentTime: TimeValue, list: List<AlarmEntity>, onAlarmList: OnAl
 
 @Composable
 fun AlarmItem(
-    alarmEntity: AlarmEntity,
-    currentTime: TimeValue,
+    alarmEntity: () -> AlarmEntity,
+    currentTime: () -> TimeValue,
     onToggleClick: OnClick,
     onCardClick: OnClickWithIntValue
 ) {
+    println("AlarmItem recomposed") // or Log.d()
+
+    val entity = remember(alarmEntity) { alarmEntity() }
+    val time = remember(currentTime) { currentTime() }
+
+    val alarmTimeString = remember(entity.hours, entity.minutes) {
+        println("alarmTimeString recalculated")
+        Pair(entity.hours, entity.minutes).toAlarmTime()
+    }
+
+    val alarmInTimeString = remember(time, entity.hours, entity.minutes) {
+        println("alarmInTime recalculated")
+        getAlarmInTime(time, entity.hours, entity.minutes).toAlarmInTime()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -77,29 +96,25 @@ fun AlarmItem(
             )
             .padding(16.dp)
             .clickable {
-                onCardClick(alarmEntity.uid)
+                onCardClick(entity.uid)
             }, contentAlignment = Alignment.TopEnd
     ) {
         Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = spacedBy(10.dp)) {
             TextTitle2Strong(
-                text = alarmEntity.alarmName.value,
+                text = entity.alarmName.value,
                 color = MaterialTheme.colorScheme.onSurface
             )
             TextH3(
-                text = Pair(alarmEntity.hours, alarmEntity.minutes).toAlarmTime(),
+                text = alarmTimeString,
                 color = MaterialTheme.colorScheme.onSurface
             )
             TextBody(
-                text = getAlarmInTime(
-                    currentTime,
-                    alarmEntity.hours,
-                    alarmEntity.minutes
-                ).toAlarmInTime(),
+                text = alarmInTimeString,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         Switch(
-            alarmEntity.isEnabled, {}, colors = SwitchDefaults.colors().copy(
+            entity.isEnabled, {}, colors = SwitchDefaults.colors().copy(
 
             )
         )
@@ -132,7 +147,7 @@ private fun Pair<Long, Long>.toAlarmInTime(): String {
 private fun PreviewAlarmList() {
     SnoozelooTheme {
         AlarmList(
-            currentTime = TimeValue(System.currentTimeMillis()),
+            currentTime = { TimeValue(System.currentTimeMillis()) },
             list = generateAlarms(),
             onAlarmList = {}
         )

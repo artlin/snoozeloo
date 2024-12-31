@@ -3,8 +3,11 @@ package com.plcoding.snoozeloo.navigation.graph
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -36,6 +39,10 @@ fun RootGraph(
     ) {
         composable<NavigationRoute.Alarms> {
             val viewModel: AlarmListViewModel = koinViewModel()
+            val lifecycleState = rememberUpdatedState(LocalLifecycleOwner.current.lifecycle.currentState)
+            LaunchedEffect(lifecycleState.value) {
+                viewModel.handleLifecycleState(lifecycleState.value)
+            }
             AlarmListScreen(viewModel.uiState.value, onAlarmList = { viewModel.onEvent(it) })
         }
         composable<NavigationRoute.EditAlarm>(

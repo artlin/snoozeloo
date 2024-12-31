@@ -1,5 +1,6 @@
 package com.plcoding.snoozeloo.manager.ui.edit
 
+import com.plcoding.snoozeloo.alram_recurring.presentation.ui.AlarmRepetitionSubState
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
 import com.plcoding.snoozeloo.core.domain.value.HeaderButtonLabel
@@ -12,6 +13,7 @@ data class UIStateEditAlarm(
     val isNewDefaultAlarm: Boolean = true,
     val selectedRingtoneEntity: RingtoneEntity,
     val alarmNameSubState: AlarmNameSubState = AlarmNameSubState.asDefault(),
+    val alarmRepetitionSubState: AlarmRepetitionSubState = AlarmRepetitionSubState.getDefault(),
     val clockDescription: ClockAlarmDescriptionState = ClockAlarmDescriptionState(),
     val headerButtonStates: ButtonsState = ButtonsState(
         leftButton = SingleButtonState(

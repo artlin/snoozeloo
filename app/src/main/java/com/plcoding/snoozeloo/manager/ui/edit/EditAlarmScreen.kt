@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.plcoding.snoozeloo.alarm_selection.presentation.ui.getLabelShort
+import com.plcoding.snoozeloo.alram_recurring.presentation.AlarmRepetitionComponent
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtons
 
@@ -35,6 +36,7 @@ fun EditAlarmScreen(state: UIStateEditAlarm, onEditAlarm: OnEditAlarm) {
             "Alarm name",
             state.alarmNameSubState.name.value,
             onClick = { onEditAlarm(EditAlarmEvent.ChangeAlarmNameClicked) })
+        AlarmRepetitionComponent("Repeat", state.alarmRepetitionSubState, onClickedIndex = {})
         ClickableRowWithLabelComponent(
             "Alarm ringtone",
             state.selectedRingtoneEntity.getLabelShort(),

@@ -9,8 +9,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.plcoding.snoozeloo.alarm_selection.presentation.ui.getLabelShort
 import com.plcoding.snoozeloo.alarm_recurring.presentation.AlarmRepetitionComponent
+import com.plcoding.snoozeloo.alarm_selection.presentation.ui.getLabelShort
+import com.plcoding.snoozeloo.alarm_volume.presentation.AlarmVolumeComponent
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtons
 
@@ -39,11 +40,12 @@ fun EditAlarmScreen(state: UIStateEditAlarm, onEditAlarm: OnEditAlarm) {
         AlarmRepetitionComponent(
             "Repeat",
             state.alarmRepetitionSubState,
-            onClickedIndex = { onEditAlarm(EditAlarmEvent.OnRepetitionDayClicked(it )) })
+            onClickedIndex = { onEditAlarm(EditAlarmEvent.OnRepetitionDayClicked(it)) })
         ClickableRowWithLabelComponent(
             "Alarm ringtone",
             state.selectedRingtoneEntity.getLabelShort(),
             onClick = { onEditAlarm(EditAlarmEvent.SelectRingtoneClicked) })
+        AlarmVolumeComponent("Alarm volume") { }
     }
     if (state.alarmNameSubState.isDialogShown) {
         EditAlarmNameDialog(state.alarmNameSubState.editedName.value, onEditAlarm)

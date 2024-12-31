@@ -1,6 +1,6 @@
 package com.plcoding.snoozeloo.manager.ui.edit
 
-import com.plcoding.snoozeloo.alarm_recurring.presentation.ui.AlarmRepetitionSubState
+import com.plcoding.snoozeloo.alarm_recurring.presentation.AlarmRepetitionSubState
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
 import com.plcoding.snoozeloo.core.domain.value.HeaderButtonLabel

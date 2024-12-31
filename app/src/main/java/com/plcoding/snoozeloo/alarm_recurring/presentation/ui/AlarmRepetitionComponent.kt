@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.alarm_recurring.presentation
+package com.plcoding.snoozeloo.alarm_recurring.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.plcoding.snoozeloo.alarm_recurring.presentation.ui.AlarmRepetitionSubState
+import com.plcoding.snoozeloo.alarm_recurring.presentation.AlarmRepetitionSubState
 import com.plcoding.snoozeloo.core.ui.text.TextLabel
 import com.plcoding.snoozeloo.core.ui.text.TextTitle2Strong
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme

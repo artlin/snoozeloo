@@ -1,6 +1,7 @@
 package com.plcoding.snoozeloo.manager.ui.edit
 
 import com.plcoding.snoozeloo.alarm_recurring.presentation.AlarmRepetitionSubState
+import com.plcoding.snoozeloo.alarm_vibrate.presentation.AlarmVibrateSubState
 import com.plcoding.snoozeloo.alarm_volume.presentation.AlarmVolumeSubState
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
@@ -16,6 +17,7 @@ data class UIStateEditAlarm(
     val alarmNameSubState: AlarmNameSubState = AlarmNameSubState.asDefault(),
     val alarmRepetitionSubState: AlarmRepetitionSubState = AlarmRepetitionSubState.getDefault(),
     val alarmVolumeSubState: AlarmVolumeSubState = AlarmVolumeSubState.getDefault(),
+    val alarmVibrateSubState: AlarmVibrateSubState = AlarmVibrateSubState.getDefault(),
     val clockDescription: ClockAlarmDescriptionState = ClockAlarmDescriptionState(),
     val headerButtonStates: ButtonsState = ButtonsState(
         leftButton = SingleButtonState(
@@ -98,6 +100,10 @@ data class UIStateEditAlarm(
 
     fun changeAlarmVolume(newVolume: Float): UIStateEditAlarm {
         return copy(alarmVolumeSubState = alarmVolumeSubState.changeVolume(newVolume))
+    }
+
+    fun toggleVibrate(): UIStateEditAlarm {
+        return copy(alarmVibrateSubState = alarmVibrateSubState.toggleVibrate())
     }
 
 }

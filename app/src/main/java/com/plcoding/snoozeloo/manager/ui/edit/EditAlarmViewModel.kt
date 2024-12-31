@@ -144,6 +144,9 @@ class EditAlarmViewModel(
             is EditAlarmEvent.OnAlarmVolumeChanged -> {
                 newState = uiState.value.changeAlarmVolume(newVolume =event.volume)
             }
+
+            EditAlarmEvent.OnAlarmVibrateClicked -> newState = uiState.value.toggleVibrate()
+
         }
         validateUi()
     }

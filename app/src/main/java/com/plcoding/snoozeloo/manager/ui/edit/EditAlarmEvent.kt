@@ -17,6 +17,7 @@ sealed interface EditAlarmEvent {
     data object SaveAlarmNameClicked : EditAlarmEvent
     data class OnRepetitionDayClicked(val index: Int) : EditAlarmEvent
     data class OnAlarmVolumeChanged(val volume: Float) : EditAlarmEvent
+    data object OnAlarmVibrateClicked : EditAlarmEvent
 }
 
 typealias OnEditAlarm = (EditAlarmEvent) -> Unit

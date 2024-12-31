@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.plcoding.snoozeloo.alarm_recurring.presentation.ui.AlarmRepetitionComponent
 import com.plcoding.snoozeloo.alarm_selection.presentation.ui.getLabelShort
+import com.plcoding.snoozeloo.alarm_vibrate.presentation.ui.AlarmVibrateComponent
 import com.plcoding.snoozeloo.alarm_volume.presentation.ui.AlarmVolumeComponent
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
 import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtons
@@ -49,6 +50,11 @@ fun EditAlarmScreen(state: UIStateEditAlarm, onEditAlarm: OnEditAlarm) {
             "Alarm volume",
             state.alarmVolumeSubState,
             onVolumeChanged = { onEditAlarm(EditAlarmEvent.OnAlarmVolumeChanged(it)) })
+        AlarmVibrateComponent(
+            "Vibrate",
+            state.alarmVibrateSubState,
+            { onEditAlarm(EditAlarmEvent.OnAlarmVibrateClicked) }
+        )
     }
     if (state.alarmNameSubState.isDialogShown) {
         EditAlarmNameDialog(state.alarmNameSubState.editedName.value, onEditAlarm)

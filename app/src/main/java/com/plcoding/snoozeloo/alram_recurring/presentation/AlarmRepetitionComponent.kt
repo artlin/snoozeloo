@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,7 +26,11 @@ import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
 import com.plcoding.snoozeloo.manager.ui.edit.OnClick
 
 @Composable
-fun AlarmRepetitionComponent(label: String,state:AlarmRepetitionSubState, onClickedIndex: (Int) -> Unit) {
+fun AlarmRepetitionComponent(
+    label: String,
+    state: AlarmRepetitionSubState,
+    onClickedIndex: (Int) -> Unit
+) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -64,6 +69,7 @@ fun DayButton(label: String, isSelected: Boolean, onClick: OnClick) {
             shape = RoundedCornerShape(38.dp)
         )
         .widthIn(min = 38.dp)
+        .clip(RoundedCornerShape(38.dp))
         .clickable { onClick() }
         .padding(vertical = 6.dp, horizontal = 11.dp)
     val textModifier = Modifier
@@ -94,8 +100,8 @@ fun PreviewDayButton() {
 @Preview(device = Devices.PIXEL_4)
 @Composable
 fun PreviewAlarmRepetitionComponent() {
-    val state=  AlarmRepetitionSubState.getDefault()
+    val state = AlarmRepetitionSubState.getDefault()
     SnoozelooTheme {
-        AlarmRepetitionComponent("Repeat",state, {})
+        AlarmRepetitionComponent("Repeat", state, {})
     }
 }

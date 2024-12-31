@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.plcoding.snoozeloo.core.common.extension.toAlarmInTime
 import com.plcoding.snoozeloo.core.common.extension.toAlarmTime
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
-import com.plcoding.snoozeloo.core.domain.getAlarmInTime
+import com.plcoding.snoozeloo.core.domain.getTimeLeftToAlarm
 import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import com.plcoding.snoozeloo.core.ui.text.TextBody
 import com.plcoding.snoozeloo.core.ui.text.TextH3
@@ -47,7 +47,7 @@ fun AlarmItem(
 
     val alarmInTimeString = remember(time, entity.hours, entity.minutes) {
         println("alarmInTime recalculated")
-        getAlarmInTime(time, entity.hours, entity.minutes).toAlarmInTime()
+        getTimeLeftToAlarm(time, entity.hours, entity.minutes).toAlarmInTime()
     }
 
     Box(

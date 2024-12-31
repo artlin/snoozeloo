@@ -16,7 +16,7 @@ fun getAlarmTime(alarmTime: TimeValue): Pair<Int, Int> {
     return hours to minutes
 }
 
-fun getAlarmInTime(currentTime: TimeValue, alarmTime: TimeValue): Pair<Long, Long> {
+fun getTimeLeftToAlarm(currentTime: TimeValue, alarmTime: TimeValue): Pair<Long, Long> {
     return if (currentTime.value <= alarmTime.value) {
         getTimeDifferenceInHoursAndMinutes(currentTime.value, alarmTime.value)
     } else {
@@ -24,7 +24,7 @@ fun getAlarmInTime(currentTime: TimeValue, alarmTime: TimeValue): Pair<Long, Lon
     }
 }
 
-fun getAlarmInTime(currentTime: TimeValue, hours: Int, minutes: Int): Pair<Long, Long> {
+fun getTimeLeftToAlarm(currentTime: TimeValue, hours: Int, minutes: Int): Pair<Long, Long> {
     val calendar = Calendar.getInstance().apply {
         timeInMillis = currentTime.value
     }

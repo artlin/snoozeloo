@@ -1,4 +1,4 @@
-package com.plcoding.snoozeloo.alram_recurring.presentation.ui
+package com.plcoding.snoozeloo.alarm_recurring.presentation.ui
 
 data class AlarmRepetitionSubState(val selected: List<Boolean>) {
     fun toggleDay(atIndex: Int): AlarmRepetitionSubState {

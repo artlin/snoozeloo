@@ -36,9 +36,9 @@ class EditAlarmViewModel(
         )
     )
 
-    var newState: UIStateEditAlarm = UIStateEditAlarm(RingtoneEntity.asMute())
+    var newState: UIStateEditAlarm? = null
         set(value) {
-            uiState.value = value
+            uiState.value = value ?: return
         }
 
     private var alarmEntity: AlarmEntity
@@ -74,7 +74,7 @@ class EditAlarmViewModel(
             newState = uiState.value.fromEntity(
                 navArgument,
                 ringtonesManager.getRingtoneByUri(navArgument.ringtoneId)
-            )
+            ).copy(isNewDefaultAlarm = false)
         }
     }
 

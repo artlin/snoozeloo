@@ -9,12 +9,13 @@ data class ClockAlarmDescriptionState(
 ) {
     fun validateDescription(
         currentTime: TimeValue,
-        alarmTime: TimeValue
+        alarmTime: TimeValue,
+        isDescriptionEnabled: Boolean,
     ): ClockAlarmDescriptionState {
         val difference = getTimeLeftToAlarm(currentTime, alarmTime)
         return copy(
             description = "Alarm in ${difference.first} H ${difference.second}min",
-            isDescriptionEnabled = currentTime.value != alarmTime.value
+            isDescriptionEnabled = isDescriptionEnabled
         )
     }
 }

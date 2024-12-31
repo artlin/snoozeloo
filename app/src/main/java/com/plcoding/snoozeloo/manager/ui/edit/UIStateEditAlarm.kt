@@ -9,6 +9,7 @@ import com.plcoding.snoozeloo.core.ui.headerbuttons.HeaderButtonType
 import com.plcoding.snoozeloo.core.ui.headerbuttons.SingleButtonState
 
 data class UIStateEditAlarm(
+    val isNewDefaultAlarm: Boolean = true,
     val selectedRingtoneEntity: RingtoneEntity,
     val alarmNameSubState: AlarmNameSubState = AlarmNameSubState.asDefault(),
     val clockDescription: ClockAlarmDescriptionState = ClockAlarmDescriptionState(),
@@ -26,6 +27,7 @@ data class UIStateEditAlarm(
 
     fun toNewAlarm(defaultRingtone: RingtoneEntity): UIStateEditAlarm {
         return copy(
+            isNewDefaultAlarm = true,
             clockDigitStates = clockDigitStates.asNewAlarm(),
             selectedRingtoneEntity = defaultRingtone
         )
@@ -50,7 +52,7 @@ data class UIStateEditAlarm(
         copy(clockDigitStates = clockDigitStates.toCorrectedState())
 
     fun toAcceptedState(): UIStateEditAlarm =
-        copy(clockDigitStates = clockDigitStates.toAcceptedState())
+        copy(clockDigitStates = clockDigitStates.toAcceptedState(), isNewDefaultAlarm = false)
 
     fun validateButtons(): UIStateEditAlarm {
         val isSaveAlarmAllowed = isCompleted()
@@ -65,7 +67,13 @@ data class UIStateEditAlarm(
     }
 
     fun validateDescription(currentTime: TimeValue, alarmTime: TimeValue): UIStateEditAlarm {
-        return copy(clockDescription = clockDescription.validateDescription(currentTime, alarmTime))
+        return copy(
+            clockDescription = clockDescription.validateDescription(
+                currentTime,
+                alarmTime,
+                isDescriptionEnabled = isNewDefaultAlarm.not()
+            )
+        )
     }
 
     fun fromEntity(

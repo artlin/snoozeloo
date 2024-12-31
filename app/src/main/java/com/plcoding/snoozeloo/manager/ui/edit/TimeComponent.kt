@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -26,10 +27,13 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.plcoding.snoozeloo.core.ui.text.TextH2
+import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
 
 
 @Composable
@@ -46,8 +50,9 @@ fun TimeComponent(
     val viewTreeObserver = view.viewTreeObserver
     DisposableEffect(viewTreeObserver) {
         val listener = ViewTreeObserver.OnGlobalLayoutListener {
-            val isKeyboardOpen = ViewCompat.getRootWindowInsets(view)
-                ?.isVisible(WindowInsetsCompat.Type.ime()) ?: true
+            val isKeyboardOpen =
+                ViewCompat.getRootWindowInsets(view)?.isVisible(WindowInsetsCompat.Type.ime())
+                    ?: true
             if (isKeyboardOpen.not()) onKeyboardHidden()
         }
 
@@ -68,24 +73,28 @@ fun TimeComponent(
             keyboardController?.hide()
         }
     }
-    Box {
+    Box(contentAlignment = Alignment.Center) {
         FocusableHiddenField(focusRequester) { enteredText ->
             onUserEnteredValue(enteredText)
         }
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally)
         ) {
-            TimeComponentBg(onClick = { onComponentClick(ComponentClickType.HOURS) }) {
-                OneDigitField(Modifier.weight(1f), state.allStates[FocusedSelection.HOURS_1])
-                OneDigitField(Modifier.weight(1f), state.allStates[FocusedSelection.HOURS_2])
-            }
+            val digitModifier = Modifier.wrapContentWidth()
+            TimeComponentBg(onClick = { onComponentClick(ComponentClickType.HOURS) }, {
+                OneDigitField(digitModifier, state.allStates[FocusedSelection.HOURS_1])
+            }, {
+                OneDigitField(digitModifier, state.allStates[FocusedSelection.HOURS_2])
+            })
             Colon()
-            TimeComponentBg(onClick = { onComponentClick(ComponentClickType.MINUTES) }) {
-                OneDigitField(Modifier.weight(1f), state.allStates[FocusedSelection.MINUTES_1])
-                OneDigitField(Modifier.weight(1f), state.allStates[FocusedSelection.MINUTES_2])
-            }
+            TimeComponentBg(onClick = { onComponentClick(ComponentClickType.MINUTES) }, {
+                OneDigitField(digitModifier, state.allStates[FocusedSelection.MINUTES_1])
+            }, {
+                OneDigitField(digitModifier, state.allStates[FocusedSelection.MINUTES_2])
+            })
         }
     }
 }
@@ -95,9 +104,7 @@ fun OneDigitField(modifier: Modifier, digitData: DigitFieldData?) {
     val infiniteTransition = rememberInfiniteTransition(label = "")
 
     val blink by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 0.3f,
-        animationSpec = infiniteRepeatable(
+        initialValue = 1f, targetValue = 0.3f, animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 500, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse
         ), label = ""
@@ -109,8 +116,7 @@ fun OneDigitField(modifier: Modifier, digitData: DigitFieldData?) {
             DigitFieldState.IS_SET -> MaterialTheme.colorScheme.primary
             DigitFieldState.IS_WAITING_FOR_INPUT -> MaterialTheme.colorScheme.onSurfaceVariant
             null -> MaterialTheme.colorScheme.error
-        },
-        animationSpec = tween(durationMillis = 500), label = ""
+        }, animationSpec = tween(durationMillis = 500), label = ""
     )
 
     val animatedModifier = when (digitData?.state) {
@@ -126,6 +132,46 @@ fun OneDigitField(modifier: Modifier, digitData: DigitFieldData?) {
         color = color,
         textAlign = TextAlign.Center
     )
+}
+
+@Preview(device = Devices.PIXEL_4)
+@Composable
+fun PreviewOneDigitFields() {
+    SnoozelooTheme {
+        val modifier = Modifier.wrapContentWidth()
+        val clockDigitStates = ClockDigitStates().asNewAlarm()
+        OneDigitField(modifier, clockDigitStates.allStates[FocusedSelection.HOURS_1])
+    }
+}
+
+@Preview(device = Devices.PIXEL_4)
+@Composable
+fun PreviewTwoDigitFields() {
+    SnoozelooTheme {
+        val clockDigitStates = ClockDigitStates().asNewAlarm()
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            val modifier = Modifier.wrapContentWidth()
+            TimeComponentBg(onClick = { }, firstDigit = {
+                OneDigitField(modifier, clockDigitStates.allStates[FocusedSelection.HOURS_1])
+            }, secondDigit = {
+                OneDigitField(modifier, clockDigitStates.allStates[FocusedSelection.HOURS_1])
+            })
+        }
+    }
+}
+
+@Preview(device = Devices.PIXEL_4)
+@Composable
+fun PreviewTimeComponent() {
+    SnoozelooTheme {
+        val clockDigitStates = ClockDigitStates().asNewAlarm()
+        TimeComponent(clockDigitStates, { }, { }, {})
+    }
 }
 
 typealias OnComponentClick = (ComponentClickType) -> Unit

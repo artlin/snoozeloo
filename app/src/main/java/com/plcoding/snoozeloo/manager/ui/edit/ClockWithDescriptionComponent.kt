@@ -61,7 +61,7 @@ fun PreviewEditableClockComponent() {
     SnoozelooTheme {
         val state = ClockDigitStates().asNewAlarm()
         ClockWithDescriptionComponent(state, ClockAlarmDescriptionState()) {
-
+            
         }
     }
 }

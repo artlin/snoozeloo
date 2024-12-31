@@ -36,7 +36,10 @@ fun EditAlarmScreen(state: UIStateEditAlarm, onEditAlarm: OnEditAlarm) {
             "Alarm name",
             state.alarmNameSubState.name.value,
             onClick = { onEditAlarm(EditAlarmEvent.ChangeAlarmNameClicked) })
-        AlarmRepetitionComponent("Repeat", state.alarmRepetitionSubState, onClickedIndex = {})
+        AlarmRepetitionComponent(
+            "Repeat",
+            state.alarmRepetitionSubState,
+            onClickedIndex = { onEditAlarm(EditAlarmEvent.OnRepetitionDayClicked(it )) })
         ClickableRowWithLabelComponent(
             "Alarm ringtone",
             state.selectedRingtoneEntity.getLabelShort(),

@@ -90,4 +90,8 @@ data class UIStateEditAlarm(
         )
     }
 
+    fun toggleRepetitionDay(atIndex: Int): UIStateEditAlarm {
+        return copy(alarmRepetitionSubState = alarmRepetitionSubState.toggleDay(atIndex))
+    }
+
 }

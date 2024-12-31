@@ -136,6 +136,10 @@ class EditAlarmViewModel(
                     )
                 )
             }
+
+            is EditAlarmEvent.OnRepetitionDayClicked -> {
+                newState = uiState.value.toggleRepetitionDay(atIndex = event.index)
+            }
         }
         validateUi()
     }

@@ -27,8 +27,7 @@ class EditAlarmViewModel(
     private val navigationController: NavigationController,
     private val savedStateHandle: SavedStateHandle,
     alarmEntityArgument: AlarmEntity? = null
-) : ViewModel(),
-    ViewModelAccess<UIStateEditAlarm, EditAlarmEvent> {
+) : ViewModel(), ViewModelAccess<UIStateEditAlarm, EditAlarmEvent> {
 
     override var uiState: MutableState<UIStateEditAlarm> = mutableStateOf(
         UIStateEditAlarm(
@@ -55,8 +54,7 @@ class EditAlarmViewModel(
         }
         with(navigationController) {
             viewModelScope.watchStateHandle<String>(
-                key = SELECTED_RINGTONE_KEY,
-                defaultValue = null
+                key = SELECTED_RINGTONE_KEY, defaultValue = null
             ) { ringtoneUri ->
                 ringtoneUri?.let {
                     val selectedRingtone = ringtonesManager.getRingtoneByUri(ringtoneUri)
@@ -72,8 +70,7 @@ class EditAlarmViewModel(
     private fun newUiStateFromNavArgument(navArgument: AlarmEntity) {
         viewModelScope.launch {
             newState = uiState.value.fromEntity(
-                navArgument,
-                ringtonesManager.getRingtoneByUri(navArgument.ringtoneId)
+                navArgument, ringtonesManager.getRingtoneByUri(navArgument.ringtoneId)
             ).copy(isNewDefaultAlarm = false)
         }
     }
@@ -105,16 +102,14 @@ class EditAlarmViewModel(
             }
 
             EditAlarmEvent.SaveAlarmNameClicked -> {
-                val alarmNameSubState = uiState.value.alarmNameSubState
-                    .saveNameIfNotEmpty()
-                    .dismissDialogResetValues()
+                val alarmNameSubState =
+                    uiState.value.alarmNameSubState.saveNameIfNotEmpty().dismissDialogResetValues()
                 newState = uiState.value.copy(alarmNameSubState = alarmNameSubState)
 
             }
 
             EditAlarmEvent.HoursComponentClicked -> newState = uiState.value.startHoursEdit()
-            EditAlarmEvent.MinutesComponentClicked -> newState =
-                uiState.value.startMinutesEdit()
+            EditAlarmEvent.MinutesComponentClicked -> newState = uiState.value.startMinutesEdit()
 
             EditAlarmEvent.KeyboardIsHidden -> {
                 if (uiState.value.isCompleted().not()) {
@@ -142,7 +137,7 @@ class EditAlarmViewModel(
             }
 
             is EditAlarmEvent.OnAlarmVolumeChanged -> {
-                newState = uiState.value.changeAlarmVolume(newVolume =event.volume)
+                newState = uiState.value.changeAlarmVolume(newVolume = event.volume)
             }
 
             EditAlarmEvent.OnAlarmVibrateClicked -> newState = uiState.value.toggleVibrate()
@@ -155,15 +150,19 @@ class EditAlarmViewModel(
         alarmEntity = alarmEntity.updateClock(
             hours = uiState.value.clockDigitStates.getHours(),
             minutes = uiState.value.clockDigitStates.getMinutes(),
+        ).updateRingtone(
+            ringtoneId = uiState.value.selectedRingtoneEntity.uri.toString(),
+        ).updateRingtoneVolume(
+            uiState.value.alarmVolumeSubState.currentVolume
+        ).updateRingtoneVibration(
+            uiState.value.alarmVibrateSubState.isVibrateEnabled
+        ).updateAlarmName(
+            alarmName = uiState.value.alarmNameSubState.name
         )
     }
 
     private fun saveAlarm() {
         viewModelScope.launch(Dispatchers.IO) {
-            alarmEntity = alarmEntity.copy(
-                ringtoneId = uiState.value.selectedRingtoneEntity.uri.toString(),
-                alarmName = uiState.value.alarmNameSubState.name
-            )
             updateAlarmUseCase(alarmEntity)
         }
     }
@@ -174,21 +173,16 @@ class EditAlarmViewModel(
         val alarmHour = uiState.value.clockDigitStates.getHours()
         val alarmMinute = uiState.value.clockDigitStates.getMinutes()
         newState = uiState.value.validateButtons().validateDescription(
-            currentTime = TimeValue(currentTime),
-            alarmTime = TimeValue(
+            currentTime = TimeValue(currentTime), alarmTime = TimeValue(
                 setTimeToSpecificHourAndMinute(
-                    currentTime,
-                    alarmHour,
-                    alarmMinute
+                    currentTime, alarmHour, alarmMinute
                 )
             )
         )
     }
 
     private fun setTimeToSpecificHourAndMinute(
-        originalTimeInMillis: Long,
-        targetHour: Int,
-        targetMinute: Int
+        originalTimeInMillis: Long, targetHour: Int, targetMinute: Int
     ): Long {
         val calendar = Calendar.getInstance().apply {
             timeInMillis = originalTimeInMillis

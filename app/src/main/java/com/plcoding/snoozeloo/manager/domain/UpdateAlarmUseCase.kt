@@ -8,14 +8,17 @@ import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 class UpdateAlarmUseCase(
     private val alarmsDao: AlarmsDao,
     private val mapper: DataMapper<Alarm, AlarmEntity>,
-    private val rescheduleAlarmUse: RescheduleAlarmUseCase
+    private val rescheduleAlarmUse: RescheduleAlarmUseCase,
+    private val cancelAlarmUseCase: CancelAlarmUseCase
 ) {
     suspend operator fun invoke(alarmEntity: AlarmEntity) {
         mapper.convert(alarmEntity)?.let { alarm ->
             alarmsDao.upsert(alarm)
-            rescheduleAlarmUse.invoke(alarm)
+            if(alarmEntity.isEnabled) {
+                rescheduleAlarmUse.invoke(alarm)
+            } else {
+                cancelAlarmUseCase.invoke(alarm)
+            }
         }
-
-
     }
 }

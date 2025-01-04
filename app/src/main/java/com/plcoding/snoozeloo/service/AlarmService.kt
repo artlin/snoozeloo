@@ -59,6 +59,8 @@ class AlarmService: Service() {
             .setContentTitle("Alarm")
             .setContentText("Alarm with id $alarmId is running")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
             .setChannelId("ALARM_SERVICE_CHANNEL_ID")
             .setFullScreenIntent(

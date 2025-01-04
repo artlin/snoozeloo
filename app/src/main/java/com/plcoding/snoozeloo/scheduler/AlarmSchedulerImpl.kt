@@ -30,7 +30,7 @@ class AlarmSchedulerImpl(
 
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            alarm.hashCode(),
+            alarm.id,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -50,7 +50,7 @@ class AlarmSchedulerImpl(
 //            nextAlarmOccurence,
 //            PendingIntent.getBroadcast(
 //                context,
-//                alarm.hashCode(),
+//                alarm.id,
 //                intent,
 //                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
 //            )
@@ -74,7 +74,7 @@ class AlarmSchedulerImpl(
         alarmManager.cancel(
             PendingIntent.getBroadcast(
                 context,
-                alarm.hashCode(),
+                alarm.id,
                 Intent(context, AlarmReceiver::class.java).apply {
                     putExtra("ALARM_ID", alarm.id)
                 },

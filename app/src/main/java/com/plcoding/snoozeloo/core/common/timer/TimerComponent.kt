@@ -27,7 +27,11 @@ class TimerComponent(
         isRunning = true
         timerJob = coroutineScope.launch {
             while (isRunning) {
-                delay(TimeUnit.SECONDS.toMillis(15))
+                if(lastTickValue > 0) {
+                    delay(TimeUnit.MINUTES.toMillis(1))
+                } else {
+                    delay(getDurationToNextFullMinute())
+                }
                 lastTickValue++
                 onTick()
             }
@@ -43,5 +47,11 @@ class TimerComponent(
         stop()
         lastTickValue = 0
         cleanupJob.cancel()
+    }
+
+    fun getDurationToNextFullMinute(): Long {
+        val currentTimeMillis = System.currentTimeMillis()
+        return TimeUnit.MINUTES.toMillis(1) -
+                (currentTimeMillis % TimeUnit.MINUTES.toMillis(1))
     }
 }

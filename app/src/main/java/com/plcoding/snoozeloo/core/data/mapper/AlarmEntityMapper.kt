@@ -7,7 +7,7 @@ import com.plcoding.snoozeloo.core.domain.value.AlarmName
 
 class AlarmEntityMapper : DataMapper<Alarm, AlarmEntity>() {
 
-    override suspend fun fromAtoB(input: Alarm): AlarmEntity? = AlarmEntity(
+    override suspend fun fromAtoB(input: Alarm): AlarmEntity = AlarmEntity(
         uid = input.id,
         alarmName = AlarmName(input.name),
         isEnabled = input.isActive,

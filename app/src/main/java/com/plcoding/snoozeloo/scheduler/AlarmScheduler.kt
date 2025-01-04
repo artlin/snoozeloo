@@ -1,6 +1,9 @@
 package com.plcoding.snoozeloo.scheduler
 
+import com.plcoding.snoozeloo.core.domain.db.Alarm
+
 interface AlarmScheduler {
-    fun scheduleAlarm(item: AlarmItem)
-    fun cancelAlarm(item: AlarmItem)
+    fun scheduleAlarm(alarm: Alarm)
+    fun cancelAlarm(alarm: Alarm)
+    fun cancelAllAlarms()
 }

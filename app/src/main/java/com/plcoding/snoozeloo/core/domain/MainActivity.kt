@@ -21,14 +21,13 @@ import com.plcoding.snoozeloo.core.domain.db.Alarm
 import com.plcoding.snoozeloo.core.domain.db.dao.AlarmsDao
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
-import com.plcoding.snoozeloo.scheduler.AlarmItem
 import com.plcoding.snoozeloo.scheduler.AlarmSchedulerImpl
 import com.plcoding.snoozeloo.navigation.NavigationController
 import com.plcoding.snoozeloo.navigation.NavigationControllerImpl
 import com.plcoding.snoozeloo.navigation.graph.RootGraph
+import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import java.time.LocalDateTime
 
 class MainActivity : ComponentActivity() {
 
@@ -56,21 +55,19 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            SnoozelooTheme {
-                val viewModel: MainViewModel = koinViewModel()
-                val navController = koinInject<NavigationController>()
+            KoinContext {
+                SnoozelooTheme {
+                    val viewModel: LockScreenAlarmViewModel = koinViewModel()
+                    val navController = koinInject<NavigationController>()
 
-//                TestCase()
-
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    viewModel.doSomething()
-                    Log.w("TAG", "MainActivity doSomething")
-                    // navigation
-                    val navHostController = rememberNavController()
-                    (navController as? NavigationControllerImpl)?.setNavController(
-                        navHostController
-                    )
-                    RootGraph(navController = navHostController,innerPadding)
+                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                        // navigation
+                        val navHostController = rememberNavController()
+                        (navController as? NavigationControllerImpl)?.setNavController(
+                            navHostController
+                        )
+                        RootGraph(navController = navHostController, innerPadding)
+                    }
                 }
             }
         }
@@ -85,12 +82,5 @@ class MainActivity : ComponentActivity() {
         val alarmEntityMapper = koinInject<DataMapper<AlarmEntity, Alarm>>()
 
         val alarmSchedulerImpl = koinInject<AlarmSchedulerImpl>()
-
-        val alarmItem = AlarmItem(
-            time = LocalDateTime.now().plusMinutes(1),
-            message = "DESPICABLE ME 1 min have passed"
-        )
-
-        alarmSchedulerImpl.scheduleAlarm(alarmItem)
     }
 }

@@ -21,13 +21,24 @@ class LockScreenAlarmActivity : ComponentActivity() {
 
         setContent {
             SnoozelooTheme {
-                val viewModel: MainViewModel = koinViewModel()
                 val navController = koinInject<NavigationController>()
+                val alarmId = intent.getIntExtra("ALARM_ID", -1)
+                val viewModel: LockScreenAlarmViewModel = koinViewModel()
+                val state = viewModel.uiState.value
 
+                if (state.shouldClose) {
+                    finishAffinity()
+                }
+
+                println("AlarmId: $alarmId")
+                viewModel.onEvent(LockScreenAlarmEvent.AlarmSet(alarmId))
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     innerPadding
-                    AlarmNotificationComponent()
+                    AlarmNotificationComponent(
+                        state = viewModel.uiState.value,
+                        onLockScreenAlarm = viewModel::onEvent
+                    )
                 }
             }
         }

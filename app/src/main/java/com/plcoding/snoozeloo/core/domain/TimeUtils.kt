@@ -1,6 +1,9 @@
 package com.plcoding.snoozeloo.core.domain
 
 import com.plcoding.snoozeloo.core.domain.value.TimeValue
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
@@ -66,4 +69,19 @@ fun getTimeComponents(timestamp: Long): Pair<Int, Int> {
 
 fun formatNumberToTwoDigits(number: Int): String {
     return number.toString().padStart(2, '0')
+}
+
+fun findNextScheduleTimeEpochSeconds(scheduleHour: Int, scheduleMinute: Int): Long {
+    val userTimeZone = ZoneId.systemDefault() // Get user's current time zone
+    val now = ZonedDateTime.now(userTimeZone) // Get current time in user's time zone
+
+    val scheduleTimeToday = now.with(LocalTime.of(scheduleHour, scheduleMinute))
+
+    val nextScheduleTime = if (scheduleTimeToday.isAfter(now)) {
+        scheduleTimeToday // Schedule time is in the future today
+    } else {
+        scheduleTimeToday.plusDays(1) // Schedule time has passed, use tomorrow
+    }
+
+    return nextScheduleTime.toEpochSecond() // Convert to Epoch seconds
 }

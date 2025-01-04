@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class TimerComponent(
     private val coroutineScope: CoroutineScope,
@@ -26,7 +27,7 @@ class TimerComponent(
         isRunning = true
         timerJob = coroutineScope.launch {
             while (isRunning) {
-                delay(1000)
+                delay(TimeUnit.SECONDS.toMillis(15))
                 lastTickValue++
                 onTick()
             }

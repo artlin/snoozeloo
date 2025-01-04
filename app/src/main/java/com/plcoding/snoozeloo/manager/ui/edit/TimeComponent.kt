@@ -177,4 +177,5 @@ fun PreviewTimeComponent() {
 typealias OnComponentClick = (ComponentClickType) -> Unit
 typealias OnClickWithIntValue = (Int) -> Unit
 typealias OnClickWithStringValue = (String) -> Unit
+typealias OnClickWithBooleanValue = (Boolean) -> Unit
 typealias OnClick = () -> Unit

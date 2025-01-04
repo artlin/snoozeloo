@@ -16,7 +16,11 @@ import com.plcoding.snoozeloo.core.ui.CustomSwitch
 import com.plcoding.snoozeloo.core.ui.text.TextTitle2Strong
 
 @Composable
-fun AlarmVibrateComponent(label: String, state: AlarmVibrateSubState, onEvent: (Boolean) -> Unit) {
+fun AlarmVibrateComponent(
+    label: String,
+    state: AlarmVibrateSubState,
+    onEvent: (Boolean) -> Unit
+) {
     Row(
         Modifier
             .fillMaxWidth()

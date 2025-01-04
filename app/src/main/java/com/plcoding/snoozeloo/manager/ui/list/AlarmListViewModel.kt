@@ -15,6 +15,7 @@ import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import com.plcoding.snoozeloo.core.ui.ViewModelAccess
 import com.plcoding.snoozeloo.navigation.NavigationController
 import com.plcoding.snoozeloo.navigation.route.NavigationRoute
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -22,7 +23,7 @@ import org.koin.core.component.inject
 
 class AlarmListViewModel(
     private val savedStateHandle: SavedStateHandle,
-    private val navigationController: NavigationController
+    private val navigationController: NavigationController,
 ) : ViewModel(), KoinComponent,
     ViewModelAccess<AlarmListState, AlarmListEvent> {
 
@@ -67,6 +68,18 @@ class AlarmListViewModel(
             is AlarmListEvent.AlarmCardClicked -> {
                 navigationController.navigateTo(NavigationRoute.EditAlarm(alarmEntity = event.alarmEntity))
             }
+
+            is AlarmListEvent.ToggleAlarmClicked -> {
+                toggleAlarm(event.alarmId, event.isChecked)
+            }
+        }
+    }
+
+    private fun toggleAlarm(alarmId: Int, isChecked: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val alarmDto = alarmsDao.getAlarmById(alarmId)
+            println("toggle alarm dbAlarmEnabled ${alarmDto.isActive} checked $isChecked")
+            alarmsDao.upsert(alarmDto.copy(isActive = isChecked))
         }
     }
 

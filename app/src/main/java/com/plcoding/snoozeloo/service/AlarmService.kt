@@ -26,21 +26,26 @@ class AlarmService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
         when(intent?.action){
-            Actions.START_FOREGROUND_SERVICE.toString() -> startFullScreen()
+            Actions.START_FOREGROUND_SERVICE.toString() -> startFullScreen(
+                intent.getIntExtra("ALARM_ID", -1)
+            )
             Actions.STOP_FOREGROUND_SERVICE.toString() -> stopSelf()
         }
 
         serviceScope.launch {
             delay(TimeUnit.MINUTES.toMillis(1))
+            // TODO dodać reschedule of alarm
             stopSelf()
         }
 
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun startFullScreen() {
+    private fun startFullScreen(alarmId: Int) {
         val alarmScreenIntent = Intent(this, LockScreenAlarmActivity::class.java)
+        alarmScreenIntent.putExtra("ALARM_ID", alarmId)
 
         val pendingIntent = PendingIntent.getActivity(
             this,
@@ -52,7 +57,7 @@ class AlarmService: Service() {
         val notification = NotificationCompat.Builder(this, "ALARM_SERVICE_CHANNEL_ID")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle("Alarm")
-            .setContentText("Alarm is running")
+            .setContentText("Alarm with id $alarmId is running")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
             .setChannelId("ALARM_SERVICE_CHANNEL_ID")

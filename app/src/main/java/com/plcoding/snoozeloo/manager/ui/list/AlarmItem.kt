@@ -24,14 +24,14 @@ import com.plcoding.snoozeloo.core.ui.CustomSwitch
 import com.plcoding.snoozeloo.core.ui.text.TextBody
 import com.plcoding.snoozeloo.core.ui.text.TextH3
 import com.plcoding.snoozeloo.core.ui.text.TextTitle2Strong
-import com.plcoding.snoozeloo.manager.ui.edit.OnClick
+import com.plcoding.snoozeloo.manager.ui.edit.OnClickWithBooleanValue
 import com.plcoding.snoozeloo.manager.ui.edit.OnClickWithIntValue
 
 @Composable
 fun AlarmItem(
     alarmEntity: () -> AlarmEntity,
     currentTime: () -> TimeValue,
-    onToggleClick: OnClick,
+    onToggleClick: OnClickWithBooleanValue,
     onCardClick: OnClickWithIntValue
 ) {
     println("AlarmItem recomposed") // or Log.d()
@@ -79,7 +79,10 @@ fun AlarmItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        CustomSwitch(entity.isEnabled) { }
+        CustomSwitch(
+            isEnabled = entity.isEnabled,
+            onEvent = onToggleClick
+        )
     }
 }
 

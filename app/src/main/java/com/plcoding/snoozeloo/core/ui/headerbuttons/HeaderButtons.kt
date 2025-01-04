@@ -33,7 +33,9 @@ private fun HeaderButton(buttonState: SingleButtonState, onEvent: HeaderButtonsE
     when (buttonState.buttonType) {
         HeaderButtonType.CLOSE -> {
             Icon(
-                modifier = Modifier.clickable { onEvent(SingleButtonState(buttonType = HeaderButtonType.CLOSE)) },
+                modifier = Modifier.clickable {
+                    onEvent(SingleButtonState(buttonType = HeaderButtonType.CLOSE))
+                                              },
                 painter = painterResource(id = R.drawable.icon_close),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary

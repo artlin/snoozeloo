@@ -10,6 +10,7 @@ import com.plcoding.snoozeloo.core.domain.db.dao.AlarmsDao
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.ui.ViewModelAccess
 import com.plcoding.snoozeloo.manager.domain.UpdateAlarmUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -25,7 +26,7 @@ class LockScreenAlarmViewModel(
         mutableStateOf(LockScreenAlarmState(alarm = null))
 
     fun fetchAlarm(alarmId: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             alarmsDao.observeAlarmById(alarmId).collectLatest { alarmDto ->
                 val alarm = alarmEntityConverter.convert(alarmDto)
                 uiState.value = uiState.value.copy(alarm = alarm)
@@ -39,7 +40,7 @@ class LockScreenAlarmViewModel(
                 fetchAlarm(event.alarmId)
             }
             is LockScreenAlarmEvent.CloseClicked -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     uiState.value.alarm?.copy()?.let { updateAlarmUseCase.invoke(alarmEntity = it) }
                 }
                 uiState.value = uiState.value.copy(shouldClose = true)

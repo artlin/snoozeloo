@@ -38,7 +38,7 @@ class AlarmListViewModel(
         mutableStateOf(AlarmListState(currentTime = TimeValue(System.currentTimeMillis())))
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             alarmsDao.getAll().collectLatest { alarmDtos ->
                 val alarms = entityConverter.convert(alarmDtos)
                 uiState.value = uiState.value.copy(

@@ -63,7 +63,8 @@ class AlarmService : Service(), KoinComponent {
             try {
                 val alarmById = alarmsDatabase.alarmsDao().getAlarmById(alarmId)
                 val ringtoneUri = Uri.parse(alarmById.alarmRingtoneId)
-                ringtonesManager.playRingtone(context = this@AlarmService, ringtoneUri)
+                ringtonesManager.playRingtone(ringtoneUri)
+                ringtonesManager.startVibrating()
             } catch (e: Exception) {
                 stopSelf()
                 return@launch
@@ -93,7 +94,6 @@ class AlarmService : Service(), KoinComponent {
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
             .setFullScreenIntent(fullScreenPendingIntent, true)
             .setOngoing(true)  // Make it persistent
             .setAutoCancel(false)  // Prevent auto-cancellation

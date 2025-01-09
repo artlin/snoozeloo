@@ -46,6 +46,7 @@ class LockScreenAlarmViewModel(
                 viewModelScope.launch(Dispatchers.IO) {
                     uiState.value.alarm?.copy()?.let { updateAlarmUseCase.invoke(alarmEntity = it) }
                     ringtonesManager.stopRingtone()
+                    ringtonesManager.stopVibrating()
                 }
                 uiState.value = uiState.value.copy(shouldClose = true)
             }

@@ -4,10 +4,17 @@ import android.content.Context
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import com.plcoding.snoozeloo.alarm_selection.domain.GetSystemRingtonesUseCase
 import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
 
-class RingtonesManager(private val getSystemRingtonesUseCase: GetSystemRingtonesUseCase) {
+class RingtonesManager(
+    private val context: Context,
+    private val getSystemRingtonesUseCase: GetSystemRingtonesUseCase
+) {
 
     private var currentRingtone: Ringtone? = null
 
@@ -31,7 +38,7 @@ class RingtonesManager(private val getSystemRingtonesUseCase: GetSystemRingtones
     }
 
 
-    fun playRingtone(context: Context, uri: Uri) {
+    fun playRingtone(uri: Uri) {
         try {
             val ringtone: Ringtone = RingtoneManager.getRingtone(context, uri)
             currentRingtone = ringtone
@@ -42,6 +49,33 @@ class RingtonesManager(private val getSystemRingtonesUseCase: GetSystemRingtones
             e.printStackTrace() // Handle cases where the ringtone URI is invalid or inaccessible
             currentRingtone = null
         }
+    }
+
+    fun startVibrating() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getVibrator().vibrate(
+                VibrationEffect.createWaveform(
+                    longArrayOf(1000, 1000, 1000, 1000),
+                    -1
+                )
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            getVibrator().vibrate(longArrayOf(1000, 1000, 1000, 1000), -1)
+        }
+    }
+
+    fun stopVibrating() {
+        getVibrator().cancel()
+    }
+
+    private fun getVibrator(): Vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val vibratorManager =
+            context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        vibratorManager.defaultVibrator
+    } else {
+        @Suppress("DEPRECATION")
+        context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
     }
 
     fun stopRingtone() {

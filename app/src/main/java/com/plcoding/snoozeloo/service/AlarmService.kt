@@ -64,7 +64,7 @@ class AlarmService : Service(), KoinComponent {
                 val alarmById = alarmsDatabase.alarmsDao().getAlarmById(alarmId)
                 val ringtoneUri = Uri.parse(alarmById.alarmRingtoneId)
                 ringtonesManager.playRingtone(ringtoneUri)
-                ringtonesManager.startVibrating()
+                if (alarmById.shouldVibrate) ringtonesManager.startVibrating()
             } catch (e: Exception) {
                 stopSelf()
                 return@launch

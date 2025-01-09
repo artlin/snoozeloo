@@ -36,20 +36,17 @@ class AlarmService : Service(), KoinComponent {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        val alarmId = intent?.getIntExtra("ALARM_ID", -1) ?: run {
-            throw Error("Alarm id is equal to -1, that's no good")
-        }
 
-        when (intent.action) {
-            Actions.START_FOREGROUND_SERVICE.toString() -> startFullScreen(alarmId)
+        when (intent?.action) {
+            Actions.START_FOREGROUND_SERVICE.toString() -> {
+                val alarmId = intent.getIntExtra("ALARM_ID", -1)
+                if (alarmId == -1) throw Error("Alarm id is equal to -1, that's no good")
+                startFullScreen(alarmId)
+            }
 
             Actions.STOP_FOREGROUND_SERVICE.toString() -> stopSelf()
         }
-        dbScope.launch {
-            val alarmById = alarmsDatabase.alarmsDao().getAlarmById(alarmId)
-            val ringtoneUri = Uri.parse(alarmById.alarmRingtoneId)
-            ringtonesManager.playRingtone(context = this@AlarmService, ringtoneUri)
-        }
+
 
         serviceScope.launch {
             delay(TimeUnit.MINUTES.toMillis(1))
@@ -61,6 +58,13 @@ class AlarmService : Service(), KoinComponent {
     }
 
     private fun startFullScreen(alarmId: Int) {
+
+        dbScope.launch {
+            val alarmById = alarmsDatabase.alarmsDao().getAlarmById(alarmId)
+            val ringtoneUri = Uri.parse(alarmById.alarmRingtoneId)
+            ringtonesManager.playRingtone(context = this@AlarmService, ringtoneUri)
+        }
+
         val alarmScreenIntent = Intent(this, LockScreenAlarmActivity::class.java)
         alarmScreenIntent.putExtra("ALARM_ID", alarmId)
 

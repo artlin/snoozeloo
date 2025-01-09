@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.plcoding.snoozeloo.alarm_selection.presentation.RingtonesManager
 import com.plcoding.snoozeloo.core.data.mapper.DataMapper
 import com.plcoding.snoozeloo.core.domain.db.Alarm
 import com.plcoding.snoozeloo.core.domain.db.dao.AlarmsDao
@@ -18,8 +19,9 @@ import org.koin.core.component.KoinComponent
 class LockScreenAlarmViewModel(
     private val updateAlarmUseCase: UpdateAlarmUseCase,
     private val alarmsDao: AlarmsDao,
-    private val alarmEntityConverter: DataMapper<Alarm, AlarmEntity>
-): ViewModel(), KoinComponent,
+    private val alarmEntityConverter: DataMapper<Alarm, AlarmEntity>,
+    private val ringtonesManager: RingtonesManager,
+) : ViewModel(), KoinComponent,
     ViewModelAccess<LockScreenAlarmState, LockScreenAlarmEvent> {
 
     override val uiState: MutableState<LockScreenAlarmState> =
@@ -39,14 +41,14 @@ class LockScreenAlarmViewModel(
             is LockScreenAlarmEvent.AlarmSet -> {
                 fetchAlarm(event.alarmId)
             }
+
             is LockScreenAlarmEvent.CloseClicked -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     uiState.value.alarm?.copy()?.let { updateAlarmUseCase.invoke(alarmEntity = it) }
+                    ringtonesManager.stopRingtone()
                 }
                 uiState.value = uiState.value.copy(shouldClose = true)
             }
-
-
         }
     }
 }

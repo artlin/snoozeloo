@@ -9,6 +9,8 @@ import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
 
 class RingtonesManager(private val getSystemRingtonesUseCase: GetSystemRingtonesUseCase) {
 
+    private var currentRingtone: Ringtone? = null
+
     suspend fun getAllRingtones(): List<RingtoneEntity> {
         return getSystemRingtonesUseCase()
     }
@@ -32,10 +34,23 @@ class RingtonesManager(private val getSystemRingtonesUseCase: GetSystemRingtones
     fun playRingtone(context: Context, uri: Uri) {
         try {
             val ringtone: Ringtone = RingtoneManager.getRingtone(context, uri)
+            currentRingtone = ringtone
+            println("$TAG Play : $ringtone, $uri")
             ringtone.play()
         } catch (e: Exception) {
+            println("$TAG Exception : ${e.printStackTrace()}, $uri")
             e.printStackTrace() // Handle cases where the ringtone URI is invalid or inaccessible
+            currentRingtone = null
         }
+    }
+
+    fun stopRingtone() {
+        currentRingtone?.stop()
+        currentRingtone = null
+    }
+
+    companion object {
+        const val TAG = "RingtonesManager"
     }
 
 }

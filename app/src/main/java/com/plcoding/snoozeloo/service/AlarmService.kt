@@ -54,46 +54,63 @@ class AlarmService : Service(), KoinComponent {
             stopSelf()
         }
 
-        return super.onStartCommand(intent, flags, startId)
+        return START_STICKY
     }
 
     private fun startFullScreen(alarmId: Int) {
-
+        // Play ringtone part remains the same
         dbScope.launch {
-            val alarmById = alarmsDatabase.alarmsDao().getAlarmById(alarmId)
-            val ringtoneUri = Uri.parse(alarmById.alarmRingtoneId)
-            ringtonesManager.playRingtone(context = this@AlarmService, ringtoneUri)
+            try {
+                val alarmById = alarmsDatabase.alarmsDao().getAlarmById(alarmId)
+                val ringtoneUri = Uri.parse(alarmById.alarmRingtoneId)
+                ringtonesManager.playRingtone(context = this@AlarmService, ringtoneUri)
+            } catch (e: Exception) {
+                stopSelf()
+                return@launch
+            }
         }
 
-        val alarmScreenIntent = Intent(this, LockScreenAlarmActivity::class.java)
-        alarmScreenIntent.putExtra("ALARM_ID", alarmId)
+        // Create intents with proper flags
+        val fullScreenIntent = Intent(this, LockScreenAlarmActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_SINGLE_TOP
+            putExtra("ALARM_ID", alarmId)
+        }
 
-        val pendingIntent = PendingIntent.getActivity(
+        val fullScreenPendingIntent = PendingIntent.getActivity(
             this,
-            0,
-            alarmScreenIntent,
+            alarmId,  // Use alarmId for unique pending intents
+            fullScreenIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        // Create a high-priority notification that will show even when app is minimized
         val notification = NotificationCompat.Builder(this, "ALARM_SERVICE_CHANNEL_ID")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle("Alarm")
-            .setContentText("Alarm with id $alarmId is running")
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentText("Alarm with id $alarmId is ringing!")
+            .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
-            .setChannelId("ALARM_SERVICE_CHANNEL_ID")
-            .setFullScreenIntent(
-                pendingIntent,
-                true
-            )
+            .setFullScreenIntent(fullScreenPendingIntent, true)
+            .setOngoing(true)  // Make it persistent
+            .setAutoCancel(false)  // Prevent auto-cancellation
             .build()
 
+        // Start the full screen activity explicitly
+        startActivity(fullScreenIntent)
+
+        // Start foreground with notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED)
+            startForeground(
+                alarmId,  // Use alarmId as notification id
+                notification,
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED
+            )
         } else {
-            startForeground(1, notification)
+            startForeground(alarmId, notification)
         }
     }
 

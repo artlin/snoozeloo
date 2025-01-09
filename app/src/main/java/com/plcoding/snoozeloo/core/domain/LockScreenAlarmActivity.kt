@@ -12,12 +12,30 @@ import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
 import com.plcoding.snoozeloo.navigation.NavigationController
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import android.view.WindowManager
 
 class LockScreenAlarmActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        // Add these window flags to ensure the activity shows above lock screen
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+        )
+
+        // For newer Android versions
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+            val keyguardManager = getSystemService(android.app.KeyguardManager::class.java)
+            keyguardManager?.requestDismissKeyguard(this, null)
+        }
 
         setContent {
             SnoozelooTheme {
@@ -27,7 +45,7 @@ class LockScreenAlarmActivity : ComponentActivity() {
                 val state = viewModel.uiState.value
 
                 if (state.shouldClose) {
-                    finishAffinity()
+                    finishAndRemoveTask() // Use this instead of finishAffinity()
                 }
 
                 println("AlarmId: $alarmId")
@@ -42,8 +60,10 @@ class LockScreenAlarmActivity : ComponentActivity() {
                 }
             }
         }
-
     }
 
-
+//    override fun onBackPressed() {
+//        // Optionally override back press to prevent accidental dismissal
+//        // You can either do nothing or handle it in a specific way
+//    }
 }

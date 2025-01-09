@@ -1,6 +1,7 @@
 package com.plcoding.snoozeloo.core.domain
 
 import android.app.Application
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -39,10 +40,16 @@ class SnoozelooApplication : Application() {
             "ALARM_SERVICE_CHANNEL_ID",
             "Alarm Notifications",
             NotificationManager.IMPORTANCE_HIGH
-        )
+        ).apply {
+            description = "Alarm notifications"
+            enableLights(true)
+            enableVibration(true)
+            setShowBadge(true)
+            setBypassDnd(true)  // Bypass Do Not Disturb
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+        }
 
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
 
     }

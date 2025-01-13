@@ -8,10 +8,12 @@ import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.plcoding.snoozeloo.R
 import com.plcoding.snoozeloo.alarm_selection.presentation.RingtonesManager
 import com.plcoding.snoozeloo.core.domain.LockScreenAlarmActivity
 import com.plcoding.snoozeloo.core.domain.db.AlarmsDatabase
+import com.plcoding.snoozeloo.scheduler.AlarmReceiver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -36,7 +38,6 @@ class AlarmService : Service(), KoinComponent {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-
         when (intent?.action) {
             Actions.START_FOREGROUND_SERVICE.toString() -> {
                 val alarmId = intent.getIntExtra("ALARM_ID", -1)
@@ -44,7 +45,8 @@ class AlarmService : Service(), KoinComponent {
                 startFullScreen(alarmId)
             }
 
-            Actions.STOP_FOREGROUND_SERVICE.toString() -> stopSelf()
+            Actions.STOP_FOREGROUND_SERVICE_DISMISS.toString() -> stopSelf()
+            Actions.STOP_FOREGROUND_SERVICE_SNOOZE.toString() -> stopSelf()
         }
 
 
@@ -70,6 +72,26 @@ class AlarmService : Service(), KoinComponent {
                 return@launch
             }
         }
+
+        val dismissAlarmPendingIntent = PendingIntent.getBroadcast(
+            this,
+            alarmId,
+            Intent(this, AlarmReceiver::class.java).apply {
+                putExtra(AlarmReceiver.ALARM_ID, alarmId)
+                putExtra(AlarmReceiver.ALARM_FLAG, AlarmReceiver.AlarmDismissType.DISMISS.name)
+            },
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val snoozeAlarmPendingIntent = PendingIntent.getBroadcast(
+            this,
+            alarmId,
+            Intent(this, AlarmReceiver::class.java).apply {
+                putExtra(AlarmReceiver.ALARM_ID, alarmId)
+                putExtra(AlarmReceiver.ALARM_FLAG, AlarmReceiver.AlarmDismissType.SNOOZE.name)
+            },
+            PendingIntent.FLAG_IMMUTABLE
+        )
 
         // Create intents with proper flags
         val fullScreenIntent = Intent(this, LockScreenAlarmActivity::class.java).apply {
@@ -97,6 +119,8 @@ class AlarmService : Service(), KoinComponent {
             .setFullScreenIntent(fullScreenPendingIntent, true)
             .setOngoing(true)  // Make it persistent
             .setAutoCancel(false)  // Prevent auto-cancellation
+            .addAction(R.drawable.icon_alarm, "Dismiss", dismissAlarmPendingIntent)
+            .addAction(R.drawable.icon_alarm, "Snooze", snoozeAlarmPendingIntent)
             .build()
 
         // Start the full screen activity explicitly
@@ -121,6 +145,7 @@ class AlarmService : Service(), KoinComponent {
 
     enum class Actions {
         START_FOREGROUND_SERVICE,
-        STOP_FOREGROUND_SERVICE
+        STOP_FOREGROUND_SERVICE_DISMISS,
+        STOP_FOREGROUND_SERVICE_SNOOZE,
     }
 }

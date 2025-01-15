@@ -8,12 +8,15 @@ import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.plcoding.snoozeloo.R
 import com.plcoding.snoozeloo.alarm_selection.presentation.RingtonesManager
+import com.plcoding.snoozeloo.core.data.mapper.DataMapper
 import com.plcoding.snoozeloo.core.domain.LockScreenAlarmActivity
+import com.plcoding.snoozeloo.core.domain.db.Alarm
 import com.plcoding.snoozeloo.core.domain.db.AlarmsDatabase
+import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
+import com.plcoding.snoozeloo.manager.domain.UpdateAlarmUseCase
 import com.plcoding.snoozeloo.scheduler.AlarmReceiver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +35,9 @@ class AlarmService : Service(), KoinComponent {
 
     private val ringtonesManager: RingtonesManager by inject()
     private val alarmsDatabase: AlarmsDatabase by inject()
+    private val updateAlarmUseCase: UpdateAlarmUseCase by inject()
+
+    private val alarmEntityConverter: DataMapper<Alarm, AlarmEntity> by inject()
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -39,29 +45,33 @@ class AlarmService : Service(), KoinComponent {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        when (intent?.action) {
-            Actions.START_FOREGROUND_SERVICE.toString() -> {
-                println("AlarmService action ${intent.action}")
-                val alarmId = intent.getIntExtra("ALARM_ID", -1)
-                if (alarmId == -1) throw Error("Alarm id is equal to -1, that's no good")
-                startFullScreen(alarmId)
-            }
+        val alarmId = intent?.getIntExtra("ALARM_ID", -1)
+        if (alarmId == -1) {
+            throw Error("Alarm id is equal to -1, that's no good")
+        } else {
+            alarmId?.let {
+                when (intent?.action) {
+                    Actions.START_FOREGROUND_SERVICE.toString() -> {
+                        println("AlarmService action ${intent.action}")
+                        startFullScreen(alarmId)
+                    }
 
-            Actions.STOP_FOREGROUND_SERVICE_DISMISS.toString() -> {
-                println("AlarmService action ${intent.action}")
-                stopAlarm()
-            }
-            Actions.STOP_FOREGROUND_SERVICE_SNOOZE.toString() -> {
-                println("AlarmService action ${intent.action}")
-                stopAlarm()
-            }
-        }
+                    Actions.STOP_FOREGROUND_SERVICE_DISMISS.toString() -> {
+                        println("AlarmService action ${intent.action}")
+                        stopAlarm(alarmId)
+                    }
 
+                    Actions.STOP_FOREGROUND_SERVICE_SNOOZE.toString() -> {
+                        println("AlarmService action ${intent.action}")
+                        stopAlarm(alarmId)
+                    }
+                }
 
-        serviceScope.launch {
-            delay(TimeUnit.MINUTES.toMillis(1))
-            // TODO dodać reschedule of alarm
-            stopAlarm()
+                serviceScope.launch {
+                    delay(TimeUnit.MINUTES.toMillis(1))
+                    stopAlarm(alarmId)
+                }
+            }
         }
 
         return START_STICKY
@@ -76,7 +86,7 @@ class AlarmService : Service(), KoinComponent {
                 ringtonesManager.playRingtone(ringtoneUri)
                 if (alarmById.shouldVibrate) ringtonesManager.startVibrating()
             } catch (e: Exception) {
-                stopSelf()
+                stopAlarm(alarmId)
                 return@launch
             }
         }
@@ -146,15 +156,30 @@ class AlarmService : Service(), KoinComponent {
         }
     }
 
-    private fun stopAlarm() {
+    private fun stopAlarm(alarmId: Int) {
         ringtonesManager.stopRingtone()
         ringtonesManager.stopVibrating()
         stopForeground(STOP_FOREGROUND_REMOVE)
-        stopApp()
+        rescheduleAlarm(alarmId)
+        stopAlarmActivityIfItIsOnForeground()
         stopSelf()
     }
 
-    private fun stopApp() {
+    private fun rescheduleAlarm(alarmId: Int) {
+        dbScope.launch {
+            try {
+                val alarmDto = alarmsDatabase.alarmsDao().getAlarmById(alarmId)
+                alarmEntityConverter.convert(alarmDto)?.let {
+                    updateAlarmUseCase.invoke(alarmEntity = it)
+                }
+            } catch (e: Exception) {
+                stopAlarm(alarmId)
+                return@launch
+            }
+        }
+    }
+
+    private fun stopAlarmActivityIfItIsOnForeground() {
         val closeIntent = Intent("ACTION_CLOSE_APP")
         LocalBroadcastManager.getInstance(this).sendBroadcast(closeIntent)
     }

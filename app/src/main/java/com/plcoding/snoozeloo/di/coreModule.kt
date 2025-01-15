@@ -5,12 +5,12 @@ import com.plcoding.snoozeloo.core.data.mapper.DataMapper
 import com.plcoding.snoozeloo.core.domain.LockScreenAlarmViewModel
 import com.plcoding.snoozeloo.core.domain.db.Alarm
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
-import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val coreModule = module {
 
-    viewModelOf(::LockScreenAlarmViewModel)
+    viewModel { LockScreenAlarmViewModel(get(), get(), get()) }
     // mappers
     factory<DataMapper<Alarm, AlarmEntity>> { AlarmEntityMapper() }
 }

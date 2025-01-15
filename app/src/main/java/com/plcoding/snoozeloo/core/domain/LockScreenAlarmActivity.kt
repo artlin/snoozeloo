@@ -1,5 +1,9 @@
 package com.plcoding.snoozeloo.core.domain
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,12 +17,24 @@ import com.plcoding.snoozeloo.navigation.NavigationController
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import android.view.WindowManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 class LockScreenAlarmActivity : ComponentActivity() {
+
+    private val closeAppReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            finishAndRemoveTask()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            closeAppReceiver,
+            IntentFilter("ACTION_CLOSE_APP")
+        )
 
         // Add these window flags to ensure the activity shows above lock screen
         window.addFlags(
@@ -66,4 +82,11 @@ class LockScreenAlarmActivity : ComponentActivity() {
 //        // Optionally override back press to prevent accidental dismissal
 //        // You can either do nothing or handle it in a specific way
 //    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Unregister the receiver
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(closeAppReceiver)
+    }
+
 }

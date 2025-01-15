@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.plcoding.snoozeloo.R
 import com.plcoding.snoozeloo.alarm_selection.presentation.RingtonesManager
 import com.plcoding.snoozeloo.core.domain.LockScreenAlarmActivity
@@ -40,20 +41,27 @@ class AlarmService : Service(), KoinComponent {
 
         when (intent?.action) {
             Actions.START_FOREGROUND_SERVICE.toString() -> {
+                println("AlarmService action ${intent.action}")
                 val alarmId = intent.getIntExtra("ALARM_ID", -1)
                 if (alarmId == -1) throw Error("Alarm id is equal to -1, that's no good")
                 startFullScreen(alarmId)
             }
 
-            Actions.STOP_FOREGROUND_SERVICE_DISMISS.toString() -> stopSelf()
-            Actions.STOP_FOREGROUND_SERVICE_SNOOZE.toString() -> stopSelf()
+            Actions.STOP_FOREGROUND_SERVICE_DISMISS.toString() -> {
+                println("AlarmService action ${intent.action}")
+                stopAlarm()
+            }
+            Actions.STOP_FOREGROUND_SERVICE_SNOOZE.toString() -> {
+                println("AlarmService action ${intent.action}")
+                stopAlarm()
+            }
         }
 
 
         serviceScope.launch {
             delay(TimeUnit.MINUTES.toMillis(1))
             // TODO dodać reschedule of alarm
-            stopSelf()
+            stopAlarm()
         }
 
         return START_STICKY
@@ -80,7 +88,7 @@ class AlarmService : Service(), KoinComponent {
                 putExtra(AlarmReceiver.ALARM_ID, alarmId)
                 putExtra(AlarmReceiver.ALARM_FLAG, AlarmReceiver.AlarmDismissType.DISMISS.name)
             },
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         val snoozeAlarmPendingIntent = PendingIntent.getBroadcast(
@@ -90,7 +98,7 @@ class AlarmService : Service(), KoinComponent {
                 putExtra(AlarmReceiver.ALARM_ID, alarmId)
                 putExtra(AlarmReceiver.ALARM_FLAG, AlarmReceiver.AlarmDismissType.SNOOZE.name)
             },
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         // Create intents with proper flags
@@ -136,6 +144,19 @@ class AlarmService : Service(), KoinComponent {
         } else {
             startForeground(alarmId, notification)
         }
+    }
+
+    private fun stopAlarm() {
+        ringtonesManager.stopRingtone()
+        ringtonesManager.stopVibrating()
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopApp()
+        stopSelf()
+    }
+
+    private fun stopApp() {
+        val closeIntent = Intent("ACTION_CLOSE_APP")
+        LocalBroadcastManager.getInstance(this).sendBroadcast(closeIntent)
     }
 
     override fun onDestroy() {

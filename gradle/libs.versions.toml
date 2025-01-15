@@ -12,6 +12,7 @@ navigation-compose = "2.8.3"
 lifecycle-compose = "2.8.7"
 composeBom = "2024.10.01"
 koinBom = "4.0.0"
+localbroadcastmanager = "1.1.0"
 
 roomVersion = "2.7.0-alpha11"  #"2.6.1"""
 kspVersion = "2.0.21-1.0.27"
@@ -34,10 +35,11 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-localbroadcastmanager = { group = "androidx.localbroadcastmanager", name = "localbroadcastmanager", version.ref = "localbroadcastmanager" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomVersion" }
 room-runtime-android = { module = "androidx.room:room-runtime-android", version.ref = "roomVersion" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomVersion"}
-sqlite-bundled-android = { module = "androidx.sqlite:sqlite-bundled-android" , version.ref = "sqlite"}
+sqlite-bundled-android = { module = "androidx.sqlite:sqlite-bundled-android", version.ref = "sqlite"}
 
 #Koin
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koinBom" }

@@ -13,21 +13,23 @@ class AlarmReceiver: BroadcastReceiver() {
             return
         }
 
+        val alarmFlag = intent.getStringExtra(ALARM_FLAG)
+
         println("$TAG Alarm triggered: $alarmId")
         context?.let {
             println("$TAG Alarm triggered: context not null")
 
-            when (intent.action) {
-                ACTION_DISMISS -> {
-                    println("$TAG Dismiss action for alarm $alarmId")
+            when (alarmFlag) {
+                AlarmDismissType.DISMISS.name -> {
+                    println("$TAG Dismiss action for alarm $alarmId , $alarmFlag")
                     startAlarmService(context, alarmId, AlarmService.Actions.STOP_FOREGROUND_SERVICE_DISMISS)
                 }
-                ACTION_SNOOZE -> {
-                    println("$TAG Snooze action for alarm $alarmId")
+                AlarmDismissType.SNOOZE.name -> {
+                    println("$TAG Snooze action for alarm $alarmId , $alarmFlag")
                     startAlarmService(context, alarmId, AlarmService.Actions.STOP_FOREGROUND_SERVICE_SNOOZE)
                 }
                 else -> {
-                    println("$TAG Start action for alarm $alarmId")
+                    println("$TAG Start action for alarm $alarmId , $alarmFlag")
                     startAlarmService(context, alarmId, AlarmService.Actions.START_FOREGROUND_SERVICE)
                 }
             }

@@ -74,7 +74,7 @@ fun formatNumberToTwoDigits(number: Int): String {
 
 const val NEXT_SCHEDULE_TIME_NOT_FOUND = -1L
 
-fun findNextScheduleTimeEpochSeconds(
+fun findNextScheduleTimeEpochMillis(
     scheduleHour: Int,
     scheduleMinute: Int,
     days: List<Boolean>
@@ -94,7 +94,7 @@ fun findNextScheduleTimeEpochSeconds(
     val currentTime = now.toLocalTime()
 
     if (days[currentDayIndex] && targetTime.isAfter(currentTime)) {
-        return now.with(targetTime).toEpochSecond()
+        return now.with(targetTime).toEpochSecond() * 1000L
     }
 
     var daysToAdd = 1
@@ -104,7 +104,7 @@ fun findNextScheduleTimeEpochSeconds(
         if (days[nextDayIndex]) {
             return now.plusDays(daysToAdd.toLong())
                 .with(targetTime)
-                .toEpochSecond()
+                .toEpochSecond() * 1000L
         }
         daysToAdd++
         nextDayIndex = (nextDayIndex + 1) % 7  // This % 7 is needed for wrapping
@@ -113,21 +113,10 @@ fun findNextScheduleTimeEpochSeconds(
     return NEXT_SCHEDULE_TIME_NOT_FOUND
 }
 
-//    val scheduleTimeToday = now.with(LocalTime.of(scheduleHour, scheduleMinute))
-//
-//    val nextScheduleTime = if (scheduleTimeToday.isAfter(now)) {
-//        scheduleTimeToday // Schedule time is in the future today
-//    } else {
-//        scheduleTimeToday.plusDays(1) // Schedule time has passed, use tomorrow
-//    }
-//
-//    return nextScheduleTime.toEpochSecond() // Convert to Epoch seconds
-
-
-fun findNextScheduleTimeEpochSeconds(amountToAdd: Long, unit: TemporalUnit): Long {
+fun findNextScheduleTimeEpochMillis(amountToAdd: Long, unit: TemporalUnit): Long {
     val userTimeZone = ZoneId.systemDefault() // Get user's current time zone
     val now = ZonedDateTime.now(userTimeZone) // Get current time in user's time zone
     val nextScheduleTime = now.plus(amountToAdd, unit)
 
-    return nextScheduleTime.toEpochSecond() // Convert to Epoch seconds
+    return nextScheduleTime.toEpochSecond() * 1000L// Convert to Epoch seconds
 }

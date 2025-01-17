@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.plcoding.snoozeloo.R
 import com.plcoding.snoozeloo.core.domain.LockScreenAlarmEvent
@@ -24,6 +25,7 @@ import com.plcoding.snoozeloo.core.domain.OnLockScreenAlarm
 import com.plcoding.snoozeloo.core.ui.text.TextH1
 import com.plcoding.snoozeloo.core.ui.text.TextTitle1Strong
 import java.util.Locale
+
 
 @Composable
 fun AlarmNotificationComponent(
@@ -68,6 +70,13 @@ fun AlarmNotificationComponent(
             }
         ) {
             TextTitle1Strong(text = "Turn Off", color = MaterialTheme.colorScheme.onPrimary)
+        }
+        Button(
+            onClick = {
+                onLockScreenAlarm(LockScreenAlarmEvent.SnoozeClicked)
+            }
+        ) {
+            TextTitle1Strong(text = "Snooze", color = MaterialTheme.colorScheme.onPrimary)
         }
     }
 }

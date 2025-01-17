@@ -48,6 +48,11 @@ class LockScreenAlarmViewModel(
                 startAlarmService(uiState.value.alarm?.uid ?: -1, AlarmService.Actions.STOP_FOREGROUND_SERVICE_DISMISS)
                 uiState.value = uiState.value.copy(shouldClose = true)
             }
+
+            is LockScreenAlarmEvent.SnoozeClicked -> {
+                startAlarmService(uiState.value.alarm?.uid ?: -1, AlarmService.Actions.STOP_FOREGROUND_SERVICE_SNOOZE)
+                uiState.value = uiState.value.copy(shouldClose = true)
+            }
         }
     }
 

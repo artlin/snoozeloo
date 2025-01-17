@@ -4,6 +4,7 @@ import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import java.time.temporal.TemporalUnit
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
@@ -82,6 +83,14 @@ fun findNextScheduleTimeEpochSeconds(scheduleHour: Int, scheduleMinute: Int): Lo
     } else {
         scheduleTimeToday.plusDays(1) // Schedule time has passed, use tomorrow
     }
+
+    return nextScheduleTime.toEpochSecond() // Convert to Epoch seconds
+}
+
+fun findNextScheduleTimeEpochSeconds(amountToAdd: Long, unit: TemporalUnit): Long {
+    val userTimeZone = ZoneId.systemDefault() // Get user's current time zone
+    val now = ZonedDateTime.now(userTimeZone) // Get current time in user's time zone
+    val nextScheduleTime = now.plus(amountToAdd, unit)
 
     return nextScheduleTime.toEpochSecond() // Convert to Epoch seconds
 }

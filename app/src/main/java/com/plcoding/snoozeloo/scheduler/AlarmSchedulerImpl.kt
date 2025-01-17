@@ -9,6 +9,7 @@ import com.plcoding.snoozeloo.core.domain.db.Alarm
 import com.plcoding.snoozeloo.core.domain.findNextScheduleTimeEpochSeconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.time.temporal.ChronoUnit
 
 class AlarmSchedulerImpl(
     private val context: Context,
@@ -17,7 +18,7 @@ class AlarmSchedulerImpl(
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     @SuppressLint("MissingPermission")
-    override suspend fun scheduleAlarm(alarm: Alarm) {
+    override suspend fun scheduleAlarm(alarm: Alarm, wasSnoozed: Boolean) {
         withContext(Dispatchers.IO) {
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("ALARM_ID", alarm.id)
@@ -26,7 +27,11 @@ class AlarmSchedulerImpl(
 
         println("Alarm scheduled at ${alarm.hours} hours and ${alarm.minutes} minutes")
 
-        val nextAlarmOccurrence = findNextScheduleTimeEpochSeconds(alarm.hours, alarm.minutes) * 1000L
+        val nextAlarmOccurrence = if(wasSnoozed) {
+            findNextScheduleTimeEpochSeconds(5L, ChronoUnit.MINUTES) * 1000L
+        } else {
+            findNextScheduleTimeEpochSeconds(alarm.hours, alarm.minutes) * 1000L
+        }
 
         val pendingIntent = PendingIntent.getBroadcast(
             context,

@@ -48,8 +48,6 @@ class AlarmReceiver: BroadcastReceiver() {
         const val TAG = "AlarmReceiver"
         const val ALARM_ID = "ALARM_ID"
         const val ALARM_FLAG = "ALARM_FLAG"
-        const val ACTION_DISMISS = "ACTION_DISMISS"
-        const val ACTION_SNOOZE = "ACTION_SNOOZE"
     }
 
     enum class AlarmDismissType {

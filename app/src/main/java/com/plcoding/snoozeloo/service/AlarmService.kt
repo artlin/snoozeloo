@@ -16,13 +16,11 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.plcoding.snoozeloo.R
 import com.plcoding.snoozeloo.alarm_selection.presentation.RingtonesManager
-import com.plcoding.snoozeloo.core.data.mapper.DataMapper
 import com.plcoding.snoozeloo.core.domain.LockScreenAlarmActivity
-import com.plcoding.snoozeloo.core.domain.db.Alarm
 import com.plcoding.snoozeloo.core.domain.db.AlarmsDatabase
-import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.manager.domain.RescheduleAlarmUseCase
 import com.plcoding.snoozeloo.scheduler.AlarmReceiver
+import com.plcoding.snoozeloo.scheduler.AlarmReceiver.Companion.ALARM_ID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -32,7 +30,6 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.concurrent.TimeUnit
-import kotlin.text.format
 
 class AlarmService : Service(), KoinComponent {
 
@@ -49,7 +46,7 @@ class AlarmService : Service(), KoinComponent {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        val alarmId = intent?.getIntExtra("ALARM_ID", -1)
+        val alarmId = intent?.getIntExtra(ALARM_ID, -1)
         if (alarmId == -1) {
             throw Error("Alarm id is equal to -1, that's no good")
         } else {
@@ -76,11 +73,17 @@ class AlarmService : Service(), KoinComponent {
                     dbScope.launch {
                         try {
                             val alarmById = alarmsDatabase.alarmsDao().getAlarmById(alarmId)
-                            val formattedTime = String.format(Locale.current.platformLocale, "%02d:%02d",
-                                alarmById.hours, alarmById.minutes)
-                            val notificationText = "Alarm at: $formattedTime with id $alarmId was missed!"
+                            val formattedTime = String.format(
+                                Locale.current.platformLocale, "%02d:%02d",
+                                alarmById.hours, alarmById.minutes
+                            )
+                            val notificationText =
+                                "Alarm at: $formattedTime with id $alarmId was missed!"
 
-                            val missedAlarmNotification = NotificationCompat.Builder(this@AlarmService, "ALARM_SERVICE_CHANNEL_ID")
+                            val missedAlarmNotification = NotificationCompat.Builder(
+                                this@AlarmService,
+                                "ALARM_SERVICE_CHANNEL_ID"
+                            )
                                 .setContentTitle("Alarm missed")
                                 .setContentText(notificationText)
                                 .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -89,14 +92,18 @@ class AlarmService : Service(), KoinComponent {
                                 .build()
 
                             val missedAlarmNotificationId = MISSED_REQUEST_CODE + alarmId
-                            val notificationManager = NotificationManagerCompat.from(this@AlarmService)
+                            val notificationManager =
+                                NotificationManagerCompat.from(this@AlarmService)
 
                             if (ActivityCompat.checkSelfPermission(
                                     this@AlarmService,
                                     Manifest.permission.POST_NOTIFICATIONS
                                 ) == PackageManager.PERMISSION_GRANTED
                             ) {
-                                notificationManager.notify(missedAlarmNotificationId, missedAlarmNotification)
+                                notificationManager.notify(
+                                    missedAlarmNotificationId,
+                                    missedAlarmNotification
+                                )
                             }
 
                         } catch (e: Exception) {
@@ -152,7 +159,7 @@ class AlarmService : Service(), KoinComponent {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or
                     Intent.FLAG_ACTIVITY_CLEAR_TOP or
                     Intent.FLAG_ACTIVITY_SINGLE_TOP
-            putExtra("ALARM_ID", alarmId)
+            putExtra(ALARM_ID, alarmId)
         }
 
         val fullScreenPendingIntent = PendingIntent.getActivity(

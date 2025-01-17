@@ -8,6 +8,7 @@ import android.content.Intent
 import com.plcoding.snoozeloo.core.domain.db.Alarm
 import com.plcoding.snoozeloo.core.domain.db.converters.Converters
 import com.plcoding.snoozeloo.core.domain.findNextScheduleTimeEpochMillis
+import com.plcoding.snoozeloo.scheduler.AlarmReceiver.Companion.ALARM_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.temporal.ChronoUnit
@@ -22,7 +23,7 @@ class AlarmSchedulerImpl(
     override suspend fun scheduleAlarm(alarm: Alarm, wasSnoozed: Boolean) {
         withContext(Dispatchers.IO) {
         val intent = Intent(context, AlarmReceiver::class.java).apply {
-            putExtra("ALARM_ID", alarm.id)
+            putExtra(ALARM_ID, alarm.id)
         }
 //        alarmManager.setAlarmClock()
 
@@ -83,7 +84,7 @@ class AlarmSchedulerImpl(
                 context,
                 alarm.id,
                 Intent(context, AlarmReceiver::class.java).apply {
-                    putExtra("ALARM_ID", alarm.id)
+                    putExtra(ALARM_ID, alarm.id)
                 },
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )

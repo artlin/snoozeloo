@@ -5,19 +5,20 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.plcoding.snoozeloo.alarm_notification.ui.AlarmNotificationComponent
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
 import com.plcoding.snoozeloo.navigation.NavigationController
+import com.plcoding.snoozeloo.scheduler.AlarmReceiver.Companion.ALARM_ID
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import android.view.WindowManager
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 class LockScreenAlarmActivity : ComponentActivity() {
 
@@ -56,7 +57,7 @@ class LockScreenAlarmActivity : ComponentActivity() {
         setContent {
             SnoozelooTheme {
                 val navController = koinInject<NavigationController>()
-                val alarmId = intent.getIntExtra("ALARM_ID", -1)
+                val alarmId = intent.getIntExtra(ALARM_ID, -1)
                 val viewModel: LockScreenAlarmViewModel = koinViewModel()
                 val state = viewModel.uiState.value
 

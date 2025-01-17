@@ -72,10 +72,16 @@ fun formatNumberToTwoDigits(number: Int): String {
     return number.toString().padStart(2, '0')
 }
 
-fun findNextScheduleTimeEpochSeconds(scheduleHour: Int, scheduleMinute: Int, days: List<Boolean>): Long {
+const val NEXT_SCHEDULE_TIME_NOT_FOUND = -1L
+
+fun findNextScheduleTimeEpochSeconds(
+    scheduleHour: Int,
+    scheduleMinute: Int,
+    days: List<Boolean>
+): Long {
     // Return -1 if all days are false
     if (days.none { it }) {
-        return -1L
+        return NEXT_SCHEDULE_TIME_NOT_FOUND
     }
 
     val userTimeZone = ZoneId.systemDefault() // Get user's current time zone
@@ -104,7 +110,7 @@ fun findNextScheduleTimeEpochSeconds(scheduleHour: Int, scheduleMinute: Int, day
         nextDayIndex = (nextDayIndex + 1) % 7  // This % 7 is needed for wrapping
     }
 
-    return
+    return NEXT_SCHEDULE_TIME_NOT_FOUND
 }
 
 //    val scheduleTimeToday = now.with(LocalTime.of(scheduleHour, scheduleMinute))

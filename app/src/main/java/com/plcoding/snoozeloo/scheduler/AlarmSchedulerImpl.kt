@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.plcoding.snoozeloo.core.domain.db.Alarm
+import com.plcoding.snoozeloo.core.domain.db.converters.Converters
 import com.plcoding.snoozeloo.core.domain.findNextScheduleTimeEpochSeconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -30,7 +31,8 @@ class AlarmSchedulerImpl(
         val nextAlarmOccurrence = if(wasSnoozed) {
             findNextScheduleTimeEpochSeconds(5L, ChronoUnit.MINUTES) * 1000L
         } else {
-            findNextScheduleTimeEpochSeconds(alarm.hours, alarm.minutes) * 1000L
+            findNextScheduleTimeEpochSeconds(alarm.hours, alarm.minutes,
+                Converters().toBooleanList(alarm.isEnabledAtWeekDay)) * 1000L
         }
 
         val pendingIntent = PendingIntent.getBroadcast(

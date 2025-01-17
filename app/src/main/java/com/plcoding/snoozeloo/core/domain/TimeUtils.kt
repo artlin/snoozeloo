@@ -72,20 +72,51 @@ fun formatNumberToTwoDigits(number: Int): String {
     return number.toString().padStart(2, '0')
 }
 
-fun findNextScheduleTimeEpochSeconds(scheduleHour: Int, scheduleMinute: Int): Long {
+fun findNextScheduleTimeEpochSeconds(scheduleHour: Int, scheduleMinute: Int, days: List<Boolean>): Long {
+    // Return -1 if all days are false
+    if (days.none { it }) {
+        return -1L
+    }
+
     val userTimeZone = ZoneId.systemDefault() // Get user's current time zone
     val now = ZonedDateTime.now(userTimeZone) // Get current time in user's time zone
 
-    val scheduleTimeToday = now.with(LocalTime.of(scheduleHour, scheduleMinute))
+    // Get current day index (0-based, Monday = 0)
+    val currentDayIndex = now.dayOfWeek.value - 1
 
-    val nextScheduleTime = if (scheduleTimeToday.isAfter(now)) {
-        scheduleTimeToday // Schedule time is in the future today
-    } else {
-        scheduleTimeToday.plusDays(1) // Schedule time has passed, use tomorrow
+    val targetTime = LocalTime.of(scheduleHour, scheduleMinute)
+    val currentTime = now.toLocalTime()
+
+    if (days[currentDayIndex] && targetTime.isAfter(currentTime)) {
+        return now.with(targetTime).toEpochSecond()
     }
 
-    return nextScheduleTime.toEpochSecond() // Convert to Epoch seconds
+    var daysToAdd = 1
+    var nextDayIndex = (currentDayIndex + 1) % 7  // This % 7 is needed for wrapping
+
+    while (daysToAdd <= 7) {
+        if (days[nextDayIndex]) {
+            return now.plusDays(daysToAdd.toLong())
+                .with(targetTime)
+                .toEpochSecond()
+        }
+        daysToAdd++
+        nextDayIndex = (nextDayIndex + 1) % 7  // This % 7 is needed for wrapping
+    }
+
+    return
 }
+
+//    val scheduleTimeToday = now.with(LocalTime.of(scheduleHour, scheduleMinute))
+//
+//    val nextScheduleTime = if (scheduleTimeToday.isAfter(now)) {
+//        scheduleTimeToday // Schedule time is in the future today
+//    } else {
+//        scheduleTimeToday.plusDays(1) // Schedule time has passed, use tomorrow
+//    }
+//
+//    return nextScheduleTime.toEpochSecond() // Convert to Epoch seconds
+
 
 fun findNextScheduleTimeEpochSeconds(amountToAdd: Long, unit: TemporalUnit): Long {
     val userTimeZone = ZoneId.systemDefault() // Get user's current time zone

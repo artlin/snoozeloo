@@ -88,7 +88,7 @@ fun AlarmItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(Modifier.height(4.dp))
-            DayButtonsSelector(emptyList(), {})
+            DayButtonsSelector(entity.days, {})
             TextBody(
                 text = healthySleepTimeString,
                 color = MaterialTheme.colorScheme.onSurfaceVariant

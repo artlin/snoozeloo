@@ -61,6 +61,7 @@ fun generateAlarms(): List<AlarmEntity> {
                 isVibrateEnabled = true, // Enable vibration for all alarms
                 volume = 0.5f, // Set volume to 0.5
                 clockTime = ClockTime(30, 1),
+                days = listOf(true, false, true, false, true, false, true), // Replace with actual values for days of the week
             )
         )
     }

@@ -241,6 +241,6 @@ class AlarmService : Service(), KoinComponent {
         const val FULL_SCREEN_ACTIVITY_REQUEST_CODE = 10000
         const val DISMISS_REQUEST_CODE = 20000
         const val SNOOZE_REQUEST_CODE = 30000
-        const val MISSED_REQUEST_CODE = 30000
+        const val MISSED_REQUEST_CODE = 40000
     }
 }

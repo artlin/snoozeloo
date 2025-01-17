@@ -158,6 +158,8 @@ class EditAlarmViewModel(
             uiState.value.alarmVibrateSubState.isVibrateEnabled
         ).updateAlarmName(
             alarmName = uiState.value.alarmNameSubState.name
+        ).updateDays(
+            selectedDays = uiState.value.alarmRepetitionSubState.selected
         )
     }
 

@@ -11,6 +11,7 @@ fun getAlarmsDatabase(context: Context): AlarmsDatabase {
         name = dbFile.absolutePath
     )
         .setDriver(BundledSQLiteDriver())
+        .fallbackToDestructiveMigration(dropAllTables = true)
         .build()
 
 }

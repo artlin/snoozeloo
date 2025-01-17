@@ -15,7 +15,8 @@ data class Alarm(
     val alarmRingtoneId: String,
     val shouldVibrate: Boolean,
     val volume: Float, // 0.0-1.0
-    val defaultRingingTime: Long = TimeUnit.MINUTES.toMillis(5)
+    val defaultRingingTime: Long = TimeUnit.MINUTES.toMillis(5),
+    val isEnabledAtWeekDay: String
 ){
     companion object {
         fun getDefault(): Alarm {
@@ -28,8 +29,9 @@ data class Alarm(
                 isActive = true, // Default active state
                 alarmRingtoneId = "default_ringtone_id", // Default ringtone ID
                 shouldVibrate = true, // Default vibration setting
-                volume = 0.5f // Default volume (50%)
+                volume = 0.5f, // Default volume (50%)
                 // defaultRingingTime uses the default value defined in the primary constructor
+                isEnabledAtWeekDay = ""
             )
         }
     }

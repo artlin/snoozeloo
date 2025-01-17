@@ -90,7 +90,8 @@ data class UIStateEditAlarm(
         return copy(
             clockDigitStates = clockDigitStates.setupClock(hour, minutes),
             alarmNameSubState = AlarmNameSubState.fromName(alarmName = alarmEntity.alarmName),
-            selectedRingtoneEntity = selectedRingtone
+            selectedRingtoneEntity = selectedRingtone,
+            alarmRepetitionSubState = AlarmRepetitionSubState(selected = alarmEntity.days)
         )
     }
 

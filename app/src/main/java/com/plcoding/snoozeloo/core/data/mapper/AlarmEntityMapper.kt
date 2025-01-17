@@ -1,6 +1,7 @@
 package com.plcoding.snoozeloo.core.data.mapper
 
 import com.plcoding.snoozeloo.core.domain.db.Alarm
+import com.plcoding.snoozeloo.core.domain.db.converters.Converters
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.entity.ClockTime
 import com.plcoding.snoozeloo.core.domain.value.AlarmName
@@ -15,6 +16,7 @@ class AlarmEntityMapper : DataMapper<Alarm, AlarmEntity>() {
         isVibrateEnabled = input.shouldVibrate,
         volume = input.volume,
         clockTime = ClockTime(input.hours, input.minutes),
+        days = Converters().toBooleanList(input.isEnabledAtWeekDay)
     )
 
     override suspend fun fromBtoA(input: AlarmEntity): Alarm = Alarm(
@@ -26,6 +28,7 @@ class AlarmEntityMapper : DataMapper<Alarm, AlarmEntity>() {
         shouldVibrate = input.isVibrateEnabled,
         volume = input.volume,
         minutes = input.clockTime.minutes,
-        hours = input.clockTime.hours
+        hours = input.clockTime.hours,
+        isEnabledAtWeekDay = Converters().fromBooleanList(input.days)
     )
 }

@@ -11,7 +11,8 @@ data class AlarmEntity(
     val isEnabled: Boolean,
     val ringtoneId: String,
     val isVibrateEnabled: Boolean,
-    val volume: Float
+    val volume: Float,
+    val days: List<Boolean> = emptyList()
 ) {
     val hours: Int
         get() {
@@ -43,6 +44,10 @@ data class AlarmEntity(
         return copy(isVibrateEnabled = vibrateEnabled)
     }
 
+    fun updateDays(selectedDays: List<Boolean>): AlarmEntity {
+        return copy(days = selectedDays)
+    }
+
     companion object {
 
         fun newAlarmEntity(): AlarmEntity = AlarmEntity(
@@ -52,7 +57,8 @@ data class AlarmEntity(
             isEnabled = true,
             ringtoneId = "",
             isVibrateEnabled = false,
-            volume = 0.5f
+            volume = 0.5f,
+            days = List<Boolean>(7) { true }
         )
     }
 

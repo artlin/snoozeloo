@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,9 @@ import com.plcoding.snoozeloo.core.ui.text.TextLabel
 import com.plcoding.snoozeloo.core.ui.text.TextTitle2Strong
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
 import com.plcoding.snoozeloo.manager.ui.edit.OnClick
+import java.text.DateFormatSymbols
+import kotlin.text.take
+import kotlin.text.uppercase
 
 @Composable
 fun AlarmRepetitionComponent(
@@ -48,10 +52,13 @@ fun AlarmRepetitionComponent(
 
 @Composable
 fun DayButtonsSelector(selectedDays: List<Boolean>, onClickedIndex: (Int) -> Unit) {
-    // fixme : add proper time shortcuts
-    val daysData: List<String> = listOf("M", "T", "W", "T", "F", "S", "S")
+    val locale = Locale.current.platformLocale
+    val daysOfWeek = DateFormatSymbols(locale).shortWeekdays
+        .drop(1) // Remove empty first element at index 0
+        .map { it.take(1).uppercase(locale) }
+
     Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-        daysData.forEachIndexed { index, dayLabel ->
+        daysOfWeek.forEachIndexed { index, dayLabel ->
             DayButton(
                 label = dayLabel,
                 isSelected = selectedDays.getOrNull(index) ?: false,

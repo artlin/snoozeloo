@@ -11,15 +11,6 @@ import kotlin.math.abs
 
 val ONE_DAY_MILLIS = TimeUnit.DAYS.toMillis(1)
 
-fun getAlarmTime(alarmTime: TimeValue): Pair<Int, Int> {
-    val calendar = Calendar.getInstance().apply {
-        timeInMillis = alarmTime.value
-    }
-    val hours = calendar.get(Calendar.HOUR_OF_DAY) // 24-hour format hour
-    val minutes = calendar.get(Calendar.MINUTE)   // Minutes
-    return hours to minutes
-}
-
 fun getTimeLeftToAlarm(currentTime: TimeValue, alarmTime: TimeValue): Pair<Long, Long> {
     return if (currentTime.value <= alarmTime.value) {
         getTimeDifferenceInHoursAndMinutes(currentTime.value, alarmTime.value)
@@ -56,16 +47,6 @@ fun getTimeDifferenceInHoursAndMinutes(timestamp1: Long, timestamp2: Long): Pair
     val minutes = (differenceInMillis % (1000 * 60 * 60)) / (1000 * 60)
 
     return hours to minutes
-}
-
-fun getTimeComponents(timestamp: Long): Pair<Int, Int> {
-    val calendar = Calendar.getInstance()
-    calendar.timeInMillis = timestamp
-
-    val hours = calendar.get(Calendar.HOUR_OF_DAY)
-    val minutes = calendar.get(Calendar.MINUTE)
-
-    return Pair(hours, minutes)
 }
 
 fun formatNumberToTwoDigits(number: Int): String {

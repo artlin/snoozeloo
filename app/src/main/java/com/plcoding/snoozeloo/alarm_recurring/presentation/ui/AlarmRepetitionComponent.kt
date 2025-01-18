@@ -26,14 +26,12 @@ import com.plcoding.snoozeloo.core.ui.text.TextTitle2Strong
 import com.plcoding.snoozeloo.core.ui.theme.SnoozelooTheme
 import com.plcoding.snoozeloo.manager.ui.edit.OnClick
 import java.text.DateFormatSymbols
-import kotlin.text.take
-import kotlin.text.uppercase
 
 @Composable
 fun AlarmRepetitionComponent(
     label: String,
     state: AlarmRepetitionSubState,
-    onClickedIndex: (Int) -> Unit
+    onClickedIndex: (Int) -> Unit,
 ) {
     Column(
         Modifier
@@ -46,12 +44,16 @@ fun AlarmRepetitionComponent(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         TextTitle2Strong(text = label, color = MaterialTheme.colorScheme.onSurface)
-        DayButtonsSelector(state.selected, onClickedIndex)
+        DayButtonsSelector(state.selected, onClickedIndex, true)
     }
 }
 
 @Composable
-fun DayButtonsSelector(selectedDays: List<Boolean>, onClickedIndex: (Int) -> Unit) {
+fun DayButtonsSelector(
+    selectedDays: List<Boolean>,
+    onClickedIndex: (Int) -> Unit,
+    isClickable: Boolean
+) {
     val locale = Locale.current.platformLocale
     val daysOfWeek = DateFormatSymbols(locale).shortWeekdays
         .drop(1) // Remove empty first element at index 0
@@ -62,14 +64,15 @@ fun DayButtonsSelector(selectedDays: List<Boolean>, onClickedIndex: (Int) -> Uni
             DayButton(
                 label = dayLabel,
                 isSelected = selectedDays.getOrNull(index) ?: false,
-                onClick = { onClickedIndex(index) }
+                onClick = if (isClickable) ({ onClickedIndex(index) }) else null
             )
         }
     }
 }
 
 @Composable
-fun DayButton(label: String, isSelected: Boolean, onClick: OnClick) {
+fun DayButton(label: String, isSelected: Boolean, onClick: OnClick? = null) {
+    val optionalClickModifier = if(onClick==null) Modifier else Modifier.clickable { onClick() }
     val buttonModifier = Modifier
         .background(
             color = if (isSelected) MaterialTheme.colorScheme.primary else Color(0xFFECEFFF),
@@ -77,8 +80,8 @@ fun DayButton(label: String, isSelected: Boolean, onClick: OnClick) {
         )
         .widthIn(min = 38.dp)
         .clip(RoundedCornerShape(38.dp))
-        .clickable { onClick() }
         .padding(vertical = 6.dp, horizontal = 11.dp)
+        .then(optionalClickModifier)
     val textModifier = Modifier
     val textColor: Color = if (isSelected) MaterialTheme.colorScheme.surface else Color(0xFF0D0F19)
     Box(buttonModifier, contentAlignment = Alignment.Center) {
@@ -90,7 +93,7 @@ fun DayButton(label: String, isSelected: Boolean, onClick: OnClick) {
 @Composable
 fun PreviewDayButtonSelector() {
     SnoozelooTheme {
-        DayButtonsSelector(emptyList(), {})
+        DayButtonsSelector(emptyList(), {}, true)
     }
 }
 

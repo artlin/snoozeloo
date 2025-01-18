@@ -21,7 +21,6 @@ import com.plcoding.snoozeloo.alarm_recurring.presentation.ui.DayButtonsSelector
 import com.plcoding.snoozeloo.core.common.extension.toAlarmInTime
 import com.plcoding.snoozeloo.core.common.extension.toAlarmTime
 import com.plcoding.snoozeloo.core.common.extension.toBedTimeText
-import com.plcoding.snoozeloo.core.common.extension.toTime8HoursBeforeAlarm
 import com.plcoding.snoozeloo.core.domain.entity.AlarmEntity
 import com.plcoding.snoozeloo.core.domain.getTimeLeftToAlarm
 import com.plcoding.snoozeloo.core.domain.value.TimeValue
@@ -37,7 +36,8 @@ fun AlarmItem(
     alarmEntity: () -> AlarmEntity,
     currentTime: () -> TimeValue,
     onToggleClick: OnClickWithBooleanValue,
-    onCardClick: OnClickWithIntValue
+    onCardClick: OnClickWithIntValue,
+    isButtonsSelectorClickable: Boolean
 ) {
     println("AlarmItem recomposed") // or Log.d()
 
@@ -88,7 +88,7 @@ fun AlarmItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(Modifier.height(4.dp))
-            DayButtonsSelector(entity.days, {})
+            DayButtonsSelector(entity.days, {}, isButtonsSelectorClickable)
             TextBody(
                 text = healthySleepTimeString,
                 color = MaterialTheme.colorScheme.onSurfaceVariant

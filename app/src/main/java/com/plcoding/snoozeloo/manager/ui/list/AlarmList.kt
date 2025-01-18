@@ -23,10 +23,20 @@ fun AlarmList(currentTime: () -> TimeValue, list: List<AlarmEntity>, onAlarmList
 
         items(items = list,
             key = { item -> item.uid }) { item ->
-            AlarmItem(alarmEntity = { item },
+            AlarmItem(
+                alarmEntity = { item },
                 currentTime = currentTime,
-                onToggleClick = { newSwitchState -> onAlarmList(AlarmListEvent.ToggleAlarmClicked(item, newSwitchState)) },
-                onCardClick = { onAlarmList(AlarmListEvent.AlarmCardClicked(item)) })
+                onToggleClick = { newSwitchState ->
+                    onAlarmList(
+                        AlarmListEvent.ToggleAlarmClicked(
+                            item,
+                            newSwitchState
+                        )
+                    )
+                },
+                onCardClick = { onAlarmList(AlarmListEvent.AlarmCardClicked(item)) },
+                isButtonsSelectorClickable = false
+            )
         }
     }
 }

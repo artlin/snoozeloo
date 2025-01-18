@@ -16,14 +16,23 @@ fun Pair<Int, Int>.toAlarmTime(): String {
 fun Pair<Long, Long>.toAlarmInTime(): String {
     return StringBuilder().apply {
         append("Alarm in")
-        if (first > 0) append(" ${first}h")
+
+        // Calculate days and remaining hours
+        val days = first / 24
+        val remainingHours = first % 24
+
+        // Add days if present
+        if (days > 0) append(" ${days}d")
+        // Add hours if present
+        if (remainingHours > 0) append(" ${remainingHours}h")
+
+        // Handle minutes
         if (second < 10) append(" 0")
         else append(" ")
         append("$second")
         append("min")
     }.toString()
 }
-
 
 fun Pair<Int, Int>.toTime8HoursBeforeAlarm(): String {
     // Convert the alarm time (Pair<Int, Int>) to LocalTime

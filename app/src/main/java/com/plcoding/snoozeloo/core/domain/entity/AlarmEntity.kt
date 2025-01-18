@@ -12,6 +12,7 @@ data class AlarmEntity(
     val ringtoneId: String,
     val isVibrateEnabled: Boolean,
     val volume: Float,
+    // we assume that monday is index 0 and sunday is index 6 when getting day from Calendar
     val days: List<Boolean> = emptyList()
 ) {
     val hours: Int

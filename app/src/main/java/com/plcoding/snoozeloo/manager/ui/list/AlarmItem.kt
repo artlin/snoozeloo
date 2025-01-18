@@ -55,7 +55,7 @@ fun AlarmItem(
 
     val alarmInTimeString = remember(time, entity.hours, entity.minutes) {
         println("alarmInTime recalculated")
-        getTimeLeftToAlarm(time, entity.hours, entity.minutes).toAlarmInTime()
+        getTimeLeftToAlarm(time,entity.days, entity.hours, entity.minutes).toAlarmInTime()
     }
 
     Box(

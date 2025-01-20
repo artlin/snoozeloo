@@ -13,6 +13,7 @@ import com.plcoding.snoozeloo.core.domain.entity.RingtoneEntity
 import com.plcoding.snoozeloo.core.domain.value.RingtoneId
 import com.plcoding.snoozeloo.core.domain.value.TimeValue
 import com.plcoding.snoozeloo.core.ui.ViewModelAccess
+import com.plcoding.snoozeloo.manager.domain.RemoveAlarmUseCase
 import com.plcoding.snoozeloo.manager.domain.UpdateAlarmUseCase
 import com.plcoding.snoozeloo.navigation.NavigationController
 import com.plcoding.snoozeloo.navigation.route.NavigationRoute
@@ -23,6 +24,7 @@ import java.util.Calendar
 
 class EditAlarmViewModel(
     private val updateAlarmUseCase: UpdateAlarmUseCase,
+    private val removeAlarmUseCase: RemoveAlarmUseCase,
     private val ringtonesManager: RingtonesManager,
     private val navigationController: NavigationController,
     private val savedStateHandle: SavedStateHandle,
@@ -141,7 +143,12 @@ class EditAlarmViewModel(
             }
 
             EditAlarmEvent.OnAlarmVibrateClicked -> newState = uiState.value.toggleVibrate()
-
+            EditAlarmEvent.RemoveAlarmClicked -> {
+                viewModelScope.launch {
+                    removeAlarmUseCase(alarmEntity)
+                }
+                navigationController.navigateBack()
+            }
         }
         validateUi()
     }

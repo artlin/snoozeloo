@@ -23,7 +23,7 @@ fun AlarmList(currentTime: () -> TimeValue, list: List<AlarmEntity>, onAlarmList
 
         items(items = list,
             key = { item -> item.uid }) { item ->
-            AlarmItem(
+            AlarmListItem(
                 alarmEntity = { item },
                 currentTime = currentTime,
                 onToggleClick = { newSwitchState ->

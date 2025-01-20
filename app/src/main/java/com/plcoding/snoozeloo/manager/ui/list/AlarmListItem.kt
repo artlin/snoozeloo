@@ -32,7 +32,7 @@ import com.plcoding.snoozeloo.manager.ui.edit.OnClickWithBooleanValue
 import com.plcoding.snoozeloo.manager.ui.edit.OnClickWithIntValue
 
 @Composable
-fun AlarmItem(
+fun AlarmListItem(
     alarmEntity: () -> AlarmEntity,
     currentTime: () -> TimeValue,
     onToggleClick: OnClickWithBooleanValue,

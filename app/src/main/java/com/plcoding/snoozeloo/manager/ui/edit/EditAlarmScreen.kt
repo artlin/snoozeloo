@@ -71,9 +71,11 @@ fun EditAlarmScreen(state: UIStateEditAlarm, onEditAlarm: OnEditAlarm) {
             state.alarmVibrateSubState,
             { onEditAlarm(EditAlarmEvent.OnAlarmVibrateClicked) }
         )
-        RemoveButton(
-            label = "Remove alarm",
-            onClick = { onEditAlarm(EditAlarmEvent.RemoveAlarmClicked) })
+        if (state.isNewDefaultAlarm.not()) {
+            RemoveButton(
+                label = "Remove alarm",
+                onClick = { onEditAlarm(EditAlarmEvent.RemoveAlarmClicked) })
+        }
     }
     if (state.alarmNameSubState.isDialogShown) {
         EditAlarmNameDialog(state.alarmNameSubState.editedName.value, onEditAlarm)
